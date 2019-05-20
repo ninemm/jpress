@@ -42,9 +42,15 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
     KeywordCategoryService categoryService;
 
     @Override
-    public Page<Keyword> paginate(int pageNum, int pageSize, Object categoryId) {
+    public Page<Keyword> paginate(int pageNum, int pageSize, String orderBy) {
+        return DAO.paginate(pageNum, pageSize, orderBy);
+    }
+
+    @Override
+    public Page<Keyword> paginate(int pageNum, int pageSize, Object categoryId, String orderBy) {
         Column column = Column.create("category_id", categoryId);
-        return DAO.paginateByColumn(pageNum, pageSize, column, "title asc");
+        orderBy = buildOrderBy(orderBy);
+        return DAO.paginateByColumn(pageNum, pageSize, column, orderBy);
     }
 
     @Override

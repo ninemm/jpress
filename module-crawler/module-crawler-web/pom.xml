@@ -26,6 +26,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+            <artifactId>WebCollector</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.jboot</groupId>
             <artifactId>jboot</artifactId>
         </dependency>

@@ -35,7 +35,7 @@ public class _#(tableMeta.modelName)Controller extends AdminControllerBase {
 
     @AdminMenu(text = "#(tableMeta.remarks)管理", groupId = "#(moduleName)")
     public void index() {
-        Page<#(tableMeta.modelName)> entries=service.paginate(getPagePara(), 10);
+        Page<#(tableMeta.modelName)> entries = service.paginate(getPagePara(), 10);
         setAttr("page", entries);
         render("#(moduleName)/#(tableMeta.name)_list.html");
     }

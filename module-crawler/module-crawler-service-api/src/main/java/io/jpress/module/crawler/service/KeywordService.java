@@ -148,14 +148,25 @@ public interface KeywordService  {
     public Page<Keyword> paginate(int page, int pageSize);
 
     /**
+     * 查询关键词
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
+     */
+    public Page<Keyword> paginate(int pageNum, int pageSize, String orderBy);
+
+    /**
      * 按分类查询关键词
      *
      * @param pageNum
      * @param pageSize
      * @param categoryId
+     * @param orderBy
      * @return
      */
-    public Page<Keyword> paginate(int pageNum, int pageSize, Object categoryId);
+    public Page<Keyword> paginate(int pageNum, int pageSize, Object categoryId, String orderBy);
 
     /**
      * 关键词分页查询

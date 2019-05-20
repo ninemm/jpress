@@ -47,7 +47,7 @@ public class _KeywordCategoryController extends AdminControllerBase {
     @Inject
     private KeywordCategoryService service;
 
-    @AdminMenu(text = "关键词类型", groupId = "crawler", order = 3)
+    @AdminMenu(text = "关键词类型", groupId = "crawler", order = 4)
     public void index() {
         render("crawler/keyword_category_list.html");
     }
@@ -106,7 +106,7 @@ public class _KeywordCategoryController extends AdminControllerBase {
 
     public void loadKeywordData() {
         Object categoryId = getPara("categoryId");
-        Page<Keyword> page = keywordService.paginate(getPagePara(), getPageSizePara(), categoryId);
+        Page<Keyword> page = keywordService.paginate(getPagePara(), getPageSizePara(), categoryId, "title asc");
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "rows", page.getList());
         renderJson(map);
     }

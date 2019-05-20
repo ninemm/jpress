@@ -65,7 +65,7 @@ public class _KeywordController extends AdminControllerBase {
     @Inject
     private KeywordCategoryService categoryService;
 
-    @AdminMenu(text = "关键词", groupId = "crawler", order = 4)
+    @AdminMenu(text = "关键词", groupId = "crawler", order = 3)
     public void index() {
 
         List<KeywordCategory> list = categoryService.findAll();

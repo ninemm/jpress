@@ -1,0 +1,161 @@
+#@layout()
+
+#define css()
+<style>
+	.switchery-small {
+		margin-top: 0;
+	}
+</style>
+#end
+
+#define content()
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+			#if(scheduleTask.id ??) 编辑 #else 新增 #end 任务
+			<small>Task Item</small>
+        </h1>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header ">
+                        <h3 class="box-title"></h3>
+                    </div>
+                    <form class="form-horizontal form-setting autoAjaxSubmit" autocomplete="off"
+                          action="#(CPATH)/admin/crawler/task/doSave" data-ok-href="#(CPATH)/admin/crawler/task"
+                          method="POST" id="form">
+                        
+                        <div class="box-body ">
+							<input type="hidden" id="entryId" name="scheduleTask.id" value="#(scheduleTask.id ??)">
+							<input type="hidden" name="scheduleTask.task_id" value="#(scheduleTask.task_id ??)">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">任务名称</label>
+								<div class="col-sm-6">
+								   <input type="input" name="scheduleTask.task_name" class="form-control" value="#(scheduleTask.task_name ??)"
+										   placeholder="请填写该任务的名称，名称需要唯一...">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">任务描述</label>
+								<div class="col-sm-6">
+								   <textarea rows="3" class="form-control" placeholder="请输入..."
+										 name="scheduleTask.task_description">#(scheduleTask.task_description ??)</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">任务类名</label>
+								<div class="col-sm-6">
+								   <input type="input" name="scheduleTask.task_class" class="form-control" value="#(scheduleTask.task_class ??)"
+										   placeholder="请输入...">
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">记录数</label>
+                                <div class="col-sm-6">
+                                    <input type="number" min="100" name="scheduleTask.page_size" class="form-control" value="#(scheduleTask.page_size ?? 300)"
+                                           placeholder="请输入...">
+                                    <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 每次处理记录数, 最少100, 推荐每次处理<mark>300</mark>条记录</a></p>
+                                </div>
+                            </div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">cron表达式</label>
+								<div class="col-sm-6">
+								   <input type="input" name="scheduleTask.cron" class="form-control" value="#(scheduleTask.cron ??)"
+										   placeholder="">
+									<code> Crontab <br>
+										*    *    *    *    *    * <br>
+										-    -    -    -    -    - <br>
+										|    |    |    |    |    | <br>
+										|    |    |    |    |    + 年 [可选]<br>
+										|    |    |    |    +----- 星期 (0 - 7) (星期天=0 或 7)<br>
+										|    |    |    +---------- 月份 (1 - 12)<br>
+										|    |    +--------------- 日期 (1 - 31)<br>
+										|    +-------------------- 小时 (0 - 23)<br>
+										+------------------------- 分钟 (0 - 59)<br>
+									</code>
+                                    <p class="help-block"><a href="http://cron.qqe2.com/" target="_blank"><i class="fa fa-share-alt"></i> 在线Cron表达式生成</a></p>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">设置</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline">
+									   <input type="checkbox" class="switchery" data-for="is_active" #checkedIf(scheduleTask.is_active ??)>
+									   <input type="hidden" id="is_active" name="scheduleTask.is_active">是否启用
+									</label>
+									<label class="checkbox-inline">
+										<input type="checkbox" class="switchery" data-for="scheduleTask_is_start" #checkedIf(scheduleTask.is_start ??)>
+										<input type="hidden" id="scheduleTask_is_start" name="scheduleTask.is_start"> 是否运行
+									</label>
+									<label class="checkbox-inline">
+										<input type="checkbox" class="switchery" data-for="scheduleTask_is_daemon" #checkedIf(scheduleTask.is_daemon ??)>
+										<input type="hidden" id="scheduleTask_is_daemon" name="scheduleTask.is_daemon"> 是否守护进程
+									</label>
+									<label class="checkbox-inline">
+										<input type="checkbox" class="switchery" data-for="scheduleTask_is_distributed" #checkedIf(scheduleTask.is_distributed ??)>
+										<input type="hidden" id="scheduleTask_is_distributed" name="scheduleTask.is_distributed"> 是否分布式
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">搜索引擎类型</label>
+								<div class="col-sm-6">
+									<select class="form-control" name="scheduleTask.search_type">
+										<option value="">--请选择--</option>
+										#dict('search', 'select', '#(scheduleTask.search_type ??)')
+									</select>
+								</div>
+							</div>
+							#if(scheduleTask.id ??)
+							<div class="form-group">
+								<label class="col-sm-2 control-label">最近一次执行时间</label>
+								<div class="col-sm-6">
+									<input type="input" class="form-control" name="scheduleTask.last_execute_time"
+										   value="#date(scheduleTask.last_execute_time ??,'yyyy-MM-dd HH:mm')" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">最后处理ID</label>
+								<div class="col-sm-6">
+								   <input type="input" name="scheduleTask.last_keyword_id" class="form-control" value="#(scheduleTask.last_keyword_id ??)" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">最后执行页码</label>
+								<div class="col-sm-6">
+
+								   <input type="input" name="scheduleTask.last_page_num" class="form-control" value="#(scheduleTask.last_page_num ??)" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">处理关键词总数</label>
+								<div class="col-sm-6">
+								   <input type="input" name="scheduleTask.total_num" class="form-control" value="#(scheduleTask.total_num ??)" readonly>
+								</div>
+							</div>
+							#end
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <div class="col-sm-offset-2 col-sm-10 submit-block">
+                                <div class="box-submit">
+                                    <button type="button" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-footer -->
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+#end

@@ -90,7 +90,7 @@ public abstract class BaseKeyword<M extends BaseKeyword<M>> extends JbootModel<M
 		return status != null && status == true;
 	}
 
-	public void setIsBaiduEnabled(java.lang.Integer isBaiduEnabled) {
+	public void setIsBaiduEnabled(java.lang.Boolean isBaiduEnabled) {
 		set("is_baidu_enabled", isBaiduEnabled);
 	}
 	
