@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.utils.HttpUtil;
+import io.jpress.module.crawler.model.status.KeywordSourceStatus;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
 import io.jpress.module.crawler.model.vo.BaiduSugWordsVO;
 import io.jpress.module.crawler.model.vo.KeywordParamVO;
@@ -49,6 +50,7 @@ public class BaiduSugKeywordCallable implements Callable<KeywordParamVO> {
             /** 下拉提示关键词保存 */
             Ret ret = Ret.create();
             ret.put("parentId", keyword.getId());
+            ret.put("source", KeywordSourceStatus.SUG_COLLECTOR);
             ret.put("relWordList", Arrays.asList(baidu.getS()));
             Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
 

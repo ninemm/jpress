@@ -81,6 +81,14 @@ public abstract class BaseKeyword<M extends BaseKeyword<M>> extends JbootModel<M
 		return getStr("pinyin");
 	}
 
+	public void setSource(java.lang.String source) {
+		set("source", source);
+	}
+
+	public java.lang.String getSource() {
+		return getStr("source");
+	}
+
 	public void setStatus(java.lang.Boolean status) {
 		set("status", status);
 	}

@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.utils.HttpUtil;
+import io.jpress.module.crawler.model.status.KeywordSourceStatus;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
 import io.jpress.module.crawler.model.vo.KeywordParamVO;
 import io.jpress.module.crawler.model.vo.SosoSugWordsVO;
@@ -57,6 +58,7 @@ public class SosoSugKeywordCallable implements Callable<KeywordParamVO> {
             Ret ret = Ret.create();
             ret.put("parentId", keyword.getId());
             ret.put("relWordList", keywordList);
+            ret.put("source", KeywordSourceStatus.SUG_COLLECTOR);
             Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
 
             keyword.setValid(true);

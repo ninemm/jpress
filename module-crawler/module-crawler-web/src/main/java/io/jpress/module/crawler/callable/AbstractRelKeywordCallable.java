@@ -4,6 +4,7 @@ import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
 import io.jboot.Jboot;
 import io.jboot.utils.HttpUtil;
+import io.jpress.module.crawler.model.status.KeywordSourceStatus;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
 import io.jpress.module.crawler.model.vo.KeywordParamVO;
 import org.jsoup.Jsoup;
@@ -49,6 +50,7 @@ public abstract class AbstractRelKeywordCallable implements Callable<KeywordPara
              */
             Ret ret = Ret.create();
             ret.put("parentId", keywordParam.getId());
+            ret.put("source", KeywordSourceStatus.REL_COLLECTOR);
             ret.put("relWordList", elements.eachText());
             Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
 

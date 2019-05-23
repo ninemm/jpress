@@ -145,7 +145,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
     }
 
     @Override
-    public boolean batchSave(List<String> keywordList, Object categoryId, String categoryName) {
+    public boolean batchSave(List<String> keywordList, Object categoryId, String categoryName, String source) {
 
         boolean result = Db.tx(new IAtom() {
             @Override
@@ -171,7 +171,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
                     title = title.replaceAll(" ", "");
                     if (StrKit.notBlank(title)) {
                         title = clearNotChinese(title);
-                        sqlList.add(getDistinctInsertSQL(title, tmpCategoryId, categoryName, createDate));
+                        sqlList.add(getDistinctInsertSQL(title, tmpCategoryId, categoryName, source, createDate));
                     }
                 }
 
@@ -189,7 +189,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
     }
 
     @Override
-    public boolean batchSave(List<Map<String, List<String>>> keywordList, List<String> categoryList) {
+    public boolean batchSave(List<Map<String, List<String>>> keywordList, List<String> categoryList, String source) {
         boolean result = Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
@@ -215,7 +215,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
                         /** 过滤空关键词 */
                         kList.stream().filter(title -> StrKit.notBlank(title.trim())).forEach(title -> {
                             if (StrKit.notBlank(title)) {
-                                sqlList.add(getDistinctInsertSQL(title.trim(), categoryId, categoryName, createDate));
+                                sqlList.add(getDistinctInsertSQL(title.trim(), categoryId, categoryName, source, createDate));
                             }
                         });
 
@@ -262,10 +262,11 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
         return Db.query(sql.toString(), randomNum);
     }
 
-    private String getDistinctInsertSQL(String title, Object categoryId, String categoryName, String createDate) {
+    private String getDistinctInsertSQL(String title, Object categoryId, String categoryName, String source, String createDate) {
 
-        StringBuilder sqlBuilder = new StringBuilder("insert ignore into c_keyword(`title`, `category_id`, `category_name`, `num`, `pinyin`, `level`, `created`) values(");
-
+        StringBuilder sqlBuilder = new StringBuilder("insert ignore into c_keyword");
+        sqlBuilder.append(" (`title`, `category_id`, `category_name`, `num`, `pinyin`, `source`, `level`, `created`)");
+        sqlBuilder.append(" values(");
         sqlBuilder.append("'").append(title).append("'").append(", ");
         sqlBuilder.append(categoryId).append(", ");
         sqlBuilder.append("'").append(categoryName).append("'").append(", ");
@@ -276,9 +277,11 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
         String pinyin = "none".equals(head) ? "-" : head;
         sqlBuilder.append("'").append(pinyin).append("'").append(", ");
 
+        sqlBuilder.append("'").append(source).append("'").append(", ");
         sqlBuilder.append(1).append(", ");
         sqlBuilder.append("'").append(createDate).append("'");
         sqlBuilder.append(")");
+
         return sqlBuilder.toString();
     }
 

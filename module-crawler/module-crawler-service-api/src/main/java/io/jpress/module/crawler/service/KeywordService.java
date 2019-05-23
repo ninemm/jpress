@@ -107,18 +107,20 @@ public interface KeywordService  {
      * @param keywordList
      * @param categoryId
      * @param categoryName
+     * @param source
      * @return  boolean
      */
-    public boolean batchSave(List<String> keywordList, Object categoryId, String categoryName);
+    public boolean batchSave(List<String> keywordList, Object categoryId, String categoryName, String source);
 
     /**
      * batch save model to database
      *
      * @param keywordList
      * @param categoryList
+     * @param source
      * @return  boolean
      */
-    public boolean batchSave(List<Map<String, List<String>>> keywordList, List<String> categoryList);
+    public boolean batchSave(List<Map<String, List<String>>> keywordList, List<String> categoryList, String source);
 
     /**
      * save or update model
@@ -172,7 +174,7 @@ public interface KeywordService  {
      * 关键词分页查询
      *
      * @date  2019-05-17 15:52
-     * @param page
+     * @param pageNum
      * @param pageSize
      * @param inputKeywords         输入关键词
      * @param categoryIds           关键词分类
@@ -183,7 +185,7 @@ public interface KeywordService  {
      * @param minNum                关键词最少个数
      * @param maxNum                关键词最多个数
      * @param orderBy
-     * @return java.util.List<java.lang.String>
+     * @return Page<java.lang.String>
      */
     public Page<Keyword> paginate(int pageNum, int pageSize, String inputKeywords, String categoryIds, String validSearchTypes,
          String checkedSearchTypes, Integer minLength, Integer maxLength, Integer minNum, Integer maxNum, String orderBy);

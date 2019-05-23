@@ -39,6 +39,7 @@ import io.jpress.commons.utils.AttachmentUtils;
 import io.jpress.core.menu.annotation.AdminMenu;
 import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.KeywordCategory;
+import io.jpress.module.crawler.model.status.KeywordSourceStatus;
 import io.jpress.module.crawler.service.KeywordCategoryService;
 import io.jpress.module.crawler.service.KeywordService;
 import io.jpress.web.base.AdminControllerBase;
@@ -114,7 +115,7 @@ public class _KeywordController extends AdminControllerBase {
    
     public void doSave() {
         Keyword entry = getModel(Keyword.class,"keyword");
-
+        entry.setSource(KeywordSourceStatus.INPUT);
         keywordService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
@@ -321,7 +322,7 @@ public class _KeywordController extends AdminControllerBase {
                 KeywordCategory category = categoryService.findById(categoryId);
                 name = category.getName();
             }
-            keywordService.batchSave(keywordList, categoryId, name);
+            keywordService.batchSave(keywordList, categoryId, name, KeywordSourceStatus.IMPORT);
         }
 
         long endTime = System.currentTimeMillis();
@@ -378,7 +379,7 @@ public class _KeywordController extends AdminControllerBase {
             });
 
             categoryList.stream().distinct().collect(Collectors.toList());
-            keywordService.batchSave(keywordsList, categoryList);
+            keywordService.batchSave(keywordsList, categoryList, KeywordSourceStatus.IMPORT);
             long endTime = System.currentTimeMillis();
             _LOG.info("批量导入关键词耗时：" + (endTime - startTime) + "毫秒");
 

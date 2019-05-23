@@ -35,6 +35,7 @@ public class AddKeywordEventListener implements JbootEventListener {
 
         Ret ret = event.getData();
         Integer parentId = ret.getInt("parentId");
+        String source = ret.getStr("source");
         List<String> list = (List<String>) ret.get("relWordList");
         Date created = new Date();
 
@@ -51,7 +52,7 @@ public class AddKeywordEventListener implements JbootEventListener {
 
             Object categoryId = persist.getCategoryId();
             String categoryName = persist.getCategoryName();
-            String sql = getDistinctInsertSQL(title, parentId, categoryId, categoryName, level, pinyin, created);
+            String sql = getDistinctInsertSQL(title, parentId, categoryId, categoryName, level, pinyin, source, created);
             sqlList.add(sql);
 
         });
@@ -66,10 +67,10 @@ public class AddKeywordEventListener implements JbootEventListener {
     }
 
     private String getDistinctInsertSQL(String title, Object parentId, Object categoryId, String categoryName,
-            Integer level, String pinyin, Date createDate) {
+            Integer level, String pinyin, String source, Date createDate) {
 
         StringBuilder sqlBuilder = new StringBuilder("insert ignore into c_keyword(`title`, `parent_id`,");
-        sqlBuilder.append(" `category_id`, `category_name`, `num`, `pinyin`, `level`, `status`, `created`) values(");
+        sqlBuilder.append(" `category_id`, `category_name`, `num`, `pinyin`, `source`, `level`, `status`, `created`) values(");
 
         sqlBuilder.append("'").append(title).append("'").append(", ");
         sqlBuilder.append(parentId).append(", ");
@@ -78,9 +79,10 @@ public class AddKeywordEventListener implements JbootEventListener {
 
         sqlBuilder.append(title.length()).append(", ");
         sqlBuilder.append("'").append(pinyin).append("'").append(", ");
+        sqlBuilder.append("'").append(source).append("'").append(", ");
         sqlBuilder.append(level).append(", ");
-        sqlBuilder.append(true).append(", ");
 
+        sqlBuilder.append(true).append(", ");
         sqlBuilder.append("'").append(createDate).append("'");
         sqlBuilder.append(")");
         return sqlBuilder.toString();
