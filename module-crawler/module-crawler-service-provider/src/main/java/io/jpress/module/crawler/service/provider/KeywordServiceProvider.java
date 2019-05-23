@@ -355,8 +355,8 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
         String orderByString = null;
 
         if (StrUtil.isBlank(orderBy)) {
-            orderByString = " title asc";
-        } else if ("random".equals(orderBy)) {
+            orderByString = " id asc";
+        } else if (orderBy.equals("random")) {
             orderByString = " RAND()";
         } else {
             orderByString = orderBy;
