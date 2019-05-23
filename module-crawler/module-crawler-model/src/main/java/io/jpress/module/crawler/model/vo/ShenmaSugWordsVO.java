@@ -33,7 +33,7 @@ public class ShenmaSugWordsVO {
         this.r = r;
     }
 
-    class Word {
+    public class Word {
         private String w;
 
         public String getW() {

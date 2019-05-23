@@ -6,9 +6,13 @@ import com.google.common.util.concurrent.*;
 import com.jfinal.aop.Aop;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jpress.module.crawler.callable.BaiduKeywordCallable;
+import io.jpress.module.crawler.callable.BaiduSugKeywordCallable;
+import io.jpress.module.crawler.callable.ShenmaSugKeywordCallable;
+import io.jpress.module.crawler.callable.SogoSugKeywordCallable;
+import io.jpress.module.crawler.callable.SosoSugKeywordCallable;
 import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.ScheduleTask;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
@@ -29,13 +33,13 @@ import java.util.concurrent.*;
  * @package io.jpress.module.crawler.schedule
  **/
 
-public class KeywordValidateTask implements Runnable {
+public class SugKeywordValidateTask implements Runnable {
 
-    private static final Log _LOG = Log.getLog(KeywordValidateTask.class);
+    private static final Log _LOG = Log.getLog(SugKeywordValidateTask.class);
 
     private ScheduleTask scheduleTask;
 
-    public KeywordValidateTask(ScheduleTask scheduleTask) {
+    public SugKeywordValidateTask(ScheduleTask scheduleTask) {
         this.scheduleTask = scheduleTask;
     }
 
@@ -48,40 +52,27 @@ public class KeywordValidateTask implements Runnable {
         if (pageNum == null) {
             pageNum = 1;
         }
-
+        ScheduleTaskService taskService = Aop.get(ScheduleTaskService.class);
         Page<Keyword> page = Aop.get(KeywordService.class).paginate(pageNum, scheduleTask.getPageSize(), "id asc");
         if (page.getTotalPage() == 0) {
             scheduleTask.setLastPageNum(1);
-            scheduleTask.setTotalNum(0);
+            scheduleTask.setTotalNum(0L);
             scheduleTask.setLastExecuteTime(new Date());
-            Aop.get(ScheduleTaskService.class).update(scheduleTask);
+            taskService.update(scheduleTask);
             return;
         }
 
         int processors = Runtime.getRuntime().availableProcessors();
         ThreadFactory threadName = new ThreadFactoryBuilder().setNameFormat("当前线程-%d").build();
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(processors * 3,
-                processors * 5,
-                200L,
-                TimeUnit.MILLISECONDS,
+        ThreadPoolExecutor executorPool = new ThreadPoolExecutor(processors * 3,
+                processors * 5, 200L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1000),
                 threadName,
                 new ThreadPoolExecutor.AbortPolicy());
 
-        execute(page.getList(), searchType, executor);
+        doUpdateTaskSchedule(page.getList(), page.getTotalPage(), pageNum, scheduleTask.getTotalNum(), scheduleTask.getLastPageNum());
 
-        int totalNum = page.getList().size();
-        Long lastKeywordId = page.getList().get(totalNum - 1).getId();
-        scheduleTask.setTotalNum(totalNum + scheduleTask.getTotalNum());
-        scheduleTask.setLastKeywordId(lastKeywordId.intValue());
-
-        if (page.getTotalPage() == scheduleTask.getLastPageNum()) {
-            scheduleTask.setLastPageNum(1);
-        } else {
-            scheduleTask.setLastPageNum(pageNum + 1);
-        }
-
-        Aop.get(ScheduleTaskService.class).update(scheduleTask);
+        execute(page.getList(), searchType, executorPool);
     }
 
     /**
@@ -89,7 +80,7 @@ public class KeywordValidateTask implements Runnable {
      */
     private void execute(List<Keyword> list, String searchType, ThreadPoolExecutor executor) {
 
-        /** guava 并发执行 */
+        /** 监听执行线程池 */
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(executor);
         /** Map存储关键词ID，有效状态 */
         List<ListenableFuture<KeywordParamVO>> futures = Lists.newArrayList();
@@ -97,25 +88,32 @@ public class KeywordValidateTask implements Runnable {
         list.stream().forEach(keyword -> {
 
             Callable<KeywordParamVO> callable = null;
-            KeywordParamVO keywordVO = new KeywordParamVO(keyword.getId(), keyword.getTitle());
+            KeywordParamVO keywordParam = new KeywordParamVO(keyword.getId(), keyword.getTitle());
 
-            if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_BAIDU)) {
-                callable = new BaiduKeywordCallable(keywordVO);
+            if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SOGO)) {
+                callable = new SogoSugKeywordCallable(keywordParam);
+            } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_360)) {
+                callable = new SosoSugKeywordCallable(keywordParam);
+            } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SHENMA)) {
+                callable = new ShenmaSugKeywordCallable(keywordParam);
+            } else {
+                callable = new BaiduSugKeywordCallable(keywordParam);
             }
 
             futures.add(executorService.submit(callable));
         });
 
+        final ListenableFuture<List<KeywordParamVO>> resultsFuture = Futures.successfulAsList(futures);
         try {
             /** 执行结果 */
-            List<KeywordParamVO> result = Futures.successfulAsList(futures).get();
+            List<KeywordParamVO> result = resultsFuture.get();
             if (result != null && result.size() > 0) {
                 Ret ret = Ret.create();
                 ret.put("taskId", scheduleTask.getTaskId());
                 Map<String, List<KeywordParamVO>> keywordData = ImmutableMap.of(searchType, result);
                 ret.put("keywordData", keywordData);
 
-                Jboot.sendEvent(CrawlerConsts.UPDATE_SUG_WORD_EVENT_NAME, ret);
+                Jboot.sendEvent(CrawlerConsts.UPDATE_KEYWORD_EVENT_NAME, ret);
             }
         } catch (InterruptedException e) {
             _LOG.error("下拉搜索执行错误", e);
@@ -125,5 +123,20 @@ public class KeywordValidateTask implements Runnable {
             executor.shutdown();
         }
         executor.shutdown();
+    }
+
+    private void doUpdateTaskSchedule(List<Keyword> list, int totalPage, int pageNum, Long totalNum, int lastPageNum) {
+        int size = list.size();
+        Long lastKeywordId = list.get(size - 1).getId();
+        totalNum = size + totalNum;
+
+        if (totalPage > lastPageNum) {
+            lastPageNum = pageNum + 1;
+        } else {
+            lastPageNum = 1;
+        }
+
+        String sql = "update c_schedule_task set last_keyword_id = ?, last_execute_time = ?, last_page_num = ?, total_num = ? where id = ?";
+        Db.update(sql, lastKeywordId, new Date(), lastPageNum, totalNum, scheduleTask.getId());
     }
 }

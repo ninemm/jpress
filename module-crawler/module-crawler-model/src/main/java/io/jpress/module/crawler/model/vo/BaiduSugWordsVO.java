@@ -1,5 +1,7 @@
 package io.jpress.module.crawler.model.vo;
 
+import lombok.Data;
+
 import java.util.Arrays;
 
 /**
@@ -12,35 +14,12 @@ import java.util.Arrays;
  * @package io.jpress.module.crawler.model.vo
  **/
 
+@Data
 public class BaiduSugWordsVO {
 
     private String q;
     private Boolean p;
     private String[] s;
-
-    public String getQ() {
-        return q;
-    }
-
-    public void setQ(String q) {
-        this.q = q;
-    }
-
-    public Boolean getP() {
-        return p;
-    }
-
-    public void setP(Boolean p) {
-        this.p = p;
-    }
-
-    public String[] getS() {
-        return s;
-    }
-
-    public void setS(String[] s) {
-        this.s = s;
-    }
 
     @Override
     public String toString() {

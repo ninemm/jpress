@@ -41,6 +41,7 @@
         <commons-io.version>2.6</commons-io.version>
         <commonmark.version>0.12.1</commonmark.version>
         <aliyunoss.version>3.4.0</aliyunoss.version>
+        <lombok.version>1.16.14</lombok.version>
         <webcollector.version>2.73-alpha</webcollector.version>
         <hanlp.version>portable-1.7.3</hanlp.version>
 
@@ -167,6 +168,12 @@
                 <groupId>com.hankcs</groupId>
                 <artifactId>hanlp</artifactId>
                 <version>${hanlp.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
 
         </dependencies>

@@ -40,7 +40,7 @@ public class KeywordCategoryServiceProvider extends JbootServiceBase<KeywordCate
             columns.likeAppendPercent("name", name);
         }
 
-        return DAO.paginateByColumns(pageNum, pageSize, columns.getList(), "order_list desc");
+        return DAO.paginateByColumns(pageNum, pageSize, columns.getList(), "order_list asc");
     }
 
     @Override
@@ -49,6 +49,7 @@ public class KeywordCategoryServiceProvider extends JbootServiceBase<KeywordCate
         return DAO.findFirstByColumn("name", name);
     }
 
+    @Override
     @CacheEvict(name = KeywordCategory.CACHE_NAME)
     public boolean batchSave(List<String> categoryList) {
 
@@ -83,8 +84,9 @@ public class KeywordCategoryServiceProvider extends JbootServiceBase<KeywordCate
         return id;
     }
 
+    @Override
     @CacheEvict(name = KeywordCategory.CACHE_NAME, key = "#(id)")
-    public boolean delete(Object id) {
+    public boolean deleteById(Object id) {
         boolean deleted = super.deleteById(id);
 
         if (deleted) {

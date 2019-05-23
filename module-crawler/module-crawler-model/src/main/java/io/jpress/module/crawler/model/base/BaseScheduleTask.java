@@ -121,12 +121,12 @@ public abstract class BaseScheduleTask<M extends BaseScheduleTask<M>> extends Jb
 		return get("last_execute_time");
 	}
 
-	public void setLastKeywordId(java.lang.Integer lastKeywordId) {
+	public void setLastKeywordId(java.lang.Long lastKeywordId) {
 		set("last_keyword_id", lastKeywordId);
 	}
 	
-	public java.lang.Integer getLastKeywordId() {
-		return getInt("last_keyword_id");
+	public java.lang.Long getLastKeywordId() {
+		return getLong("last_keyword_id");
 	}
 
 	public void setLastPageNum(java.lang.Integer lastPageNum) {
@@ -137,12 +137,12 @@ public abstract class BaseScheduleTask<M extends BaseScheduleTask<M>> extends Jb
 		return getInt("last_page_num");
 	}
 
-	public void setTotalNum(java.lang.Integer totalNum) {
+	public void setTotalNum(java.lang.Long totalNum) {
 		set("total_num", totalNum);
 	}
 	
-	public java.lang.Integer getTotalNum() {
-		return getInt("total_num");
+	public java.lang.Long getTotalNum() {
+		return getLong("total_num");
 	}
 
 	public void setSearchType(java.lang.String searchType) {

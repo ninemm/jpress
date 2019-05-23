@@ -46,7 +46,8 @@ public class ShenmaRelWordsCrawler extends AbstractRamCrawler {
             return;
         }
 
-        Elements results = page.select("#rs>table>tbody>tr>th> a");
+        // Elements results = page.select("#sider>.sider-card>ul>li>.news-title");
+        Elements results = page.select(".ali_rel>ul>li>a");
         _LOG.info("关键词：" + keyword + ", 在神马中的相关(搜索)关键词个数：" + results.size());
 
         if (results.size() > 0) {
@@ -63,7 +64,7 @@ public class ShenmaRelWordsCrawler extends AbstractRamCrawler {
             ret.clear();
             ret.put("parentId", keyword.getId());
             ret.put("relWordList", results.eachText());
-            Jboot.sendEvent(CrawlerConsts.ADD_REL_WORD_EVENT_NAME, ret);
+            Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
         }
     }
 
@@ -80,7 +81,7 @@ public class ShenmaRelWordsCrawler extends AbstractRamCrawler {
     public String createUrl(String keyword, Integer pageIndex) {
         try {
             keyword = URLEncoder.encode(keyword, CharsetUtil.UTF_8);
-            return String.format("http://www.so.com/s?q=%s", keyword);
+            return String.format("https://m.sm.cn/s?q=%s&from=smor&safe=1", keyword);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

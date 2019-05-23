@@ -8,11 +8,12 @@ import com.jfinal.plugin.activerecord.Db;
 import io.jboot.components.event.JbootEvent;
 import io.jboot.components.event.JbootEventListener;
 import io.jboot.components.event.annotation.EventConfig;
+import io.jpress.commons.utils.DateUtils;
 import io.jpress.commons.utils.WebSocketUtil;
-import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
 import io.jpress.module.crawler.model.vo.KeywordParamVO;
 import io.jpress.module.crawler.service.KeywordService;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 import java.util.List;
@@ -26,10 +27,10 @@ import java.util.Map;
  * @package io.jpress.module.crawler.listener
  **/
 
-@EventConfig(action = CrawlerConsts.UPDATE_SUG_WORD_EVENT_NAME)
-public class KeywordSugWordsEventListener implements JbootEventListener {
+@EventConfig(action = CrawlerConsts.UPDATE_KEYWORD_EVENT_NAME)
+public class UpdateKeywordEventListener implements JbootEventListener {
 
-    private static final Log _LOG = Log.getLog(KeywordSugWordsEventListener.class);
+    private static final Log _LOG = Log.getLog(UpdateKeywordEventListener.class);
 
     @Override
     public void onEvent(JbootEvent event) {
@@ -38,38 +39,38 @@ public class KeywordSugWordsEventListener implements JbootEventListener {
         String taskId = ret.getStr("taskId");
         Map<String, List<KeywordParamVO>> keywordData = (Map<String, List<KeywordParamVO>>) ret.get("keywordData");
 
-        Date modified = new Date();
-        List<Keyword> keywordList = Lists.newArrayList();
+        Object modified = DateTime.now().toString(DateUtils.DEFAULT_FORMATTER);
+        List<String> sqlList = Lists.newArrayList();
         KeywordService keywordService = Aop.get(KeywordService.class);
 
         keywordData.forEach((searchType, list) -> {
-            list.stream().forEach(keywordVO -> {
+            list.stream().forEach(keyword -> {
 
-                Keyword keyword = keywordService.findById(keywordVO.getId());
-                keyword.setModified(modified);
+                StringBuilder sql = new StringBuilder("update c_keyword set modified = '").append(modified).append("'");
+                int enabled = keyword.getValid() ? 1 : 0;
 
                 if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_BAIDU)) {
-                    keyword.setIsBaiduEnabled(keywordVO.getValid());
-                    keyword.setIsBaiduChecked(true);
+                    sql.append(", is_baidu_enabled = " + enabled);
+                    sql.append(", is_baidu_checked = 1 where id = " + keyword.getId());
                 } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SOGO)) {
-                    keyword.setIsSogoEnabled(keywordVO.getValid());
-                    keyword.setIsSogoChecked(true);
+                    sql.append(", is_sogo_enabled = " + enabled);
+                    sql.append(", is_sogo_checked = 1 where id = " + keyword.getId());
                 } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_360)) {
-                    keyword.setIsSosoEnabled(keywordVO.getValid());
-                    keyword.setIsSosoChecked(true);
+                    sql.append(", is_soso_enabled = " + enabled);
+                    sql.append(", is_soso_checked = 1 where id = " + keyword.getId());
                 } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SHENMA)) {
-                    keyword.setIsShenmaEnabled(keywordVO.getValid());
-                    keyword.setIsShenmaChecked(true);
+                    sql.append(", is_shenma_enabled = " + enabled);
+                    sql.append(", is_shenma_checked = 1 where id = " + keyword.getId());
                 }
 
+                sqlList.add(sql.toString());
                 _LOG.debug("关键词ID: " + keyword.getId() + ", 关键词名称: " + keyword.getTitle());
                 String message = "关键词ID: " + keyword.getId() + ", 关键词名称: " + keyword.getTitle();
                 WebSocketUtil.sendMessage(taskId, message);
-                keywordList.add(keyword);
             });
         });
 
-        Db.batchUpdate(keywordList, keywordList.size());
+        Db.batch(sqlList, sqlList.size());
     }
 
 }

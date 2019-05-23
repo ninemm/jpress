@@ -26,16 +26,22 @@ import io.jpress.module.crawler.service.WebpageService;
 import io.jpress.web.base.AdminControllerBase;
 import java.util.Date;
 
+/**
+ * 网页文本数据呈现与分析
+ *
+ * @author Eric
+ * @date  2019-05-23 13:00
+ */
 
 @RequestMapping(value = "/admin/crawler/webpage", viewPath = JPressConsts.DEFAULT_ADMIN_VIEW)
 public class _WebpageController extends AdminControllerBase {
 
     @Inject
-    private WebpageService service;
+    private WebpageService webpageService;
 
     @AdminMenu(text = "文章管理", groupId = "crawler", order = 2)
     public void index() {
-        Page<Webpage> entries=service.paginate(getPagePara(), 10);
+        Page<Webpage> entries = webpageService.paginate(getPagePara(), 10);
         setAttr("page", entries);
         render("crawler/webpage_list.html");
     }
@@ -44,21 +50,19 @@ public class _WebpageController extends AdminControllerBase {
     public void edit() {
         int entryId = getParaToInt(0, 0);
 
-        Webpage entry = entryId > 0 ? service.findById(entryId) : null;
+        Webpage entry = entryId > 0 ? webpageService.findById(entryId) : null;
         setAttr("webpage", entry);
-        set("now",new Date());
         render("crawler/webpage_edit.html");
     }
    
     public void doSave() {
         Webpage entry = getModel(Webpage.class,"webpage");
-        service.saveOrUpdate(entry);
+        webpageService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
-
     public void doDel() {
         Long id = getIdPara();
-        render(service.deleteById(id) ? Ret.ok() : Ret.fail());
+        render(webpageService.deleteById(id) ? Ret.ok() : Ret.fail());
     }
 }

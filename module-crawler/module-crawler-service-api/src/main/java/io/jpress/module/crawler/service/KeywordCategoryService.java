@@ -73,6 +73,13 @@ public interface KeywordCategoryService extends JbootServiceJoiner {
      */
     public Object saveOrUpdate(KeywordCategory model);
 
+    /**
+     * batch save category
+     *
+     * @param categoryList
+     * @return boolean
+     */
+    public boolean batchSave(List<String> categoryList);
 
     /**
      * update data model

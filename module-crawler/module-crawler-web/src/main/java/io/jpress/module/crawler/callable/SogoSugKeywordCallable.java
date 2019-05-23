@@ -2,12 +2,10 @@ package io.jpress.module.crawler.callable;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import io.jboot.components.http.JbootHttpManager;
-import io.jboot.components.http.JbootHttpRequest;
-import io.jpress.module.crawler.crawler.BaiduRelWordsCrawler;
-import io.jpress.module.crawler.crawler.SogoRelWordsCrawler;
+import com.jfinal.kit.Ret;
+import io.jboot.Jboot;
+import io.jboot.utils.HttpUtil;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
-import io.jpress.module.crawler.model.vo.BaiduSugWordsVO;
 import io.jpress.module.crawler.model.vo.KeywordParamVO;
 
 import java.util.List;
@@ -21,13 +19,13 @@ import java.util.concurrent.Callable;
  * @package io.jpress.module.crawler.callable
  **/
 
-public class SogoKeywordCallable implements Callable<KeywordParamVO> {
+public class SogoSugKeywordCallable implements Callable<KeywordParamVO> {
 
     private static final String REL_KEYWORDS_URL = "https://www.sogou.com/suggnew/ajajjson?type=web&key=${content}";
 
     private KeywordParamVO keyword;
 
-    public SogoKeywordCallable(KeywordParamVO keyword) {
+    public SogoSugKeywordCallable(KeywordParamVO keyword) {
         this.keyword = keyword;
     }
 
@@ -41,33 +39,26 @@ public class SogoKeywordCallable implements Callable<KeywordParamVO> {
     public KeywordParamVO call() throws Exception {
 
         String url = REL_KEYWORDS_URL.replace("${content}", keyword.getTitle());
-        JbootHttpRequest request = JbootHttpRequest.create(url);
-        String content = JbootHttpManager.me().getJbootHttp().handle(request).getContent();
+        String content = HttpUtil.httpGet(url);
         content = content.replace("window.sogou.sug(", "")
                 .replace(",-1);", "");
 
         JSONArray array = JSON.parseArray(content);
         List<String> list = JSON.parseArray(array.get(1).toString(), String.class);
         if (list != null && list.size() > 0) {
+
+            /** 下拉提示关键词保存 */
+            Ret ret = Ret.create();
+            ret.put("parentId", keyword.getId());
+            ret.put("relWordList", list);
+            Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
+
             keyword.setValid(true);
             return keyword;
         }
-
-        /** 相关搜索验证关键词是否有效 */
-        searchRelKeywords();
 
         keyword.setValid(false);
         return keyword;
     }
 
-    private void searchRelKeywords() {
-        try {
-            SogoRelWordsCrawler crawler = new SogoRelWordsCrawler(keyword, CrawlerConsts.SEARCH_ENGINE_SOGO, 1);
-            crawler.getConf().setExecuteInterval(1000);
-            crawler.getConf().setWaitThreadEndTime(1000);
-            crawler.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -1,8 +1,10 @@
 package io.jpress.module.crawler;
 
+import com.google.common.base.Throwables;
 import com.jfinal.aop.Aop;
 import com.jfinal.log.Log;
 import io.jboot.components.schedule.JbootDistributedRunnable;
+import io.jboot.exception.JbootException;
 import io.jboot.utils.ClassUtil;
 import io.jpress.module.crawler.model.ScheduleTask;
 import io.jpress.module.crawler.service.ScheduleTaskService;
@@ -11,6 +13,8 @@ import it.sauronsoftware.cron4j.SchedulerListener;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,14 +51,14 @@ public class ScheduleTaskManager {
         if(scheduleTaskList== null || scheduleTaskList.isEmpty()){
             return;
         }
-        for(ScheduleTask scheduleTask : scheduleTaskList){
+
+        for (ScheduleTask scheduleTask : scheduleTaskList) {
             try {
                 addTask(scheduleTask);
-            }catch (Exception e){
-                LOG.warn(e.getMessage(),e);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(),e);
                 continue;
             }
-
         }
     }
 
@@ -65,35 +69,35 @@ public class ScheduleTaskManager {
 
         try {
             Class taskClass =  Class.forName(scheduleTask.getTaskClass());
-            Object task = ClassUtil.newInstance(taskClass);
+            Constructor constructor = taskClass.getConstructor(scheduleTask.getClass());
+            Object task = constructor.newInstance(scheduleTask);
             Scheduler scheduler = new Scheduler();
             scheduler.start();
-            if(scheduleTask.isDistributed()){
+            if (scheduleTask.isDistributed()) {
                 scheduler.launch(new Task() {
                     @Override
                     public void execute(TaskExecutionContext context) throws RuntimeException {
-                        if(task instanceof Task){
+                        if (task instanceof Task) {
                             new DistributedScheduleTask((Task) task).execute(context);
-                        } else if(task instanceof Runnable){
+                        } else if (task instanceof Runnable) {
                             new DistributedScheduleTask((Runnable) task).execute(context);
-                        }else{
+                        } else {
                             throw new IllegalStateException(" Task must be Runable,ProcessTask,ITask or Task");
                         }
                     }
                 });
-            }else{
+            } else {
                 scheduler.launch(new Task(){
 
                     @Override
                     public void execute(TaskExecutionContext context) throws RuntimeException {
-                        if(task instanceof Task){
-                            ((Task) task).execute(context);
-                        } else if(task instanceof Runnable){
-                            ((Runnable) task).run();
-                        }else{
-                            throw new IllegalStateException(" Task must be Runable,ProcessTask,ITask or Task");
-                        }
-
+                    if (task instanceof Task) {
+                        ((Task) task).execute(context);
+                    } else if(task instanceof Runnable) {
+                        ((Runnable) task).run();
+                    } else {
+                        throw new IllegalStateException(" Task must be Runable,ProcessTask,ITask or Task");
+                    }
                     }
                 });
             }
@@ -118,112 +122,121 @@ public class ScheduleTaskManager {
      * @param distributed 是否是分布式任务
      */
     public Scheduler addTask(String taskId, String cron, Object task, SchedulerListener listener, boolean daemon, boolean enable, boolean distributed){
-        if(schedulerMap.get(taskId)!=null){
+        if (schedulerMap.get(taskId) != null) {
             throw new IllegalStateException(" Task:"+taskId+" is already in the current task schedule ");
         }
+
         Scheduler scheduler = new Scheduler();
-        if(task instanceof Runnable){
+        if (task instanceof Runnable) {
             scheduler.schedule(cron, distributed? new JbootDistributedRunnable((Runnable) task) : (Runnable) task);
-        }else if(task instanceof Task){
+        } else if(task instanceof Task) {
             scheduler.schedule(cron, distributed? new DistributedScheduleTask((Task)task) : (Task)task);
-        }else{
+        } else {
             scheduler = null;
             throw new IllegalStateException(" Task must be Runable,ProcessTask,ITask or Task");
         }
 
         scheduler.addSchedulerListener(listener);
-        if(enable){
+        if (enable) {
             scheduler.start();
         }
-        schedulerMap.put(taskId, scheduler);
 
+        schedulerMap.put(taskId, scheduler);
         return scheduler;
     }
 
-    public void addTask(ScheduleTask scheduleTask){
+    public void addTask(ScheduleTask scheduleTask) {
         if (!scheduleTask.isActive()) {
             return;
         }
 
         try {
             Class taskClass =  Class.forName(scheduleTask.getTaskClass());
-            Object task = ClassUtil.newInstance(taskClass);
-            addTask(scheduleTask.getId().toString(),
-                    scheduleTask.getCron(),
-                    task,
-                    scheduleTask,
-                    scheduleTask.isDaemon(),
-                    scheduleTask.isStart(),
-                    scheduleTask.isDistributed());
+            Constructor constructor = taskClass.getConstructor(scheduleTask.getClass());
+            Object task = constructor.newInstance(scheduleTask);
+            addTask(scheduleTask.getTaskId(),
+                scheduleTask.getCron(),
+                task,
+                scheduleTask,
+                scheduleTask.isDaemon(),
+                scheduleTask.isStart(),
+                scheduleTask.isDistributed());
         } catch (ClassNotFoundException e) {
             LOG.error("can not create class:" + scheduleTask.getTaskClass() + "\n" + e.toString(), e);
             throw new IllegalStateException("can not create class:" + scheduleTask.getTaskClass());
+        } catch (NoSuchMethodException e) {
+            LOG.error("can not find constructor method:" + scheduleTask.getTaskClass() + "\n" + e.toString(), e);
+            throw new JbootException("can not find constructor method:" + scheduleTask.getTaskClass());
+        } catch (ReflectiveOperationException e) {
+            LOG.error("create instance is error by reflect" + scheduleTask.getTaskClass() + "\n" + e.toString(), e);
+            Throwables.throwIfUnchecked(e);
         }
     }
 
     public void removeTask(ScheduleTask scheduleTask){
-        removeTask(scheduleTask.getId().toString());
+        removeTask(scheduleTask.getTaskId().toString());
     }
 
-    public void removeTask(String taskId){
+    public void removeTask(String taskId) {
         stop(taskId);
         schedulerMap.remove(taskId);
     }
 
 
-    public void remove(){
+    public void remove() {
         stop();
         schedulerMap.clear();
     }
 
-    public boolean start(ScheduleTask scheduleTask){
-        if(scheduleTask == null){
+    public boolean start(ScheduleTask scheduleTask) {
+        if (scheduleTask == null) {
             return false;
         }
-        if(schedulerMap.get(scheduleTask.getId())!=null) {
-            return start(scheduleTask.getId().toString());
-        }else{
+        if (schedulerMap.get(scheduleTask.getTaskId()) != null) {
+            return start(scheduleTask.getTaskId());
+        } else {
             addTask(scheduleTask);
-            return start(scheduleTask.getId().toString());
+            return start(scheduleTask.getTaskId());
         }
     }
 
-    public void start(){
-        for(final String taskId : schedulerMap.keySet()){
+    public void start() {
+        for (final String taskId : schedulerMap.keySet()) {
             start(taskId);
         }
     }
 
-    public boolean start(String taskId){
+    public boolean start(String taskId) {
         final Scheduler scheduler = schedulerMap.get(taskId);
-        if(scheduler !=null && !scheduler.isStarted()){
+        if (scheduler != null && !scheduler.isStarted()) {
             scheduler.start();
             return scheduler.isStarted();
         }
         return false;
     }
 
-    public boolean stop(String taskId){
+    public boolean stop(String taskId) {
         final Scheduler scheduler = schedulerMap.get(taskId);
-        if(scheduler !=null && scheduler.isStarted()){
+        if (scheduler != null && scheduler.isStarted()) {
             scheduler.stop();
             return !scheduler.isStarted();
         }
         return false;
     }
 
-    public boolean stop(ScheduleTask scheduleTask){
-        if(scheduleTask !=null){
-            return stop(scheduleTask.getId().toString());
+    public boolean stop(ScheduleTask scheduleTask) {
+        if (scheduleTask != null) {
+            return stop(scheduleTask.getTaskId());
         }
         return false;
     }
 
-    public void stop(){
-        for(final String taskId : schedulerMap.keySet()){
+    public void stop() {
+        for (final String taskId : schedulerMap.keySet()) {
             stop(taskId);
         }
     }
+
     public Map<String,Scheduler> getSchedulerMap(){
         return schedulerMap;
     }

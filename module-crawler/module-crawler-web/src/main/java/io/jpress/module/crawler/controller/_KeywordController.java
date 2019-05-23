@@ -61,7 +61,7 @@ public class _KeywordController extends AdminControllerBase {
     private static final String TXT_SUFFIX = ".txt";
 
     @Inject
-    private KeywordService service;
+    private KeywordService keywordService;
     @Inject
     private KeywordCategoryService categoryService;
 
@@ -96,7 +96,7 @@ public class _KeywordController extends AdminControllerBase {
         String selectedKeywords = getPara("selectedKeywords");
         String orderBy = getPara("orderBy");
 
-        Page<Keyword> page = service.paginate(getPagePara(), getPageSizePara(), inputKeywords, categoryIds, searchTypes,
+        Page<Keyword> page = keywordService.paginate(getPagePara(), getPageSizePara(), inputKeywords, categoryIds, searchTypes,
                 disableSearchTypes, minLength, maxLength, minNum, maxNum, orderBy);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "rows", page.getList());
         renderJson(map);
@@ -104,7 +104,7 @@ public class _KeywordController extends AdminControllerBase {
 
     public void edit() {
         int id = getParaToInt(0, 0);
-        Keyword keyword = id > 0 ? service.findById(id) : new Keyword();
+        Keyword keyword = id > 0 ? keywordService.findById(id) : new Keyword();
         setAttr("keyword", keyword);
         List<KeywordCategory> list = categoryService.findAll();
 
@@ -115,19 +115,19 @@ public class _KeywordController extends AdminControllerBase {
     public void doSave() {
         Keyword entry = getModel(Keyword.class,"keyword");
 
-        service.saveOrUpdate(entry);
+        keywordService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
     public void doDel() {
         Long id = getIdPara();
-        renderJson(service.deleteById(id) ? Ret.ok() : Ret.fail());
+        renderJson(keywordService.deleteById(id) ? Ret.ok() : Ret.fail());
     }
 
     public void doBatchDel() {
         String ids = getPara("ids");
         Set<String> set = StrUtil.splitToSet(ids, ",");
-        renderJson(service.deleteByIds(set.toArray()) ? Ret.ok() : Ret.fail());
+        renderJson(keywordService.deleteByIds(set.toArray()) ? Ret.ok() : Ret.fail());
     }
 
     public void upload() {
@@ -188,7 +188,7 @@ public class _KeywordController extends AdminControllerBase {
             exportToTxt(txtFilePath, null, list);
         } else {
             // 按条件导出关键词
-            List<String> list = service.findListByParams(inputKeywords, categoryIds, validSearchTypes,
+            List<String> list = keywordService.findListByParams(inputKeywords, categoryIds, validSearchTypes,
                     checkedSearchTypes, minLength, maxLength, minNum, maxNum, orderBy);
             exportToTxt(txtFilePath, list, null);
         }
@@ -211,12 +211,12 @@ public class _KeywordController extends AdminControllerBase {
         }
 
         int pageNum = 1;
-        Page<Keyword> page = service.paginate(pageNum, 1000);
+        Page<Keyword> page = keywordService.paginate(pageNum, 1000);
         int totalPage = page.getTotalPage();
 
         for (int i = 0; i < totalPage; i++) {
             String txtFilePath = outputPath + "/关键词-000" + i + ".txt";
-            List<String> list = service.findListByPage(i, 1000);
+            List<String> list = keywordService.findListByPage(i, 1000);
             exportToTxt(txtFilePath, list, null);
         }
 
@@ -321,7 +321,7 @@ public class _KeywordController extends AdminControllerBase {
                 KeywordCategory category = categoryService.findById(categoryId);
                 name = category.getName();
             }
-            service.batchSave(keywordList, categoryId, name);
+            keywordService.batchSave(keywordList, categoryId, name);
         }
 
         long endTime = System.currentTimeMillis();
@@ -378,7 +378,7 @@ public class _KeywordController extends AdminControllerBase {
             });
 
             categoryList.stream().distinct().collect(Collectors.toList());
-            service.batchSave(keywordsList, categoryList);
+            keywordService.batchSave(keywordsList, categoryList);
             long endTime = System.currentTimeMillis();
             _LOG.info("批量导入关键词耗时：" + (endTime - startTime) + "毫秒");
 

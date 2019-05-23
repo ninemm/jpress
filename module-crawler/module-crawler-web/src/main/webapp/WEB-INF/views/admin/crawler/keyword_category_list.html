@@ -13,8 +13,18 @@
     let $table = $('#_category_table');
 
     function doDel(id) {
-        ajaxGet("#(CPATH)/admin/crawler/keyword/category/doDel/" + id);
-    }
+        layer.confirm('点击“删除”会删除该分类下的所有关键词，确定删除吗？', {
+            btn: ['确定','取消'] //按钮
+            , shade: false //不显示遮罩
+            , icon: 5
+            , offset: '120px'
+        }, function(index) {
+            layer.close(index);
+            ajaxGet("#(CPATH)/admin/crawler/keyword/category/doDel/" + id);
+        }, function(index) {
+            layer.close(index);
+        });
+     }
 
     $("#batchDel").click(function () {
         var ids = getSelectedIds();

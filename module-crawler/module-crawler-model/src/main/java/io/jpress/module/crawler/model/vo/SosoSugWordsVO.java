@@ -17,7 +17,7 @@ public class SosoSugWordsVO {
     private String tag;
     private String ssid;
     private String version;
-    private List<Conent> result;
+    private List<Content> result;
 
     public String getExt() {
         return ext;
@@ -59,15 +59,15 @@ public class SosoSugWordsVO {
         this.version = version;
     }
 
-    public List<Conent> getResult() {
+    public List<Content> getResult() {
         return result;
     }
 
-    public void setResult(List<Conent> result) {
+    public void setResult(List<Content> result) {
         this.result = result;
     }
 
-    class Conent {
+    public class Content {
         private Double rank;
         private Double resrc;
         private String source;

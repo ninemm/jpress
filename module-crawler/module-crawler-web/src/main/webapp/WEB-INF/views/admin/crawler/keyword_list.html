@@ -196,7 +196,17 @@
     });
 
     function doDel(id) {
-        ajaxGet("/admin/keyword/doDel/" + id);
+        layer.confirm('确定删除该关键词吗？', {
+            btn: ['确定','取消'] //按钮
+            , shade: false //不显示遮罩
+            , icon: 5
+            , offset: '120px'
+        }, function(index) {
+            layer.close(index);
+            ajaxGet("#(CPATH)/admin/crawler/keyword/doDel/" + id);
+        }, function(index) {
+            layer.close(index);
+        });
     }
 
     function doImport() {
@@ -209,10 +219,13 @@
 
     function doExport() {
         layer.confirm('确定导出吗？', {
-            btn: ['确定','取消'], //按钮
-            shade: false //不显示遮罩
+            btn: ['确定','取消'] //按钮
+            , shade: false //不显示遮罩
+            , icon: 2
+            , offset: '120px'
         }, function(index) {
-            var param = $form.serialize();
+
+            let param = $form.serialize();
             param = param + "&selectedKeywords=" + $selectedKeywords.join(',');
             let url = "#(CPATH)/admin/crawler/keyword/export?" + param;
             window.location.href = url;

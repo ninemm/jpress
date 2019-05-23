@@ -45,7 +45,7 @@ public class _KeywordCategoryController extends AdminControllerBase {
     @Inject
     private KeywordService keywordService;
     @Inject
-    private KeywordCategoryService service;
+    private KeywordCategoryService categoryService;
 
     @AdminMenu(text = "关键词类型", groupId = "crawler", order = 4)
     public void index() {
@@ -54,7 +54,7 @@ public class _KeywordCategoryController extends AdminControllerBase {
 
     public void paginate() {
         String categoryName = getPara("categoryName");
-        Page<KeywordCategory> page = service.paginate(getPagePara(), getPageSizePara(), categoryName);
+        Page<KeywordCategory> page = categoryService.paginate(getPagePara(), getPageSizePara(), categoryName);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "rows", page.getList());
         renderJson(map);
     }
@@ -63,24 +63,24 @@ public class _KeywordCategoryController extends AdminControllerBase {
     public void edit() {
         int entryId = getParaToInt(0, 0);
 
-        KeywordCategory entry = entryId > 0 ? service.findById(entryId) : new KeywordCategory();
+        KeywordCategory entry = entryId > 0 ? categoryService.findById(entryId) : new KeywordCategory();
         setAttr("keywordCategory", entry);
         render("crawler/keyword_category_edit.html");
     }
    
     public void doSave() {
         KeywordCategory entry = getModel(KeywordCategory.class,"keywordCategory");
-        service.saveOrUpdate(entry);
+        categoryService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
     public void doDel() {
         Long id = getIdPara();
-        render(service.deleteById(id) ? Ret.ok() : Ret.fail());
+        render(categoryService.deleteById(id) ? Ret.ok() : Ret.fail());
     }
 
     public void doCountAll() {
-        if (!service.countAll()) {
+        if (!categoryService.countAll()) {
             throw new JbootException("分类汇总关键词总数量失败");
         }
         renderOkJson();
@@ -92,7 +92,7 @@ public class _KeywordCategoryController extends AdminControllerBase {
             throw new JbootException("分类ID不能为空");
         }
 
-        if (!service.countById(id)) {
+        if (!categoryService.countById(id)) {
             throw new JbootException("分类汇总关键词总数量失败");
         }
 

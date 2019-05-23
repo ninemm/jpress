@@ -4,7 +4,7 @@
 <script>
 
     function doDel(id) {
-        ajaxGet("/admin/dict/doDel/" + id);
+        ajaxGet("#(CPATH)/admin/dict/doDel/" + id);
     }
 
     $("#batchDel").click(function () {
@@ -13,7 +13,7 @@
             alert('您未选择任何条目');
             return
         }
-        ajaxGet("/admin/dict/doDelByIds?ids=" + ids);
+        ajaxGet("#(CPATH)/admin/dict/doDelByIds?ids=" + ids);
     })
 
 </script>
@@ -77,8 +77,10 @@
                                 <td>#(entry.icon)</td>
                                 <td>#date(entry.create_date, 'yyyy-MM-dd HH:mm')</td>
                                 <td>
-                                    <a href="#(CPATH)/admin/dict/edit/#(entry.id)" class="btn btn-xs bg-olive">编辑</a>
-                                    <a href="javascript:;" class="btn btn-xs btn-danger" onclick="doDel('#(entry.id)')">删除</a>
+                                    <a href="#(CPATH)/admin/dict/edit/#(entry.id)" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:;" class="red-action" class="btn btn-xs text-red" title="删除" onclick="doDel('#(entry.id)')"><i class="fa fa-trash"></i></a>
+                                    <!--<a href="#(CPATH)/admin/dict/edit/#(entry.id)" class="btn btn-xs bg-olive">编辑</a>
+                                    <a href="javascript:;" class="btn btn-xs btn-danger" onclick="doDel('#(entry.id)')">删除</a>-->
                                 </td>
                             </tr>
                             #end

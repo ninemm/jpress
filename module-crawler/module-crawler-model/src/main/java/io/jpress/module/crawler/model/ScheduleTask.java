@@ -29,6 +29,8 @@ import java.util.Date;
 @Table(tableName = "c_schedule_task", primaryKey = "id")
 public class ScheduleTask extends BaseScheduleTask<ScheduleTask> implements SchedulerListener {
 
+    public static final String CACHE_NAME = "c_schedule_task";
+
     public Boolean isActive(){
         return getIsActive() !=null && getIsActive();
     }
@@ -45,15 +47,18 @@ public class ScheduleTask extends BaseScheduleTask<ScheduleTask> implements Sche
         return getIsDaemon() !=null && getIsDaemon();
     }
 
+    @Override
     public void taskLaunching(TaskExecutor executor) {
 
     }
 
+    @Override
     public void taskSucceeded(TaskExecutor executor) {
         setLastExecuteTime(new Date());
         update();
     }
 
+    @Override
     public void taskFailed(TaskExecutor executor, Throwable exception) {
 
     }

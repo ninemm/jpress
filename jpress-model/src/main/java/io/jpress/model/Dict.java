@@ -8,5 +8,5 @@ import io.jpress.model.base.BaseDict;
  */
 @Table(tableName = "dict", primaryKey = "id")
 public class Dict extends BaseDict<Dict> {
-	
+    public static final String CACHE_NAME = "dict";
 }

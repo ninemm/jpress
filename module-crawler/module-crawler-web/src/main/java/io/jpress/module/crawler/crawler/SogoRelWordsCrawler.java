@@ -63,7 +63,7 @@ public class SogoRelWordsCrawler extends AbstractRamCrawler {
             ret.clear();
             ret.put("parentId", keyword.getId());
             ret.put("relWordList", results.eachText());
-            Jboot.sendEvent(CrawlerConsts.ADD_REL_WORD_EVENT_NAME, ret);
+            Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
         }
     }
 

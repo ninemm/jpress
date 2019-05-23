@@ -32,10 +32,10 @@ public class CrawlerConsts {
     public static final String UPDATE_REL_WORD_EVENT_NAME = "updateRelWordStatus";
 
     /** 添加相关关键词 */
-    public static final String ADD_REL_WORD_EVENT_NAME = "addRelWordEvent";
+    public static final String ADD_KEYWORD_EVENT_NAME = "addKeyword";
 
-    /** 更新关键词状态(下拉词) */
-    public static final String UPDATE_SUG_WORD_EVENT_NAME = "updateSugWordStatus";
+    /** 更新关键词状态*/
+    public static final String UPDATE_KEYWORD_EVENT_NAME = "updateKeyword";
 
 
 }

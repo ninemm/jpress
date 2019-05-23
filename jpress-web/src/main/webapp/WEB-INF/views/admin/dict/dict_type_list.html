@@ -4,7 +4,7 @@
 <script>
 
     function doDel(id) {
-        ajaxGet("/admin/dict/type/doDel/" + id);
+        ajaxGet("#(CPATH)/admin/dict/type/doDel/" + id);
     }
 
     $("#batchDel").click(function () {
@@ -13,7 +13,7 @@
             alert('您未选择任何条目');
             return
         }
-        ajaxGet("/admin/dict/type/doDelByIds?ids=" + ids);
+        ajaxGet("#(CPATH)/admin/dict/type/doDelByIds?ids=" + ids);
     })
 
 
@@ -58,6 +58,7 @@
                                 <th>类型名称</th>
                                 <th>类型编码</th>
                                 <th>序号</th>
+                                <th>操作</th>
                             </tr>
                             #for(entry : page.list)
                             <tr class="jp-actiontr">
@@ -67,16 +68,13 @@
                                     <strong>
                                         <a href="#(CPATH)/admin/dict/type/edit/#(entry.id)"> #(entry.name ??) </a>
                                     </strong>
-                                    <div class="jp-actionblock">
-                                        <div class="jp-actionitem">
-                                            <a href="/admin/dict/type/edit/#(entry.id)">编辑</a> |
-                                            <a href="javascript:;" class="red-action"
-                                               onclick="doDel('#(entry.id)')">删除</a>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td>#(entry.code)</td>
                                 <td>#(entry.order_list)</td>
+                                <td>
+                                    <a href="#(CPATH)/admin/dict/type/edit/#(entry.id)" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:;" class="red-action" class="btn btn-xs text-red" title="删除" onclick="doDel('#(entry.id)')"><i class="fa fa-trash"></i></a>
+                                </td>
                             </tr>
                             #end
                             </tbody>

@@ -16,12 +16,33 @@
 
 package io.jpress.module.crawler.service.provider;
 
+import com.jfinal.plugin.activerecord.Model;
+import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
+import io.jpress.model.Dict;
 import io.jpress.module.crawler.service.ScheduleTaskService;
 import io.jpress.module.crawler.model.ScheduleTask;
 import io.jboot.service.JbootServiceBase;
 
 @Bean
 public class ScheduleTaskServiceProvider extends JbootServiceBase<ScheduleTask> implements ScheduleTaskService {
+
+    @Override
+    public void shouldUpdateCache(int action, Object data) {
+
+        switch (action) {
+            case ACTION_UPDATE :
+            case ACTION_DEL :
+                if (data instanceof Model) {
+                    ScheduleTask task = (ScheduleTask) data;
+                    Jboot.getCache().remove(ScheduleTask.CACHE_NAME, task.getId());
+                } else {
+                    Jboot.getCache().remove(Dict.CACHE_NAME, data);
+                }
+                break;
+            default :
+                ;
+        }
+    }
 
 }

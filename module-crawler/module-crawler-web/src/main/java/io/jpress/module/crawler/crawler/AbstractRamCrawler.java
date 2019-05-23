@@ -18,11 +18,14 @@ public abstract class AbstractRamCrawler extends RamCrawler {
     protected KeywordParamVO keyword;
     /** 搜索引擎类型 **/
     protected String searchType;
+    /** 搜索页码 **/
+    protected Integer pageIndex;
 
     public AbstractRamCrawler(KeywordParamVO keyword, String searchType, Integer pageIndex) {
 
         this.keyword = keyword;
         this.searchType = searchType;
+        this.pageIndex = pageIndex;
 
         String url = createUrl(keyword.getTitle(), pageIndex);
         CrawlDatum datum = new CrawlDatum(url)

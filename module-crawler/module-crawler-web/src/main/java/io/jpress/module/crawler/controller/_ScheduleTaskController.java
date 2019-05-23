@@ -48,7 +48,6 @@ public class _ScheduleTaskController extends AdminControllerBase {
         render("crawler/schedule_task_list.html");
     }
 
-   
     public void edit() {
         int entryId = getParaToInt(0, 0);
         ScheduleTask entry = entryId > 0 ? taskService.findById(entryId) : new ScheduleTask();
@@ -76,9 +75,7 @@ public class _ScheduleTaskController extends AdminControllerBase {
 
         if (task.isDistributed() && Jboot.getRedis() == null) {
             _LOG.error("redis is null, can not use DistributedScheduleTask or config redis info in jboot.properties");
-            renderJson(Ret.fail().set("message", "redis is null, " +
-                    "can not use DistributedScheduleTask  " +
-                    "or config redis info in jboot.properties"));
+            renderJson(Ret.fail().set("message", "redis 为空，不能启用分布式，请进行配置！"));
             return;
         }
 
@@ -157,10 +154,10 @@ public class _ScheduleTaskController extends AdminControllerBase {
         String id = getPara("id");
         if (StrUtil.notBlank(id)) {
             ScheduleTask task = taskService.findById(id);
-            if (task !=null) {
+            if (task != null) {
                 try {
 
-                    if (ScheduleTaskManager.me().stop(id)) {
+                    if (ScheduleTaskManager.me().stop(task.getTaskId())) {
                         task.setIsStart(false);
                         task.setModified(new Date());
                         taskService.update(task);
@@ -224,7 +221,7 @@ public class _ScheduleTaskController extends AdminControllerBase {
 
         if (StrUtil.notBlank(id)) {
             ScheduleTask task = taskService.findById(id);
-            if (task !=null) {
+            if (task != null) {
                 task.setIsActive(true);
                 task.setModified(new Date());
                 taskService.update(task);
@@ -241,7 +238,7 @@ public class _ScheduleTaskController extends AdminControllerBase {
             }
 
             _LOG.error("can't find task in database");
-            renderJson(Ret.fail().set("message", "Can't find task in database"));
+            renderJson(Ret.fail().set("message", "can't find task in database"));
             return;
         }
 

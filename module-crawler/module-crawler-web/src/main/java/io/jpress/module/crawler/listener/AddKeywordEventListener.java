@@ -25,10 +25,10 @@ import java.util.List;
  * @package io.jpress.module.crawler.listener
  **/
 
-@EventConfig(action = CrawlerConsts.ADD_REL_WORD_EVENT_NAME)
-public class BaiduAddRelWordsEventListener implements JbootEventListener {
+@EventConfig(action = CrawlerConsts.ADD_KEYWORD_EVENT_NAME)
+public class AddKeywordEventListener implements JbootEventListener {
 
-    private static final Log _LOG = Log.getLog(BaiduAddRelWordsEventListener.class);
+    private static final Log _LOG = Log.getLog(AddKeywordEventListener.class);
 
     @Override
     public void onEvent(JbootEvent event) {
@@ -37,12 +37,12 @@ public class BaiduAddRelWordsEventListener implements JbootEventListener {
         Integer parentId = ret.getInt("parentId");
         List<String> list = (List<String>) ret.get("relWordList");
         Date created = new Date();
+
         List<String> sqlList = Lists.newArrayList();
+        KeywordService keywordService = Aop.get(KeywordService.class);
+        Keyword persist = keywordService.findById(parentId);
 
         list.stream().forEach(title -> {
-
-            KeywordService keywordService = Aop.get(KeywordService.class);
-            Keyword persist = keywordService.findById(parentId);
 
             List<Pinyin> pinyinList = HanLP.convertToPinyinList(title);
             String head = pinyinList.get(0).getHeadString();
@@ -56,7 +56,12 @@ public class BaiduAddRelWordsEventListener implements JbootEventListener {
 
         });
 
-        Db.batch(sqlList, sqlList.size());
+        int[] ids = Db.batch(sqlList, sqlList.size());
+        /** 更新分类中关键词数量 */
+        if (ids.length > 0) {
+            String sql = "update c_keyword_category set total_num = total_num + ? where id = ?";
+            Db.update(sql, ids.length, persist.getCategoryId());
+        }
         _LOG.info("---------相关关键词保存完成---------");
     }
 

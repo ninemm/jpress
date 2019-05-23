@@ -31,12 +31,12 @@ import java.util.Date;
 public class _SpiderController extends AdminControllerBase {
 
     @Inject
-    private SpiderService service;
+    private SpiderService spiderService;
 
     @AdminMenu(text = "采集模板", groupId = "crawler", order = 1)
     public void index() {
-        Page<Spider> entries=service.paginate(getPagePara(), 10);
-        setAttr("page", entries);
+        Page<Spider> page = spiderService.paginate(getPagePara(), 10);
+        setAttr("page", page);
         render("crawler/spider_list.html");
     }
 
@@ -44,7 +44,7 @@ public class _SpiderController extends AdminControllerBase {
     public void edit() {
         int entryId = getParaToInt(0, 0);
 
-        Spider entry = entryId > 0 ? service.findById(entryId) : null;
+        Spider entry = entryId > 0 ? spiderService.findById(entryId) : null;
         setAttr("spider", entry);
         set("now",new Date());
         render("crawler/spider_edit.html");
@@ -52,13 +52,13 @@ public class _SpiderController extends AdminControllerBase {
    
     public void doSave() {
         Spider entry = getModel(Spider.class,"spider");
-        service.saveOrUpdate(entry);
+        spiderService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
 
     public void doDel() {
         Long id = getIdPara();
-        render(service.deleteById(id) ? Ret.ok() : Ret.fail());
+        render(spiderService.deleteById(id) ? Ret.ok() : Ret.fail());
     }
 }

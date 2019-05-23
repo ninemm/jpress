@@ -100,6 +100,24 @@
        memoryStoreEvictionPolicy="LFU"
     />
 
+    <cache name="dict"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+    />
+
+    <cache name="dict_type"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+    />
+
     <cache name="option"
        eternal="false"
        overflowToDisk="true"
@@ -200,6 +218,33 @@
     />
 
     <cache name="c_keyword"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+    />
+
+    <cache name="c_schedule_task"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+    />
+
+    <cache name="c_spider"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+    />
+
+    <cache name="c_webpage"
            eternal="false"
            overflowToDisk="true"
            diskSpoolBufferSizeMB="20"

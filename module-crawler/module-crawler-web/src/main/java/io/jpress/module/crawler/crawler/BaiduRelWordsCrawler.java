@@ -52,18 +52,18 @@ public class BaiduRelWordsCrawler extends AbstractRamCrawler {
         if (results.size() > 0) {
 
             Ret ret = Ret.create();
-            ret.put("searchType", searchType);
+            ret.putIfAbsent("searchType", searchType);
             KeywordParamVO keywordVO = new KeywordParamVO(keyword.getId(), keyword.getTitle(), keyword.getTaskId());
-            ret.put("keyword", keywordVO);
+            ret.putIfAbsent("keyword", keywordVO);
 
             // 更新单个关键词状态
             Jboot.sendEvent(CrawlerConsts.UPDATE_REL_WORD_EVENT_NAME, ret);
 
             // 保存相关搜索关键词
             ret.clear();
-            ret.put("parentId", keyword.getId());
-            ret.put("relWordList", results.eachText());
-            Jboot.sendEvent(CrawlerConsts.ADD_REL_WORD_EVENT_NAME, ret);
+            ret.putIfAbsent("parentId", keyword.getId());
+            ret.putIfAbsent("relWordList", results.eachText());
+            Jboot.sendEvent(CrawlerConsts.ADD_KEYWORD_EVENT_NAME, ret);
         }
     }
 
