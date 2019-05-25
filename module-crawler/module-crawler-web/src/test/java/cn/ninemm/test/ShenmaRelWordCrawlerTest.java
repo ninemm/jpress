@@ -8,8 +8,8 @@ import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 import cn.hutool.core.util.CharsetUtil;
 import io.jboot.components.http.JbootHttpManager;
 import io.jboot.components.http.JbootHttpRequest;
-import io.jboot.utils.StrUtil;
-import io.jpress.commons.utils.JsoupUtils;
+import io.jpress.module.crawler.proxy.HttpProxy;
+import io.jpress.module.crawler.proxy.ProxyPoolManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -90,6 +90,20 @@ public class ShenmaRelWordCrawlerTest extends RamCrawler {
                 System.out.println(result.text());
             }
         }
+
+        ProxyPoolManager proxyPool = new ProxyPoolManager();
+        proxyPool.add("61.178.238.122",63000);
+        proxyPool.add("123.130.11.82",8118);
+        proxyPool.add("175.0.192.70",8118);
+        proxyPool.add("110.73.34.17",8123);
+
+        HttpProxy httpProxy = proxyPool.borrow(); // 从 ProxyPool 中获取一个Proxy
+        httpProxy.getProxy();
+
+//        HttpRequest
+//        HttpRequest a =  new HttpRequest("db", httpProxy.getProxy());
+//        //或者直接new HttpRequest(crawlDatum, proxys.nextRandom());
+//        a.setProxy(httpProxy.getProxy()); //随机获取一个ip
 
     }
 

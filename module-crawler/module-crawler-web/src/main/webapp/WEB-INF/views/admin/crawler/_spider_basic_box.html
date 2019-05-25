@@ -22,7 +22,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">线程数</label>
 			<div class="input-group col-sm-6">
-				<input type="number" min="1" max="10" name="spider.thread" class="form-control" value="#(spider.thread ??)"
+				<input type="number" min="1" max="10" name="spider.thread" class="form-control" value="#(spider.thread ?? 5)"
 					   placeholder="请输入抓取线程数...">
 				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 合理的填写线程数、重试数、数量太大、睡眠时间，以免触发反爬虫策略 </p>
 			</div>
@@ -30,7 +30,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">重试次数</label>
 			<div class="input-group col-sm-6">
-				<input type="number" min="1" max="5" name="spider.retry" class="form-control" value="#(spider.retry ??)"
+				<input type="number" min="1" max="5" name="spider.retry" class="form-control" value="#(spider.retry ?? 3)"
 					   placeholder="请输入HTTP请求失败后，重试次数...">
 			</div>
 		</div>

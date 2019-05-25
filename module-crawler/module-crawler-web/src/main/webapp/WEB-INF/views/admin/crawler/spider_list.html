@@ -43,7 +43,6 @@
                                 <button type="submit" id="batchDel" class="btn btn-default checkAction"> 批量删除</button>
                             </div>
                         </div>
-
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body ">
@@ -55,12 +54,12 @@
 									<input name="dataItem" onchange="checkAll(this)" type="checkbox"/>
 								</th>
 								<th>网站名称</th>
-								<th>域名</th>
+								<th>网站域名</th>
 								<th>线程数</th>
 								<th>重试次数</th>
-								<th>Sleep Time</th>
+                                <th>请求超时时间</th>
+								<th title="单位毫秒">睡眠时长</th>
 								<th title="最多抓取网页数量,0代表不限制">抓取网页数量</th>
-								<th>HTTP超时时间</th>
 								<th>操作</th>
                             </tr>
                             #for(entry : page.list)
@@ -70,22 +69,18 @@
                                     <strong>
                                         <a href="#(CPATH)/admin/crawler/spider/edit/#(entry.id)"> #(entry.site_name ??) </a>
                                     </strong>
-                                    <div class="jp-actionblock">
-                                        <div class="jp-actionitem">
-                                            <a href="/admin/crawler/spider/edit/#(entry.id)">编辑</a> |
-                                            <a href="javascript:;" class="red-action" onclick="doDel('#(entry.id)')">删除</a>
-                                        </div>
-                                    </div>
                                 </td>
-                                    
 								<td>#(entry.domain)</td>
 								<td>#(entry.thread)</td>
 								<td>#(entry.retry)</td>
+                                <td>#(entry.timeout)</td>
 								<td>#(entry.sleep)</td>
 								<td>#(entry.max_page_gather)</td>
-								<td>#(entry.timeout)</td>
 								<td>
-									<button class="btn btn-xs btn-primary">定时任务</button>
+                                    <a href="#(CPATH)/admin/crawler/spider/edit/#(entry.id)" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs text-orange" title="启动(执行一次)"><i class="fa fa-play-circle"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs text-blue" title="定时任务"><i class="fa fa-clock-o"></i></a>
+                                    <a href="javascript:;" class="btn btn-xs text-red" onclick="doDel('#(entry.id)')" title="删除"><i class="fa fa-trash"></i></a>
 								</td>
                             </tr>
                             #end
