@@ -17,6 +17,7 @@
     let categoryIds = null;
     let searchTypes = null;
     let disableSearchTypes = null;
+    let $selectedIds = new Array();
     let $selectedKeywords = new Array();
 
     $('#category').selectpicker({
@@ -46,13 +47,23 @@
     });
 
     $("#batchDel").click(function () {
-        var ids = getSelectedIds();
+        var ids = $selectedIds.join(',');
         if (ids == "") {
-            alert('您未选择任何条目');
+            showErrorMessage('您未选择任何条目');
             return
         }
-        ajaxGet("/admin/keyword/doDelByIds?ids=" + ids);
+
+        let options = {
+            msg: '确定批量删除关键词吗?'
+            , okFunction: okBatchDelFun
+        };
+
+        showConfirm(options);
     })
+
+    function okBatchDelFun() {
+        ajaxGet("#(CPATH)/admin/crawler/keyword/doBatchDel?ids=" + ids);
+    }
 
     $('#search').click(function (e) {
         if (e && e.preventDefault) {
@@ -95,7 +106,7 @@
     var initFields = function () {
         var fields =
             [
-                {field: "checkbox", checkbox: true,
+                {field: "checkbox", checkbox: true, class: 'dataItem',
                     formatter: function (i, row) {
                         // 每次加载 checkbox 时判断当前 row 的 id 是否已经存在全局Array里
                         if ($.inArray(row.title, $selectedKeywords) != -1) {
@@ -196,17 +207,16 @@
     });
 
     function doDel(id) {
-        layer.confirm('确定删除该关键词吗？', {
-            btn: ['确定','取消'] //按钮
-            , shade: false //不显示遮罩
-            , icon: 5
-            , offset: '120px'
-        }, function(index) {
-            layer.close(index);
-            ajaxGet("#(CPATH)/admin/crawler/keyword/doDel/" + id);
-        }, function(index) {
-            layer.close(index);
-        });
+        let options = {
+            msg: '确定删除该关键词吗?'
+            , okFunction: okDelFun
+        };
+
+        showConfirm(options);
+    }
+
+    function okDelFun() {
+        ajaxGet("#(CPATH)/admin/crawler/keyword/doDel/" + id);
     }
 
     function doImport() {
@@ -218,22 +228,20 @@
     }
 
     function doExport() {
-        layer.confirm('确定导出吗？', {
-            btn: ['确定','取消'] //按钮
-            , shade: false //不显示遮罩
+        let options = {
+            msg: '确认导出吗?'
             , icon: 2
-            , offset: '120px'
-        }, function(index) {
+            , okFunction: okFunction
+        };
 
-            let param = $form.serialize();
-            param = param + "&selectedKeywords=" + $selectedKeywords.join(',');
-            let url = "#(CPATH)/admin/crawler/keyword/export?" + param;
-            window.location.href = url;
+        showConfirm(options);
+    }
 
-            layer.close(index);
-        }, function(index) {
-            layer.close(index);
-        });
+    function okFunction() {
+        let param = $form.serialize();
+        param = param + "&selectedKeywords=" + $selectedKeywords.join(',');
+        let url = "#(CPATH)/admin/crawler/keyword/export?" + param;
+        window.location.href = url;
     }
 
     function doReview(id) {
@@ -260,11 +268,13 @@
             $.each(data, function (i, v) {
                 // 添加时，判断一行或多行的 id 是否已经在数组里 不存则添加
                 $selectedKeywords.indexOf(v.title) == -1 ? $selectedKeywords.push(v.title) : -1;
+                $selectedIds.indexOf(v.id) == -1 ? $selectedIds.push(v.id) : -1;
             });
         } else {
             $.each(data, function (i, v) {
                 // 删除取消选中行
                 $selectedKeywords.splice($selectedKeywords.indexOf(v.title), 1);
+                $selectedIds.splice($selectedIds.indexOf(v.id), 1);
             });
         }
     }
@@ -396,8 +406,9 @@
                                 <a href="javascript:void(0);" class="btn btn-success" onclick="doImport();">
                                     <i class="glyphicon glyphicon-import"></i> 导入
                                 </a>
-                                <button type="button" id="batchDel" class="btn btn-danger"><i class="fa fa-trash"></i>  批量删除</button>
-                                <button type="button" class="btn btn-default" onclick="doRefresh();"><i class="fa fa-refresh"></i>  刷新</button>
+                                <button type="button" id="batchDel" class="btn btn-danger"><i class="fa fa-trash"></i> 批量删除</button>
+                                <button type="button" class="btn btn-default" onclick="doRefresh();"><i class="fa fa-refresh"></i> 刷新</button>
+                                <span><i class="fa fa-volume-up text-orange"></i> 注意：任务执行中，请不要对关键词进行编辑，以免出现关键词信息错误</span>
                             </div>
                         </div>
                     </div>

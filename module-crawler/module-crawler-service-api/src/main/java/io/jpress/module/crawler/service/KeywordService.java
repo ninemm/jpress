@@ -77,9 +77,8 @@ public interface KeywordService  {
     public boolean deleteByCategoryId(Object categoryId);
 
     /**
-     * 批量删除关键词
+     * 删除关键词（复合主键）
      *
-     * @date  2019-05-17 16:34
      * @param ids
      * @return boolean
      */

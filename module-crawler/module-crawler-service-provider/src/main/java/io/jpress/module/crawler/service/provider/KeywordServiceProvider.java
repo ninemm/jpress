@@ -240,7 +240,10 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
 
     @Override
     public boolean deleteByIds(Object... ids) {
-        return DAO.deleteByIds(ids);
+        for (Object id : ids) {
+            deleteById(id);
+        }
+        return true;
     }
 
     @Override

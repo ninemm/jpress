@@ -13,18 +13,17 @@
     let $table = $('#_category_table');
 
     function doDel(id) {
-        layer.confirm('点击“删除”会删除该分类下的所有关键词，确定删除吗？', {
-            btn: ['确定','取消'] //按钮
-            , shade: false //不显示遮罩
-            , icon: 5
-            , offset: '120px'
-        }, function(index) {
-            layer.close(index);
-            ajaxGet("#(CPATH)/admin/crawler/keyword/category/doDel/" + id);
-        }, function(index) {
-            layer.close(index);
-        });
-     }
+        let options = {
+            msg: '点击“删除”会删除该分类下的所有关键词，确定删除吗?'
+            , okFunction: okDelFun
+        };
+
+        showConfirm(options);
+    }
+
+    function okDelFun() {
+        ajaxGet("#(CPATH)/admin/crawler/keyword/category/doDel/" + id);
+    }
 
     $("#batchDel").click(function () {
         var ids = getSelectedIds();
@@ -126,27 +125,29 @@
     }
 
     function doCountById(id) {
-        layer.confirm('确定进行分类汇总吗？', {
-            btn: ['确定','取消'], //按钮
-            shade: false //不显示遮罩
-        }, function(index) {
-            layer.close(index);
-            ajaxGet("#(CPATH)/admin/crawler/keyword/category/doCountById/" +id, okFunction);
-        }, function(index) {
-            layer.close(index);
-        });
+        let options = {
+            msg: '确定进行分类汇总吗?'
+            , okFunction: okCountFun
+        };
+
+        showConfirm(options);
+    }
+    
+    function okCountFun() {
+        ajaxGet("#(CPATH)/admin/crawler/keyword/category/doCountById/" +id, okFunction);
     }
     
     function doCountAll() {
-        layer.confirm('确定进行所有分类汇总吗？', {
-            btn: ['确定','取消'], //按钮
-            shade: false //不显示遮罩
-        }, function(index) {
-            layer.close(index);
-            ajaxGet("#(CPATH)/admin/crawler/keyword/category/doCountAll", okFunction);
-        }, function(index) {
-            layer.close(index);
-        });
+        let options = {
+            msg: '确定进行所有分类汇总吗?'
+            , okFunction: okCountAllFun
+        };
+
+        showConfirm(options);
+    }
+
+    function okCountAllFun() {
+        ajaxGet("#(CPATH)/admin/crawler/keyword/category/doCountAll", okFunction);
     }
     
     function doBackup() {
@@ -155,17 +156,18 @@
             return ;
         }
 
-        layer.confirm('确定备份吗？', {
-            btn: ['确定','取消'], //按钮
-            shade: false //不显示遮罩
-        }, function(index) {
-            let ids = $selectedRows.join(',');
-            let url = "#(CPATH)/admin/crawler/keyword/category/backup/" + ids;
-            window.location.href = url;
-            layer.close(index);
-        }, function(index) {
-            layer.close(index);
-        });
+        let options = {
+            msg: '确定备份吗?'
+            , okFunction: okBackupFun
+        };
+
+        showConfirm(options);
+    }
+    
+    function okBackupFun() {
+        let ids = $selectedRows.join(',');
+        let url = "#(CPATH)/admin/crawler/keyword/category/backup/" + ids;
+        window.location.href = url;
     }
     
     function okFunction() {

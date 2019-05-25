@@ -1,4 +1,17 @@
 #@layout()
+
+#define css()
+<style>
+    blockquote {
+        border-left: 5px solid #f39c12;
+        background-color: #fff;
+    }
+
+    ol {
+        padding-inline-start: 10px;
+    }
+</style>
+#end
 	
 #define script()
 <script>
@@ -55,6 +68,20 @@
 
         <div class="row">
             <div class="col-xs-12">
+                <blockquote style="font-size: 12px;">
+                    <ul class="list-unstyled">
+                        <li><strong>任务状态：启用、禁止、运行、停用、立即执行</strong></li>
+                        <li><strong class="text-orange">启用</strong>: 标明当前任务有效; <strong class="text-orange">禁用</strong>: 启用与禁用状态相对应</li>
+                        <li><strong class="text-green">运行</strong>: 运行任务，但必须在<mark>任务启用之后</mark>，才能运行任务; <strong class="text-green">停止</strong>: 停止运行任务</li>
+                        <li><strong class="text-blue">立即执行</strong>: 重启服务后，任务状态为启用和运行状态，但任务并没有运行，此时可点击立即执行运行任务</li>
+                        <li><i class="fa fa-volume-up text-orange"></i> 任务分为<mark>相关词搜索任务、下拉词搜索任务</mark>两类，通过对不同的搜索引擎进行设置，形成多个任务同时执行。每个任务执行完成之后，又会重头开始执行</li>
+                    </ul>
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <div class="row">
@@ -82,7 +109,7 @@
                                 <th>状态</th>
                                 <th>守护进程</th>
                                 <th>分布式任务</th>
-                                <th>搜索引擎类型</th>
+                                <th>搜索平台</th>
                                 <th>最近执行时间</th>
                                 <th>最后处理ID</th>
                                 <th>最后执行页码</th>
@@ -123,15 +150,15 @@
                                 <td>#(task.cron)</td>
                                 <td>
                                     #if(task.isActive())
-                                    <small class="label label-success" title="已启用">启用</small>
+                                    <small class="label label-success" title="任务已启用(未运行)">启用</small>
                                     #else
-                                    <small class="label label-default" title="已启用">未启用</small>
+                                    <small class="label label-default" title="任务未启用(未运行)">未启用</small>
                                     #end
 
                                     #if(task.isStart())
-                                    <small class="label label-success" title="已运行">运行</small>
+                                    <small class="label label-success" title="任务已运行(先启用)">运行</small>
                                     #else
-                                    <small class="label label-default" title="已停止">停止</small>
+                                    <small class="label label-default" title="任务已停止运行">停止</small>
                                     #end
                                 </td>
                                 <td>
@@ -149,7 +176,7 @@
                                     #end
                                 </td>
                                 <td>#(task.search_type)</td>
-                                <td>#(task.last_execute_time)</td>
+                                <td>#date(task.last_execute_time, 'yyyy-MM-dd HH:mm:ss')</td>
                                 <td>#(task.last_keyword_id)</td>
                                 <td>#(task.last_page_num)</td>
                                 <td>#(task.total_num)</td>

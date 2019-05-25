@@ -92,7 +92,6 @@ function initSlugSpan() {
     })
 }
 
-
 function getPara(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -264,6 +263,31 @@ function openWindow(options) {
     options.fixed = options.fixed || false;
 
     layer.open(options);
+}
+
+function showConfirm(options) {
+
+    if (options === null || options === 'undefined') {
+        toastr.error('确认窗口配置信息错误');
+        return;
+    }
+
+    options.icon = options.icon || 5;
+    options.msg = options.msg || '确认删除吗?';
+    options.offset = options.offset || '120px';
+
+    layer.confirm(options.msg, {
+        btn: ['确定','取消'] //按钮
+        , shade: false //不显示遮罩
+        , icon: options.icon
+        , offset: options.offset
+    }, function(index) {
+        layer.close(index);
+        options.okFunction();
+    }, function(index) {
+        layer.close(index);
+    });
+
 }
 
 function initParentTable (tableId, url, queryParams, fields, subUrl) {
