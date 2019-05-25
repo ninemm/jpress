@@ -21,45 +21,54 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jpress.JPressConsts;
 import io.jpress.core.menu.annotation.AdminMenu;
+import io.jpress.model.Dict;
 import io.jpress.model.DictType;
+import io.jpress.service.DictService;
 import io.jpress.service.DictTypeService;
 import io.jpress.web.base.AdminControllerBase;
 
 import java.util.Date;
+import java.util.List;
 
 
 @RequestMapping(value = "/admin/dict/type", viewPath = JPressConsts.DEFAULT_ADMIN_VIEW)
 public class _DictTypeController extends AdminControllerBase {
 
     @Inject
-    private DictTypeService service;
+    private DictService dictService;
+    @Inject
+    private DictTypeService typeService;
 
-    @AdminMenu(text = "字典类型管理", groupId = JPressConsts.SYSTEM_MENU_SYSTEM, order = 83)
+    @AdminMenu(text = "字典类型", groupId = JPressConsts.SYSTEM_MENU_SYSTEM, order = 80)
     public void index() {
-        Page<DictType> entries=service.paginate(getPagePara(), 10);
+        Page<DictType> entries= typeService.paginate(getPagePara(), 10);
         setAttr("page", entries);
         render("dict/dict_type_list.html");
     }
 
-   
     public void edit() {
         int entryId = getParaToInt(0, 0);
 
-        DictType entry = entryId > 0 ? service.findById(entryId) : null;
+        DictType entry = entryId > 0 ? typeService.findById(entryId) : null;
         setAttr("dictType", entry);
-        set("now",new Date());
         render("dict/dict_type_edit.html");
     }
    
     public void doSave() {
         DictType entry = getModel(DictType.class,"dictType");
-        service.saveOrUpdate(entry);
+        typeService.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
-
     public void doDel() {
         Long id = getIdPara();
-        render(service.deleteById(id) ? Ret.ok() : Ret.fail());
+        render(typeService.deleteById(id) ? Ret.ok() : Ret.fail());
+    }
+
+    public void view() {
+        String type = getPara(0);
+        List<Dict> list = dictService.findByType(type);
+        set("list", list);
+        render("dict/dict_view.html");
     }
 }

@@ -7,6 +7,16 @@
         ajaxGet("#(CPATH)/admin/dict/type/doDel/" + id);
     }
 
+    function doView(type, name) {
+        let viewUrl = '#(CPATH)/admin/dict/type/view/' + type;
+        let options = {
+            content: viewUrl
+            , title: name + ' 下字典列表'
+            , offset: '120px'
+        };
+        openWindow(options);
+    }
+
     $("#batchDel").click(function () {
         var ids = getSelectedIds();
         if (ids == "") {
@@ -66,7 +76,7 @@
                                 </td>
                                 <td>
                                     <strong>
-                                        <a href="#(CPATH)/admin/dict/type/edit/#(entry.id)"> #(entry.name ??) </a>
+                                        <a href="javascript:void(0);" onclick="doView('#(entry.code)', '#(entry.name)');"> #(entry.name ??) </a>
                                     </strong>
                                 </td>
                                 <td>#(entry.code)</td>

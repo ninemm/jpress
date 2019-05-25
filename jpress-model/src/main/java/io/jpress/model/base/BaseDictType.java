@@ -41,20 +41,20 @@ public abstract class BaseDictType<M extends BaseDictType<M>> extends JbootModel
 		return getInt("order_list");
 	}
 
-	public void setCreateDate(java.util.Date createDate) {
-		set("create_date", createDate);
-	}
-	
-	public java.util.Date getCreateDate() {
-		return get("create_date");
+	public void setCreated(java.util.Date created) {
+		set("created", created);
 	}
 
-	public void setModifyDate(java.util.Date modifyDate) {
-		set("modify_date", modifyDate);
+	public java.util.Date getCreated() {
+		return get("created");
 	}
-	
-	public java.util.Date getModifyDate() {
-		return get("modify_date");
+
+	public void setModified(java.util.Date modified) {
+		set("modified", modified);
+	}
+
+	public java.util.Date getModified() {
+		return get("modified");
 	}
 
 }

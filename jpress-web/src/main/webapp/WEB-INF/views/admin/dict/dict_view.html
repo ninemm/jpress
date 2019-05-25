@@ -1,0 +1,35 @@
+#@layer()
+	
+#define script()
+<script>
+
+</script>
+#end
+#define content()
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box-body ">
+                <table class="table table-striped">
+                    <tbody>
+                    <tr>
+                        <th>Key名称</th>
+                        <th>Value</th>
+                        <th>图标</th>
+                        <th>创建时间</th>
+                    </tr>
+                    #for(entry : list)
+                    <tr class="jp-actiontr">
+                        <td>#(entry.name)</td>
+                        <td>#(entry.value)</td>
+                        <td>#(entry.icon)</td>
+                        <td>#date(entry.created, 'yyyy-MM-dd HH:mm')</td>
+                    </tr>
+                    #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+#end

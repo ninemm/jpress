@@ -39,7 +39,7 @@ public class _DictController extends AdminControllerBase {
     @Inject
     private DictTypeService dictTypeService;
 
-    @AdminMenu(text = "字典管理", groupId = JPressConsts.SYSTEM_MENU_SYSTEM, order = 80)
+    @AdminMenu(text = "字典管理", groupId = JPressConsts.SYSTEM_MENU_SYSTEM, order = 83)
     public void index() {
         Page<Dict> entries=service.paginate(getPagePara(), 10);
         dictTypeService.join(entries, "type", new String[] {"dictType"} );
@@ -47,7 +47,6 @@ public class _DictController extends AdminControllerBase {
         render("dict/dict_list.html");
     }
 
-   
     public void edit() {
         int entryId = getParaToInt(0, 0);
         Dict entry = entryId > 0 ? service.findById(entryId) : null;

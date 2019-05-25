@@ -5,7 +5,7 @@
 
     <section class="content-header">
         <h1>
-			#if(dict.id ??) 编辑 #else 新增 #end 关键词
+			#if(dict.id ??) 编辑 #else 新增 #end 字典
             <small>Dict Item</small>
         </h1>
     </section>
@@ -34,31 +34,38 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Key名称</label>
+								<label class="col-sm-2 control-label">Key_Name</label>
 								<div class="col-sm-6">
 								   <input type="input" name="dict.name" class="form-control" value="#(dict.name ??)"
-										   placeholder="">
+										   placeholder="请输入字典名称">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Key</label>
-								<div class="col-sm-6">
-								   <input type="input" name="dict.key" class="form-control" value="#(dict.key ??)"
-										   placeholder="">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label">Value</label>
+								<label class="col-sm-2 control-label">Key_Value</label>
 								<div class="col-sm-6">
 								   <input type="input" name="dict.value" class="form-control" value="#(dict.value ??)"
-										   placeholder="">
+										   placeholder="请输入下字典值">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">备用Key</label>
+								<div class="col-sm-6">
+									<input type="input" name="dict.key" class="form-control" value="#(dict.key ??)"
+										   placeholder="请输入(备用)...">
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label">字典图标</label>
 								<div class="col-sm-6">
 								   <input type="input" name="dict.icon" class="form-control" value="#(dict.icon ??)"
-										   placeholder="">
+										   placeholder="请输入图标，如fa fa-edit">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">排序</label>
+								<div class="col-sm-6">
+									<input type="number" min="1" name="dict.order_list" class="form-control" value="#(dict.order_list ?? 20)"
+										   placeholder="请输入序号...">
 								</div>
 							</div>
                         </div>
