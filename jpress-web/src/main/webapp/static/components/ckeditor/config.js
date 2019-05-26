@@ -7,4 +7,12 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
+
+    // 去掉复制样式
+    // CKEDITOR.config.pasteFromWordRemoveStyles = true;
+    // CKEDITOR.config.forcePasteAsPlainText = true;
+    config.pasteFromWordRemoveStyles = true;
+    config.forcePasteAsPlainText = true;
+
+    config.fontSize_defaultLabel = '18px';
 };
