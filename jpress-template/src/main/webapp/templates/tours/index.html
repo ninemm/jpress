@@ -28,8 +28,8 @@
 		font-size: .8rem;
 	}
 
-	.item .title-p{
-		color: #000;
+	.item .title-p {
+		/*color: #000;*/
 		font-size: 1rem;
 		margin-bottom: .5rem;
 	}
@@ -38,6 +38,10 @@
 		background: white;
 		padding: .5rem;
 		/*padding-left: 5%;*/
+	}
+
+	a:visited {
+		color: #999;
 	}
 </style>
 #end
@@ -143,7 +147,7 @@
 	        <a href="#(CPATH)/article/category/news" class="newsmore"><i class="news-icon-more"></i></a>
 	    </div>
 	    
-	    <div class="wy-Module">
+	    <!--<div class="wy-Module">
 	    	<div class="wy-Module-tit-line"><span>主题活动</span></div>
 	    	<div class="wy-Module-con">
 	    		<div class="weui-flex">
@@ -166,7 +170,7 @@
 				    </div>
 				</div>
 	    	</div>
-	    </div>
+	    </div>-->
 	    
 	    <div class="wy-Module">
             <div class="wy-Module-tit-line"><span>推荐线路</span></div>
@@ -177,11 +181,12 @@
                     <div class="grid-item item">
                         <img src="#(CPATH)#(route.thumbnail)" class="item-img" />
                         <section class="section-p">
-                            <a href="#(route.url)">
-                                <p class="title-p"><span class="txt-color-red">#(route.code ??)</span> #(route.title ??)</p>
+                            <a href="#(route.url)" class="route-title">
+                                <p class="title-p"><span class="txt-color-red">线路名称:</span> #(route.title ??)</p>
                             </a>
                             <p class="date-p">
-                                <span class="txt-color-green">出发日期： #(route.departure_date ??)</span>
+                                <!--<span class="txt-color-green">出发日期： #(route.departure_date ??)</span>-->
+								<span class="txt-color-green">线路编号： #(route.code ??)</span>
                                 <span class="fr"><span class="txt-color-red">价格：#(route.price ?? 0)</span> 元/人起</span>
                             </p>
                         </section>
@@ -189,7 +194,7 @@
                     #end
                     #end
                 </aside>
-                <div class="morelinks"><a href="#(CPATH)/article/category">查看更多 >></a></div>
+                <div class="morelinks txt-color-red"><a href="#(CPATH)/article/category">查看更多 >></a></div>
             </div>
         </div>
         <!-- 往期回顾
