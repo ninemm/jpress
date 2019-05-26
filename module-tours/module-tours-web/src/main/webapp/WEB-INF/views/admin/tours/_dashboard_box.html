@@ -1,0 +1,21 @@
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="box box-dashboard">
+        <div class="box-header with-border">
+            <h3 class="box-title">最新线路</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tbody>
+                #for(route : routes)
+                <tr>
+                    <td style="width: 130px">#date(route.created ??)</td>
+                    <td><a href="#(route.url ??)" target="_blank">#(route.title ??)</a></td>
+                </tr>
+                #end
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

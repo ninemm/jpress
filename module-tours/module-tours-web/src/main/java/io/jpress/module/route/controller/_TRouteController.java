@@ -114,7 +114,7 @@ public class _TRouteController extends AdminControllerBase {//
             route = new TRoute();
             Long code = routeService.findMaxRouteCode();
             route.setCode(code);
-            route.setSlug(code.toString());
+            route.setSlug("NO" + code.toString());
         }
         setAttr("route", route);
 
