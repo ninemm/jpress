@@ -40,6 +40,10 @@
 		/*padding-left: 5%;*/
 	}
 
+	a:link {
+		color: #333;
+	}
+
 	a:visited {
 		color: #999;
 	}
@@ -176,7 +180,7 @@
             <div class="wy-Module-tit-line"><span>推荐线路</span></div>
             <div class="wy-Module-con">
                 <aside class="fall-box grid">
-                    #categoryRoutes(categoryFlag='routes', hasThumbnail=true,count=5,orderBy='created desc')
+                    #categoryRoutes(categoryFlag='routes', hasThumbnail=true,count=8,orderBy='created desc')
                     #for(route : routes)
                     <div class="grid-item item">
                         <img src="#(CPATH)#(route.thumbnail)" class="item-img" />
@@ -187,14 +191,14 @@
                             <p class="date-p">
                                 <!--<span class="txt-color-green">出发日期： #(route.departure_date ??)</span>-->
 								<span class="txt-color-green">线路编号： #(route.code ??)</span>
-                                <span class="fr"><span class="txt-color-red">价格：#(route.price ?? 0)</span> 元/人起</span>
+                                <span class="fr"><span class="txt-color-red">参考价格：#(route.price ?? 0)</span> 元/人起</span>
                             </p>
                         </section>
                     </div>
                     #end
                     #end
                 </aside>
-                <div class="morelinks txt-color-red"><a href="#(CPATH)/article/category">查看更多 >></a></div>
+                <div class="morelinks"><a href="#(CPATH)/article/category" class="txt-color-red">查看更多 >></a></div>
             </div>
         </div>
         <!-- 往期回顾

@@ -1,4 +1,4 @@
-<div class="col-md-6 col-sm-6 col-xs-12">
+<div class="col-md-12 col-sm-12 col-xs-12">
     <div class="box box-dashboard">
         <div class="box-header with-border">
             <h3 class="box-title">最新线路</h3>
@@ -10,7 +10,17 @@
                 #for(route : routes)
                 <tr>
                     <td style="width: 130px">#date(route.created ??)</td>
+                    <td>#(route.code ??)</td>
                     <td><a href="#(route.url ??)" target="_blank">#(route.title ??)</a></td>
+                    <td>
+                    #routeCategories(route.id, "category")
+                    #for(category : categories)
+                    #(category.title ??)
+                    #if(!for.last) , #end
+                    #end
+                    #end
+                    </td>
+                    <td>#(route.price ??) 元</td>
                 </tr>
                 #end
                 </tbody>
