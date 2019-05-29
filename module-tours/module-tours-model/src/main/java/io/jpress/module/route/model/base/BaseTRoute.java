@@ -353,6 +353,30 @@ public abstract class BaseTRoute<M extends BaseTRoute<M>> extends JbootModel<M> 
 		return getStr("link_to");
 	}
 
+	public void setDays(java.lang.String days) {
+		set("days", days);
+	}
+
+	public java.lang.String getDays() {
+		return getStr("days");
+	}
+
+	public void setPrices(java.lang.String prices) {
+		set("prices", prices);
+	}
+
+	public java.lang.String getPrices() {
+		return getStr("prices");
+	}
+
+	public void setChildPrices(java.lang.String childPrices) {
+		set("child_prices", childPrices);
+	}
+
+	public java.lang.String getChildPrices() {
+		return getStr("child_prices");
+	}
+
 	public void setRemarks(java.lang.String remarks) {
 		set("remarks", remarks);
 	}

@@ -2,9 +2,9 @@
 	<!-- general form elements -->
 	<div class="form-group validata-box">
 		<div class="col-sm-5 validata-box">
-			<label class="col-sm-4 control-label">成行人数</label>
+			<label class="col-sm-4 control-label">提前天数</label>
 			<div class="input-group col-sm-8 ">
-				<input type="text" id="_group_num" name="route.group_num" class="custom-input form-control input-sm" value="#(route.groupNum ??)" placeholder="请输入成团最少人数">
+				<input type="text" id="_group_num" name="route.group_num" class="custom-input form-control input-sm" value="#(route.groupNum ??)" placeholder="请输入提前几天报名">
 			</div>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 		<div class="col-sm-5 validata-box">
 			<label class="col-sm-4 control-label">结算价</label>
 			<div class="input-group col-sm-8">
-				<input type="text" class="custom-input form-control input-sm" id="_cost" name="route.cost" value="#(route.cost ??)" placeholder="请输入成人结算价">
+				<input type="number" class="custom-input form-control input-sm" id="_cost" name="route.cost" value="#(route.cost ??)" placeholder="请输入成人结算价">
 			</div>
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 		<div class="col-sm-5 validata-box">
 			<label  class="col-sm-4 control-label">儿童价</label>
 			<div class="input-group col-sm-8">
-				<input type="text" class="custom-input form-control input-sm" id="_child_price" name="route.child_price" value="#(route.childPrice ??)" placeholder="请输入儿童价">
+				<input type="number" class="custom-input form-control input-sm" id="_child_price" name="route.child_price" value="#(route.childPrice ??)" placeholder="请输入儿童价">
 			</div>
 		</div>
 		<div class="col-sm-5 validata-box">
@@ -39,50 +39,53 @@
 		</div>
 	</div>
 
-	<div class="form-group">
+	<div class="form-group col-sm-10">
+		<label class="col-sm-2 control-label">出行日期</label>
+		<div class="input-group col-sm-10">
+			<textarea name="route.days" class="form-control input-sm" placeholder="请输入线路出行日期">#(route.days ??)</textarea>
+			<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 多个日期请用 ; 隔开，如6月 1/5/10/15/20</p>
+		</div>
+	</div>
+
+	<div class="form-group col-sm-10">
+		<label class="col-sm-2 control-label">成人价格</label>
+		<div class="input-group col-sm-10">
+			<textarea name="route.prices" class="form-control input-sm" placeholder="请输入成人线路价格">#(route.prices ??)</textarea>
+			<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 多个价格请用 ; 隔开，且个数与出行日期相对应</p>
+		</div>
+	</div>
+
+	<div class="form-group col-sm-10">
+		<label class="col-sm-2 control-label">儿童价格</label>
+		<div class="input-group col-sm-10">
+			<textarea name="route.child_prices" class="form-control input-sm" placeholder="请输入儿童线路价格">#(route.child_prices ??)</textarea>
+			<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 多个价格请用 ; 隔开</p>
+		</div>
+	</div>
+
+	<div class="form-group col-sm-10">
 		<label class="col-sm-2 control-label">价格说明</label>
-		<div class="col-sm-6">
+		<div class="input-group col-sm-10">
 			<textarea name="route.price_desc" class="form-control input-sm" placeholder="请输入价格说明">#(route.price_desc ??)</textarea>
 		</div>
 	</div>
-	
-	<div class="form-group col-sm-10 validata-box">
+
+	<div class="form-group col-sm-10">
+		<label class="col-sm-2 control-label">备注</label>
+		<div class="input-group col-sm-10">
+			<textarea name="route.remarks" class="form-control input-sm" placeholder="此项不在前台显示：请填写地接社名称，地接联系方式、线路成本说明等">#(route.remarks ??)</textarea>
+		</div>
+	</div>
+
+	<!--<div class="form-group col-sm-10 validata-box">
 		<label for="_group_cycle" class="col-sm-2 control-label">团期</label>
 		<div class="input-group col-sm-10" id="group">
 			<input type="hidden" id="_group_cycle" name="route.group_id" value="#(route.groupId ??)">
 			#routeGroupOptions(groupCycle = route.groupCycle)
 				#(routeGroupOptionsHtml ??)
 			#end
-			<!--<div style="float: right;">
-				<button type="button" class="btn btn-sm btn-primary" id="batchAdd"><i class="fa fa-angle-down"></i> 批量添加</button>
-			</div>-->
 			<p class="help-block">系统默认会生成一个月的团期线路，一个月之后，请重新上架线路</p>
 		</div>
-	</div>
-	
-	<!--<div class="form-group col-sm-10">
-		<label for="calendar" class="col-sm-2 control-label">日历团期</label>
-		<div class="input-group col-sm-10">
-			<div id="calendar"></div>
-		</div>
 	</div>-->
+	
 </div>
-
-<!--
-<div class="col-md-10" style="display:none; padding-top: 20px;" id="_reserver_box">
-	<form action="" class="form-horizontal">
-		<input type="hidden" name="event_id">
-		<div class="form-group">
-			<label for="_price" class="col-md-6 control-label">价格(成人):</label>
-			<div class="input-group col-md-6 ">
-				<input type="text" id="_add_price" name="price" class="form-control input-sm">
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="_child_price" class="col-md-6 control-label">价格(儿童):</label>
-			<div class="input-group col-md-6 ">
-				<input type="text" id="_add_child_price" name="childPrice" class="form-control input-sm">
-			</div>
-		</div>
-	</form>
-</div>-->
