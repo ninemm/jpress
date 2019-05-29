@@ -50,7 +50,7 @@
 		width: 1.6rem;
 		height: 1.6rem;
 		border-radius: 50%;
-		background: rgba(0,0,0,0.4);
+		background: rgba(0,0,0,0.8);
 		text-align: center;
 	}
 
@@ -70,12 +70,6 @@
                 $ul = $target.find("ul");
             $target.height($ul.outerHeight()), $ul.css("position", "absolute");
         });
-
-        $(document).on("open", ".weui-popup__modal", function() {
-            console.log("open popup");
-        }).on("close", ".weui-popup__modal", function() {
-            console.log("close popup");
-        });
     })
 </script>
 #end
@@ -92,7 +86,7 @@
 				<a href="#(CPATH)/"><i class="icon-home"></i></a>
 			</div>
 			<div class="route_title">
-				<span>#(route.title ??)</span>
+				<strong><span>#(route.title ??)</span></strong>
 			</div>
 		</div>
 	</div>
@@ -108,27 +102,41 @@
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-calendar" style="margin-right: .2rem"></i> </div>
 				<div class="weui-cell__bd">
-					<p>行程天数：#(route.group_num ?? 0)天</p>
+					<p>行程天数：#(route.total_days ?? 0)天</p>
 				</div>
-				<div class="weui-cell__ft txt-color-green font-b">需提前1天预订</div>
+				<div class="weui-cell__ft txt-color-green font-b">需提前#(route.group_num ?? 1)天预订</div>
 			</div>
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-clock-o" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
-					<p>出发日期：#(route.departure_date ??)</p>
+					<p>出发日期：<span class="font-b txt-color-red">#(route.days ??)</span></p>
 				</div>
-				<div class="weui-cell__ft">报名截至：出发前一天</div>
+				<!--<div class="weui-cell__ft">报名截至：出发前一天</div>-->
 			</div>
 			<div class="weui-cell">
-				<div class="weui-cell__hd"><i class="icon-cc-visa" style="margin-right: .2rem"></i></div>
+				<div class="weui-cell__hd"><i class="icon-male" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
-					<p>成人价：<span class="font-b txt-color-red">￥#(route.price ?? 0)</span></p>
+					<p>成人价格：<span class="font-b txt-color-red">#(route.prices ?? 0)</span></p>
 				</div>
-				#if(route.child_price)<div class="weui-cell__ft">儿童价：￥#(route.child_price ?? 无)</div>#end
+				<!--<div class="weui-cell__ft">实际价格请以合同价为准</div>-->
 			</div>
 			<div class="weui-cell">
+				<div class="weui-cell__hd"><i class="icon-child" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
-					<span style="line-height: .9rem"><i class="icon-star" style="margin-right: .2rem"></i> #(route.meta_description ??)</span>
+					<p>儿童价格：<span class="font-b txt-color-red">#(route.child_prices ?? 0)</span></p>
+				</div>
+				<!--#if(route.child_price)<div class="weui-cell__ft">儿童价：#(route.child_price ?? 0)元/人</div>#end-->
+			</div>
+			#if (route.price_desc)
+			<div class="weui-cell">
+				<div class="weui-cell__bd">
+					<p style="line-height: .9rem"><i class="icon-star" style="margin-right: .2rem"></i><span class="txt-color-ml"> #(route.price_desc ??)</span></p>
+				</div>
+			</div>
+			#end
+			<div class="weui-cell">
+				<div class="weui-cell__bd">
+					<p style="line-height: .9rem"><i class="icon-volume-up" style="margin-right: .2rem"></i> 行程及价格仅供参考，以签订电子旅游合同为准!</p>
 				</div>
 			</div>
 		</div>
@@ -149,33 +157,12 @@
 					</div>
 				</div>
 			</div>
-
-			<div id="tab2" class="weui-tab__bd-item ">
-				<!--评价-->
-				<div class="weui-panel__bd">
-					<div class="wy-media-box weui-media-box_text">
-						<div class="weui-cell nopd weui-cell_access">
-							<div class="weui-cell__hd">
-								<img src="upload/headimg.jpg" alt="" style="width:20px;margin-right:5px;display:block">
-							</div>
-							<div class="weui-cell__bd weui-cell_primary">
-								<p>飞翔的小土豆</p>
-							</div>
-							<span class="weui-cell__time">2017-02-06</span>
-						</div>
-						<div class="comment-item-star">
-							<span class="real-star comment-stars-width3"></span>
-						</div>
-						<p class="weui-media-box__desc">面料不错，码数也正常  男朋友穿的很合适。</p>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 
 	<div class="weui-footer">
 		<div class="footer-wrapper">
-			<p class="weui-footer__text">Copyright &copy; 2016-2017 9mm.tech</p>
+			<p class="weui-footer__text">Copyright &copy; 2016-2017 ninemm.cn</p>
 		</div>
 	</div>
 	<div class="foot-black"></div>
@@ -185,20 +172,16 @@
 <!--底部导航-->
 
 <div class="weui-tabbar wy-foot-menu">
-	<a href="tel:#option('tours_mobile')" class="promotion-foot-menu-items">
-		<div class="weui-tabbar__icon promotion-foot-menu-kefu"></div>
-		<p class="weui-tabbar__label">咨询</p>
+	<a href="tel:#option('tours_mobile')" class="weui-tabbar__item black-color">
+		<p class="promotion-foot-menu-label"><i class="icon-phone"></i> 电话咨询</p>
 	</a>
-	<!--<a href="javascript:;" id='show-toast' class="promotion-foot-menu-items">
-		<div class="weui-tabbar__icon promotion-foot-menu-collection"></div>
-		<p class="weui-tabbar__label">领取优惠券</p>
-	</a>-->
+	<a href="http://wpa.qq.com/msgrd?v=3&uin=81889166&site=qq&menu=yes" class="weui-tabbar__item red-color">
+		<p class="promotion-foot-menu-label"><i class="icon-qq"></i> QQ咨询</p>
+	</a>
 	<a href="javascript:;" class="weui-tabbar__item green-color open-popup" data-target="#wechat-group">
-		<p class="promotion-foot-menu-label">加入微信群</p>
+		<p class="promotion-foot-menu-label"><i class="icon-wechat"></i> 微信咨询</p>
 	</a>
-	<a href="http://wpa.qq.com/msgrd?v=3&uin=81889166&site=qq&menu=yes" class="weui-tabbar__item red-color open-popup">
-		<p class="promotion-foot-menu-label">QQ咨询</p>
-	</a>
+
 </div>
 
 <div id="wechat-group" class='weui-popup__container popup-bottom' style="z-index:600;">
@@ -207,7 +190,7 @@
 		<div class="toolbar">
 			<div class="toolbar-inner">
 				<a href="javascript:;" class="picker-button close-popup">关闭</a>
-				<h1 class="title">关注微信群</h1>
+				<h1 class="title">加微信咨询</h1>
 			</div>
 		</div>
 		<div class="modal-content">
@@ -217,7 +200,7 @@
 						<p class="weui-msg__desc">
 							<img src="#(CPATH)#option('tours_qrcode', '/templates/tours/images/qrcode.jpg')">
 						</p>
-                        <p>长按二维码识别加入微信群</p>
+                        <p>#option('tours_qrcode_text')</p>
 					</div>
 				</div>
 			</div>
