@@ -7,7 +7,7 @@ body
 {
 	/* Font */
 	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
-	font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-family: sans-serif, Arial, Verdana, "微软雅黑,Microsoft YaHei", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 12px;
 
 	/* Text color */
@@ -21,8 +21,12 @@ body
 
 .cke_editable
 {
-	font-size: 13px;
-	line-height: 1.6;
+	/*font-size: 13px;
+	line-height: 1.6;*/
+	line-height: 1.6em;
+	font-size: 18px;
+	color: #666;
+	font-family: "Arial", "微软雅黑,Microsoft YaHei";
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
 	word-wrap: break-word;

@@ -98,7 +98,8 @@ public class TGroupServiceProvider extends JbootServiceBase<TGroup> implements T
                         groupList.add(group);
                     }
                 }
-            } else {
+            }
+            /*else {
                 List<CalendarVO> list = JSON.parseArray(calendarStr, CalendarVO.class);
                 int size = list.size();
                 for (int i = 0; i < size; i++) {
@@ -121,7 +122,7 @@ public class TGroupServiceProvider extends JbootServiceBase<TGroup> implements T
 
                     groupList.add(tgroup);
                 }
-            }
+            }*/
             Db.batchSave(groupList, groupList.size());
             return true;
         });

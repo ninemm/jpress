@@ -1,12 +1,13 @@
 package io.jpress.module.route.service;
 
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.service.JbootServiceJoiner;
 import io.jpress.module.article.model.ArticleCategory;
 import io.jpress.module.route.model.TRoute;
 
 import java.util.List;
 
-public interface TRouteCategoryService {
+public interface TRouteCategoryService extends JbootServiceJoiner {
 
     /**
      * find categoryIds by routeId

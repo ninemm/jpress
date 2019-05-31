@@ -21,6 +21,7 @@ import io.jpress.module.article.service.search.ArticleSearcherFactory;
 import io.jpress.module.route.model.TGroup;
 import io.jpress.module.route.model.TRoute;
 import io.jpress.module.route.service.TGroupService;
+import io.jpress.module.route.service.TRouteCategoryService;
 import io.jpress.module.route.service.TRouteService;
 import io.jpress.module.route.service.task.RouteViewsCountUpdateTask;
 import io.jpress.service.UserService;
@@ -37,6 +38,8 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     private UserService userService;
     @Inject
     private TGroupService groupService;
+    @Inject
+    private TRouteCategoryService categoryService;
 
     private static final String DEFAULT_ORDER_BY = "order_list desc,id desc";
 
@@ -133,6 +136,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
         Page<TRoute> dataPage = DAO.paginate(page, pagesize, "select * ", sqlBuilder.toString(), columns.getValueArray());
         return joinUserPage(dataPage);
     }
+
 
     @Override
     public Long findMaxRouteCode() {
@@ -308,6 +312,11 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
         String sql = "SELECT * FROM `t_route` WHERE status = ? AND title LIKE ? ORDER BY id DESC LIMIT ?";
 
         return DAO.find(sql, TRoute.STATUS_NORMAL, keyword, count);
+    }
+
+    private List<TRoute> joinCategoryInfo(List<TRoute> list) {
+        categoryService.join(list, "category_id");
+        return list;
     }
 
 }

@@ -64,6 +64,7 @@ ul, ol, li { list-style: none outside none; }
 .txt-color-green {color: #1aad19;}
 .yellow-color{background-color:#ffb03f;}
 .gray-color{background-color:#ddd;}
+.black-color{background-color:#3d4145;}
 .red-color{background-color:#ea6f5a;}
 .green-color{background-color:#1aad19;}
 .weui-icon-success{color:#15C8DA;}
@@ -293,7 +294,7 @@ header, .weui-navbar{
     bottom: 0;
     width: 100%;
     color: #fff;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.6);
     height: 2rem;
     line-height: 2rem;
     overflow: hidden;
@@ -305,7 +306,8 @@ header, .weui-navbar{
     padding-left: .5rem;
     float: left;
     width: 90%;
-    font-size: .8rem;
+    font-size: .9rem;
+    font-weight: 700;
     overflow: hidden;
 }
 

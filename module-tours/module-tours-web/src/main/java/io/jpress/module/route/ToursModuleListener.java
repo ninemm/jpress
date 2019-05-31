@@ -15,6 +15,7 @@
  */
 package io.jpress.module.route;
 
+import com.jfinal.aop.Aop;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import io.jboot.Jboot;
@@ -23,6 +24,10 @@ import io.jboot.core.listener.JbootAppListenerBase;
 import io.jboot.db.model.Columns;
 import io.jpress.core.menu.MenuGroup;
 import io.jpress.core.module.ModuleListener;
+import io.jpress.module.article.model.Article;
+import io.jpress.module.article.service.ArticleService;
+import io.jpress.module.route.model.TRoute;
+import io.jpress.module.route.service.TRouteService;
 import io.jpress.module.route.sitemap.RouteSitemapProviderBuilder;
 
 import java.util.List;
@@ -39,7 +44,9 @@ public class ToursModuleListener extends JbootAppListenerBase implements ModuleL
 
     @Override
     public String onRenderDashboardBox(Controller controller) {
-        return null;
+        List<TRoute> routes = Aop.get(TRouteService.class).findListByColumns(Columns.create().eq("status", TRoute.STATUS_NORMAL), "id desc", 10);
+        controller.setAttr("routes", routes);
+        return "tours/_dashboard_box.html";
     }
 
     @Override

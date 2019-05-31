@@ -114,7 +114,7 @@ public class _TRouteController extends AdminControllerBase {//
             route = new TRoute();
             Long code = routeService.findMaxRouteCode();
             route.setCode(code);
-            route.setSlug(code.toString());
+            route.setSlug("NO" + code.toString());
         }
         setAttr("route", route);
 
@@ -131,10 +131,7 @@ public class _TRouteController extends AdminControllerBase {//
     @EmptyValidate({
         @Form(name = "route.code", message = "线路编码不能为空"),
         @Form(name = "route.title", message = "线路标题不能为空"),
-        @Form(name = "route.total_days", message = "线程天数不能为空"),
         @Form(name = "route.expire_date", message = "过期日期不能为空"),
-        @Form(name = "route.child_price", message = "儿童价格不能为空"),
-        @Form(name = "route.market_price", message = "市场价格不能为空"),
         @Form(name = "route.price", message = "成人价格不能为空")
     })
     public void doSave() {
@@ -209,10 +206,11 @@ public class _TRouteController extends AdminControllerBase {//
 
         TRoute route = routeService.findById(id);
         route.setId(null);
+        route.setStatus(TRoute.STATUS_DRAFT);
 
         Long maxCode = routeService.findMaxRouteCode();
         route.setCode(maxCode);
-        route.setSlug(maxCode.toString());
+        route.setSlug("NO" + maxCode.toString());
         route.setCreated(new Date());
 
         Long newId = (Long) routeService.save(route);
