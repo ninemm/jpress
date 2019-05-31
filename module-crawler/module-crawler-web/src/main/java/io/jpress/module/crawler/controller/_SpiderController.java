@@ -18,9 +18,11 @@ package io.jpress.module.crawler.controller;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.exception.JbootException;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jpress.JPressConsts;
 import io.jpress.core.menu.annotation.AdminMenu;
+import io.jpress.module.crawler.crawler.BaiduKeywordCrawler;
 import io.jpress.module.crawler.model.Spider;
 import io.jpress.module.crawler.service.SpiderService;
 import io.jpress.web.base.AdminControllerBase;
@@ -60,5 +62,18 @@ public class _SpiderController extends AdminControllerBase {
     public void doDel() {
         Long id = getIdPara();
         render(spiderService.deleteById(id) ? Ret.ok() : Ret.fail());
+    }
+
+    public void start() {
+        Object id = getPara(0);
+        if (id == null) {
+            throw new JbootException("id 不能为空");
+        }
+
+        Spider spider = spiderService.findById(id);
+        BaiduKeywordCrawler baiduCrawler = new BaiduKeywordCrawler("crawler", true);
+        baiduCrawler.addSeed(spider.getStartUrl());
+
+
     }
 }
