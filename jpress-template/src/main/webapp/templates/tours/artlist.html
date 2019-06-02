@@ -21,12 +21,10 @@
 	}
 
 	.item .date-p {
-		/*color: #444;*/
 		font-size: .8rem;
 	}
 
 	.item .title-p{
-		color: #000;
 		font-size: .8rem;
 		margin-bottom: .5rem;
 	}
@@ -34,12 +32,19 @@
 	.fall-box .section-p{
 		background: white;
 		padding: .5rem;
-		/*padding-left: 5%;*/
 	}
 
 	.caption-item.active {
 		opacity: 0.2;
 		background: #999;
+	}
+
+	a:link {
+		color: #333;
+	}
+
+	a:visited {
+		color: #999;
 	}
 </style>
 #end
@@ -51,6 +56,7 @@
 <script>
 
     var photoBrowser = null;
+    var isLastPage = false;
     var categoryId = '#(category.id ?? 10)';
 
     $(function() {
@@ -97,17 +103,19 @@
                 photoBrowser.open();
         });
 
-        var pageNum = 1 ; var dataFall = [];
+        var pageNum = 1 ;
+        var dataFall = [];
         var totalItem = 10;
-        var isAppended = true;
         var items = new Array();
 
         $(window).scroll(function(){
             $grid.masonry('layout');
             var scrollTop = $(this).scrollTop();
-            var scrollHeight = $(document).height();
             var windowHeight = $(this).height();
-            if(scrollTop + windowHeight == scrollHeight) {
+            var scrollHeight = $(document).height();
+
+            if(!isLastPage && (scrollTop + windowHeight == scrollHeight)) {
+                console.log(pageNum)
                 loadRoute();
             }
         });
@@ -116,18 +124,18 @@
             $.ajax({
                 method: 'post',
                 url: '#(CPATH)/routes/paginate',
-                data: { page: pageNum, pageSize: 10, categoryId: categoryId, orderBy: 'created' },
+                data: { page: pageNum, pageSize: 6, categoryId: categoryId, orderBy: 'created' },
                 dataType: 'json',
                 beforeSend: function() {
                     Utils.openLoadingWin('加载中..');
                 },
                 success: function(res) {
                     dataFall = res.page.list;
+                    isLastPage = res.isLastPage;
                     setTimeout(function(){
                         items = Utils.appendFall($grid, dataFall);
                         Utils.closeLoadingWin();
                         pageNum ++ ;
-                        isAppended = false;
                     },500);
                 },
                 error: function(res) {

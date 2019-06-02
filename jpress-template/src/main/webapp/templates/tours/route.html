@@ -52,6 +52,7 @@
 		border-radius: 50%;
 		background: rgba(0,0,0,0.8);
 		text-align: center;
+		z-index: 501;
 	}
 
 	.gohome i {
@@ -99,34 +100,41 @@
 					<p>线路编号：#(route.code ?? 80000001)</p>
 				</div>
 			</div>
+			#if (route.total_days)
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-calendar" style="margin-right: .2rem"></i> </div>
 				<div class="weui-cell__bd">
 					<p>行程天数：#(route.total_days ?? 0)天</p>
 				</div>
+				#if (route.group_num)
 				<div class="weui-cell__ft txt-color-green font-b">需提前#(route.group_num ?? 1)天预订</div>
+				#end
 			</div>
+			#end
+			#if (route.days)
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-clock-o" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
 					<p>出发日期：<span class="font-b txt-color-red">#(route.days ??)</span></p>
 				</div>
-				<!--<div class="weui-cell__ft">报名截至：出发前一天</div>-->
 			</div>
+			#end
+			#if (route.prices)
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-male" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
 					<p>成人价格：<span class="font-b txt-color-red">#(route.prices ?? 0)</span></p>
 				</div>
-				<!--<div class="weui-cell__ft">实际价格请以合同价为准</div>-->
 			</div>
+			#end
+			#if (route.child_prices)
 			<div class="weui-cell">
 				<div class="weui-cell__hd"><i class="icon-child" style="margin-right: .2rem"></i></div>
 				<div class="weui-cell__bd">
 					<p>儿童价格：<span class="font-b txt-color-red">#(route.child_prices ?? 0)</span></p>
 				</div>
-				<!--#if(route.child_price)<div class="weui-cell__ft">儿童价：#(route.child_price ?? 0)元/人</div>#end-->
 			</div>
+			#end
 			#if (route.price_desc)
 			<div class="weui-cell">
 				<div class="weui-cell__bd">
@@ -136,7 +144,7 @@
 			#end
 			<div class="weui-cell">
 				<div class="weui-cell__bd">
-					<p style="line-height: .9rem"><i class="icon-volume-up" style="margin-right: .2rem"></i> 行程及价格仅供参考，以签订电子旅游合同为准!</p>
+					<p style="line-height: .9rem"><i class="icon-volume-up" style="margin-right: .2rem"></i> 页面所显示内容仅供参考，以签订旅游合同为准！</p>
 				</div>
 			</div>
 		</div>

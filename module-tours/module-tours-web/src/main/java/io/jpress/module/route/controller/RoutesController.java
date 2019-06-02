@@ -43,7 +43,6 @@ public class RoutesController extends TemplateControllerBase {
                 ? routeService.paginateInNormal(pageNumber, 10, orderBy)
                 : routeService.paginateByCategoryIdInNormal(pageNumber, 10, categoryId, orderBy);
 
-        renderJson(Ret.ok().set("page", page));
-
+        renderJson(Ret.ok().set("page", page).set("isLastPage", page.isLastPage()));
     }
 }

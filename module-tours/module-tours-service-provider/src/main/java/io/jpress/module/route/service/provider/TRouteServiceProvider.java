@@ -12,6 +12,7 @@ import io.jboot.components.cache.annotation.CacheEvict;
 import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
+import io.jboot.db.model.JbootModel;
 import io.jboot.service.JbootServiceBase;
 import io.jboot.utils.StrUtil;
 import io.jpress.commons.utils.SqlUtils;
@@ -317,6 +318,26 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     private List<TRoute> joinCategoryInfo(List<TRoute> list) {
         categoryService.join(list, "category_id");
         return list;
+    }
+
+    @Override
+    public void shouldUpdateCache(int action, Object data) {
+        if (action == ACTION_UPDATE) {
+            TRoute route = (TRoute) data;
+            Jboot.getCache().remove("routeCategory", "categoryIds:" + route.getId());
+            Jboot.getCache().remove("routeCategory", "categoryList:" + route.getId());
+        }
+
+        if (action == ACTION_DEL) {
+            if (data instanceof JbootModel) {
+                TRoute route = (TRoute) data;
+                Jboot.getCache().remove("routeCategory", "categoryIds:" + route.getId());
+                Jboot.getCache().remove("routeCategory", "categoryList:" + route.getId());
+            } else {
+                Jboot.getCache().remove("routeCategory", "categoryIds:" + data);
+                Jboot.getCache().remove("routeCategory", "categoryList:" + data);
+            }
+        }
     }
 
 }

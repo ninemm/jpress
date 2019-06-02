@@ -92,7 +92,6 @@
                 },
                 'route.total_days': {
                     validators: {
-                        notEmpty: { message: '行程天数不能为空' },
                         integer: { message: '请输入有效的整数' },
                         greaterThan: { value: 0, inclusive: false, message: '请输入有效的整数' }
                     }
@@ -110,13 +109,13 @@
                         greaterThan: { value: 0, inclusive: false, message: '请输入有效的整数' }
                     }
                 }
-                /*, 'route.cost': {
+                , 'route.cost': {
                     validators: {
                         integer: { message: '请输入有效的整数' },
                         greaterThan: { value: 0, inclusive: false, message: '请输入有效的整数' }
                     }
                 }
-                , 'route.market_price': {
+                /*, 'route.market_price': {
                     validators: {
                         integer: { message: '请输入有效的整数' },
                         greaterThan: { value: 0, inclusive: false, message: '请输入有效的整数' }
