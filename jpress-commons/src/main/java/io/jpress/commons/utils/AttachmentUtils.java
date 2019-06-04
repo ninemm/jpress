@@ -15,6 +15,8 @@
  */
 package io.jpress.commons.utils;
 
+import com.google.common.collect.Lists;
+import com.jfinal.kit.PathKit;
 import com.jfinal.log.Log;
 import com.jfinal.upload.UploadFile;
 import io.jboot.utils.FileUtil;
@@ -58,14 +60,19 @@ public class AttachmentUtils {
             LOG.error(e.toString(), e);
         }
 
-        String attachmentRoot = JPressConfig.me.getAttachmentRootOrWebRoot();
+        String attachmentRoot = StrUtil.isNotBlank(JPressConfig.me.getAttachmentRoot())
+                ? JPressConfig.me.getAttachmentRoot()
+                : PathKit.getWebRootPath();
+
 
         return FileUtil.removePrefix(newfile.getAbsolutePath(), attachmentRoot);
     }
 
     public static File newAttachemnetFile(String suffix) {
 
-        String attachmentRoot = JPressConfig.me.getAttachmentRootOrWebRoot();
+        String attachmentRoot = StrUtil.isNotBlank(JPressConfig.me.getAttachmentRoot())
+                ? JPressConfig.me.getAttachmentRoot()
+                : PathKit.getWebRootPath();
 
         String uuid = UUID.randomUUID().toString().replace("-", "");
 
@@ -79,11 +86,14 @@ public class AttachmentUtils {
     }
 
     public static File file(String path) {
-        String attachmentRoot = JPressConfig.me.getAttachmentRootOrWebRoot();
+        String attachmentRoot = StrUtil.isNotBlank(JPressConfig.me.getAttachmentRoot())
+                ? JPressConfig.me.getAttachmentRoot()
+                : PathKit.getWebRootPath();
+
         return new File(attachmentRoot, path);
     }
 
-    static List<String> imageSuffix = new ArrayList<>();
+    static List<String> imageSuffix = new ArrayList<String>();
 
     static {
         imageSuffix.add(".jpg");
@@ -101,7 +111,7 @@ public class AttachmentUtils {
         return false;
     }
 
-    static List<String> unSafeFilesSuffix = new ArrayList<>();
+    static List<String> unSafeFilesSuffix = new ArrayList<String>();
 
     static {
         unSafeFilesSuffix.add(".jsp");
@@ -124,6 +134,21 @@ public class AttachmentUtils {
             return unSafeFilesSuffix.contains(sufffix.toLowerCase());
         return false;
     }
+
+    static List<String> safeFileSuffix = Lists.newArrayList();
+
+    static {
+        safeFileSuffix.add(".txt");
+        safeFileSuffix.add(".zip");
+    }
+    public static boolean isSafe(File file){
+        String sufffix = FileUtil.getSuffix(file.getName());
+        if (StrUtil.isNotBlank(sufffix)) {
+            return safeFileSuffix.contains(sufffix.toLowerCase());
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         System.out.println(FileUtil.getSuffix("xxx.jpg"));
