@@ -33,7 +33,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <jboot.version>2.1.0</jboot.version>
+        <jboot.version>2.1.1</jboot.version>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool.version>4.1.14</hutool.version>
         <lombok.version>1.16.14</lombok.version>

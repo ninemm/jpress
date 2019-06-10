@@ -22,6 +22,7 @@ import com.jfinal.upload.UploadFile;
 import io.jboot.utils.FileUtil;
 import io.jboot.utils.StrUtil;
 import io.jpress.JPressConfig;
+import org.apache.curator.shaded.com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,6 +95,12 @@ public class AttachmentUtils {
     }
 
     static List<String> imageSuffix = new ArrayList<String>();
+    public static String getAttachmentPath(String path) {
+        String attachmentRoot = JPressConfig.me.getAttachmentRootOrWebRoot();
+        return path != null && path.startsWith(attachmentRoot)
+                ? path.substring(attachmentRoot.length())
+                : path;
+    }
 
     static {
         imageSuffix.add(".jpg");
@@ -128,7 +135,7 @@ public class AttachmentUtils {
         unSafeFilesSuffix.add(".war");
     }
 
-    public static boolean isUnSafe(File file){
+    public static boolean isUnSafe(File file) {
         String sufffix = FileUtil.getSuffix(file.getName());
         if (StrUtil.isNotBlank(sufffix))
             return unSafeFilesSuffix.contains(sufffix.toLowerCase());
@@ -148,7 +155,6 @@ public class AttachmentUtils {
         }
         return false;
     }
-
 
     public static void main(String[] args) {
         System.out.println(FileUtil.getSuffix("xxx.jpg"));

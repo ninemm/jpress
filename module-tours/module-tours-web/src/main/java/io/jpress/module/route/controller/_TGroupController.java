@@ -33,7 +33,7 @@ import java.util.Date;
  * @Package io.jpress.module.page.controller.admin
  */
 @RequestMapping(value = "/admin/group", viewPath = JPressConsts.DEFAULT_ADMIN_VIEW)
-public class _TGroupController extends AdminControllerBase {//
+public class _TGroupController extends AdminControllerBase {
 
     @Inject
     private TGroupService service;

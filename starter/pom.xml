@@ -8,11 +8,9 @@
         <version>2.0</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.jpress</groupId>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>starter</artifactId>
-
 
     <dependencies>
 
@@ -130,7 +128,6 @@
             <version>2.0</version>
         </dependency>
 
-
         <dependency>
             <groupId>io.jpress</groupId>
             <artifactId>codegen</artifactId>
@@ -163,7 +160,6 @@
             </resource>
         </resources>
 
-
         <plugins>
 
             <plugin>
@@ -176,7 +172,6 @@
                     <compilerArgument>-parameters</compilerArgument>
                 </configuration>
             </plugin>
-
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -258,6 +253,5 @@
         </plugins>
 
     </build>
-
 
 </project>

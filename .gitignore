@@ -3,6 +3,7 @@
 */jpress-addon-articlemeta/
 */jpress-addon-wechatlogin/
 */jpress-addon-wtask/
+*/jpress-addon-dcode/
 starter-dev/
 .idea
 *.iml
@@ -21,5 +22,5 @@ logs
 ~$*
 */*.jar
 dbuild.sh
+docker_volumes/
 cache/
-
