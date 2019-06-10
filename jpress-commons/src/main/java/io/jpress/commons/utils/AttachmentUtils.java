@@ -20,6 +20,7 @@ import com.jfinal.upload.UploadFile;
 import io.jboot.utils.FileUtil;
 import io.jboot.utils.StrUtil;
 import io.jpress.JPressConfig;
+import org.apache.curator.shaded.com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,6 +130,20 @@ public class AttachmentUtils {
         String sufffix = FileUtil.getSuffix(file.getName());
         if (StrUtil.isNotBlank(sufffix))
             return unSafeFilesSuffix.contains(sufffix.toLowerCase());
+        return false;
+    }
+
+    static List<String> safeFileSuffix = Lists.newArrayList();
+
+    static {
+        safeFileSuffix.add(".txt");
+        safeFileSuffix.add(".zip");
+    }
+    public static boolean isSafe(File file){
+        String sufffix = FileUtil.getSuffix(file.getName());
+        if (StrUtil.isNotBlank(sufffix)) {
+            return safeFileSuffix.contains(sufffix.toLowerCase());
+        }
         return false;
     }
 
