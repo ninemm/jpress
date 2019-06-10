@@ -22,7 +22,6 @@ import com.jfinal.upload.UploadFile;
 import io.jboot.utils.FileUtil;
 import io.jboot.utils.StrUtil;
 import io.jpress.JPressConfig;
-import org.apache.curator.shaded.com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
