@@ -9,6 +9,7 @@
         maxBytesLocalHeap：在CacheManager级别指定能够使用的堆内存的最大容量
     -->
     <diskStore path="user.dir/cache"/>
+    <sizeOfPolicy maxDepth="10000" maxDepthExceededBehavior="abort" />
 	<!--
 	属性简介：
 		maxElementsInMemory：缓存最大个数
@@ -39,6 +40,14 @@
     />
 
     <cache name="__jboot_wechat_access_tokens"
+       eternal="false"
+       timeToIdleSeconds="3600"
+       timeToLiveSeconds="0"
+       overflowToDisk="true"
+       diskPersistent="true"
+    />
+
+    <cache name="captchaCache"
        eternal="false"
        timeToIdleSeconds="3600"
        timeToLiveSeconds="0"
@@ -101,21 +110,21 @@
     />
 
     <cache name="dict"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="dict_type"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="option"
@@ -209,48 +218,48 @@
     />
 
     <cache name="c_keyword_category"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="c_keyword"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="c_schedule_task"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="c_spider"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
     <cache name="c_webpage"
-           eternal="false"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LFU"
+       eternal="false"
+       overflowToDisk="true"
+       diskSpoolBufferSizeMB="20"
+       timeToIdleSeconds="300"
+       timeToLiveSeconds="600"
+       memoryStoreEvictionPolicy="LFU"
     />
 
 </ehcache>

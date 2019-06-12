@@ -97,6 +97,9 @@ header, .weui-navbar{
     background: linear-gradient(to bottom, #fff 0%,#efefef 100%);
 }
 
+a:link {color: #333;}
+a:visited {color: #999;}
+
 /*滚动条样式*/
 .scrollbar-none::-webkit-scrollbar {/*滚动条宽度设置*/
     width: 0px; height: 0;
@@ -502,7 +505,7 @@ header, .weui-navbar{
 .promotion-foot-menu-label{line-height:40px; font-size:15px; color:#fff;}
 /*返回顶部*/
 #gotop, .goback{z-index:10;display:block;position:fixed;width:36px;height:36px;right:10px;bottom:60px;cursor:pointer;background-image:url(../images/tophovertree.gif);opacity:0.9;display:none}
-#gohome{z-index:10;display:block;position:fixed;width:32px;height:32px;right:10px;bottom:60px;border-radius:50%;cursor:pointer;/* background-color:#1aad19; opacity:0.9;*/background: rgba(0,0,0,0.4); text-align:center;}
+#gohome{z-index:10;display:block;position:fixed;width:32px;height:32px;right:10px;bottom:60px;border-radius:50%;cursor:pointer;/* background-color:#1aad19; opacity:0.9;*/background: rgba(0,0,0,0.8); text-align:center;}
 #gohome i {color: #fff; font-size: 1.5rem;}
 
 

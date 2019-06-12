@@ -42,7 +42,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     @Inject
     private TRouteCategoryService categoryService;
 
-    private static final String DEFAULT_ORDER_BY = "order_list desc,id desc";
+    private static final String DEFAULT_ORDER_BY = "order_list desc, id desc";
 
     @Override
     public boolean deleteByIds(Object... ids) {
@@ -102,13 +102,13 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     }
 
     @Override
-    @Cacheable(name = "routes")
+    @Cacheable(name = "routes", key = "routes:#(page):#(pagesize)")
     public Page<TRoute> paginateInNormal(int page, int pagesize) {
         return paginateInNormal(page, pagesize,null);
     }
 
     @Override
-    @Cacheable(name = "routes")
+    @Cacheable(name = "routes", key = "routes:#(page):#(pagesize):#(orderBy)")
     public Page<TRoute> paginateInNormal(int page, int pagesize, String orderBy) {
         orderBy = StrUtil.obtainDefaultIfBlank(orderBy,DEFAULT_ORDER_BY);
         Columns columns = new Columns();
@@ -119,7 +119,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
 
 
     @Override
-    @Cacheable(name = "routes")
+    @Cacheable(name = "routes", key = "routes:#(categoryId):#(page):#(pagesize)")
     public Page<TRoute> paginateByCategoryIdInNormal(int page, int pagesize, long categoryId, String orderBy) {
 
         StringBuilder sqlBuilder = new StringBuilder("from t_route r ");
@@ -164,7 +164,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     }
 
     @Override
-    @CacheEvict(name = "routes",key = "*")
+    @CacheEvict(name = "routes", key = "*")
     public void doUpdateCategorys(long routeId, Long[] categoryIds) {
 
         Db.tx(() -> {
@@ -186,7 +186,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     }
 
     @Override
-    @CacheEvict(name = "routes",key = "*")
+    @CacheEvict(name = "routes", key = "*")
     public void doUpdateExpiredRouteStatus() {
 
         Columns columns = Columns.create();
@@ -198,7 +198,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
         Db.tx(() -> {
             List<TRoute> list = Lists.newArrayList();
             for (TRoute route : expiredList) {
-                if (route.getGroupId() != null && route.getGroupId() > 0) {
+                /*if (route.getGroupId() != null && route.getGroupId() > 0) {
                     // update current group status
                     TGroup curGroup = groupService.findById(route.getGroupId());
                     curGroup.setStatus(TGroup.EXPIRED_STATUS);
@@ -215,7 +215,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
                         nextGroup.update();
                         continue;
                     }
-                }
+                }*/
 
                 route.setModified(new Date());
                 route.setStatus(TRoute.STATUS_TRASH);
@@ -235,7 +235,7 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     }
 
     @Override
-    @CacheEvict(name = "routes",key = "*")
+    @CacheEvict(name = "routes", key = "*")
     public void deleteCacheById(Object id) {
         DAO.deleteIdCacheById(id);
     }
@@ -246,50 +246,31 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
     }
 
     @Override
-    @Cacheable(name = "routes",key = "#(columns.cacheKey)-#(orderBy)-#(count)")
+    @Cacheable(name = "routes", key = "#(columns.cacheKey):#(orderBy):#(count)")
     public List<TRoute> findListByColumns(Columns columns, String orderBy, Integer count) {
         return DAO.findListByColumns(columns, orderBy, count);
     }
 
     @Override
-    @Cacheable(name = "routes",key = "findListByCategoryId:#(categoryId)-#(hasThumbnail)-#(orderBy)-#(count)")
-    public List<TRoute> findListByCategoryId(long categoryId, Boolean hasThumbnail, String orderBy, Integer count) {
+    @Cacheable(name = "routes", key = "findListInTop:#(isTop):#(orderBy):#(count)")
+    public List<TRoute> findListInTop(long categoryId, Boolean isTop, String orderBy, Integer count) {
 
-        StringBuilder from = new StringBuilder("select * from t_route r ");
-        from.append(" left join t_route_category_mapping m on r.id = m.`route_id` ");
-        from.append(" where m.category_id = ? ");
-        from.append(" and r.status = ? ");
+        Columns columns = Columns.create();
+        columns.is_not_null("thumbnail");
+        columns.add("is_top", isTop);
+        columns.add("status", TRoute.STATUS_NORMAL);
 
-
-        if (hasThumbnail != null) {
-            if (hasThumbnail == true) {
-                from.append(" and r.thumbnail is not null");
-            } else {
-                from.append(" and r.thumbnail is null");
-            }
-        }
-
-        from.append(" group by r.id ");
-
-        if (orderBy != null) {
-            from.append(" order by " + orderBy);
-        }
-
-        if (count != null) {
-            from.append(" limit " + count);
-        }
-
-        return DAO.find(from.toString(), categoryId, TRoute.STATUS_NORMAL);
+        return DAO.findListByColumns(columns, orderBy, count);
     }
 
     @Override
     public Page<TRoute> search(String keyword, String code, Long categoryId, int page, int pagesize) {
         return _paginateByBaseColumns(page
-                ,pagesize
-                ,keyword
-                ,code
-                ,categoryId
-                ,Columns.create().ne("r.status", TRoute.STATUS_TRASH));
+            , pagesize
+            , keyword
+            , code
+            , categoryId
+            , Columns.create().eq("r.status", TRoute.STATUS_NORMAL));
     }
 
     @Override
@@ -322,13 +303,17 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
 
     @Override
     public void shouldUpdateCache(int action, Object data) {
-        if (action == ACTION_UPDATE) {
+
+        if (action == ACTION_ADD) {
+            TRoute route = (TRoute) data;
+        }
+        else if (action == ACTION_UPDATE) {
             TRoute route = (TRoute) data;
             Jboot.getCache().remove("routeCategory", "categoryIds:" + route.getId());
             Jboot.getCache().remove("routeCategory", "categoryList:" + route.getId());
         }
-
-        if (action == ACTION_DEL) {
+        // delete action
+        else {
             if (data instanceof JbootModel) {
                 TRoute route = (TRoute) data;
                 Jboot.getCache().remove("routeCategory", "categoryIds:" + route.getId());
@@ -338,6 +323,8 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
                 Jboot.getCache().remove("routeCategory", "categoryList:" + data);
             }
         }
+
+        Jboot.getCache().remove("routes", "*");
     }
 
 }

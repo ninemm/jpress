@@ -35,8 +35,8 @@ public class RoutesController extends TemplateControllerBase {
     private TRouteService routeService;
 
     public void paginate() {
-        Long categoryId = getParaToLong("categoryId");
         String orderBy = getPara("orderBy");
+        Long categoryId = getParaToLong("categoryId");
         int pageNumber = getParaToInt("page", 1);
 
         Page<TRoute> page = categoryId == null

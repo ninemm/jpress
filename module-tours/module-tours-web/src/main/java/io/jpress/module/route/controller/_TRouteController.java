@@ -108,6 +108,7 @@ public class _TRouteController extends AdminControllerBase {//
                 return;
             }
 
+            route.setSlug("NO" + route.getCode());
             Long[] categoryIds = routeCategoryService.findCategoryIdsByRouteId(routeId);
             flagCheck(categories, categoryIds);
         } else {
@@ -123,7 +124,7 @@ public class _TRouteController extends AdminControllerBase {//
                 ? JPressConsts.EDIT_MODE_MARKDOWN
                 : JPressConsts.EDIT_MODE_HTML);
 
-        set("now",new Date());
+        // set("now", new Date());
         initStylesAttr("route_");
         render("tours/route_edit.html");
     }

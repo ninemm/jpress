@@ -39,10 +39,6 @@ public class RouteSearchController extends TemplateControllerBase {
     public void index() {
 
         String keyword = getEscapeHtmlPara("keyword");
-/*        if (StrUtil.isBlank(keyword)) {
-            renderError(404);
-            return;
-        }*/
 
         /**
          * 不让页面大于100，我认为：
@@ -57,10 +53,6 @@ public class RouteSearchController extends TemplateControllerBase {
 
         String code = getPara("code");
         Long categoryId = getParaToLong("categoryId");
-
-//        for test only
-//        ArticleService articleService = Aop.get(ArticleService.class);
-//        articleService.search(keyword,1,10);
 
         setAttr("keyword", keyword);
         setAttr("code", code);
@@ -81,7 +73,7 @@ public class RouteSearchController extends TemplateControllerBase {
         int pageSize = getParaToInt("pageSize", 10);
 
         Page<TRoute> dataPage = Aop.get(TRouteService.class).search(keyword, code, categoryId, page, pageSize);
-        renderJson(Ret.ok().set("page", dataPage));
+        renderJson(Ret.ok().set("page", dataPage).set("isLastPage", dataPage.isLastPage()));
     }
 
 }

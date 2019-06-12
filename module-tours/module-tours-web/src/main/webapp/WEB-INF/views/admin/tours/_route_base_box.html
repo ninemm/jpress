@@ -35,24 +35,16 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label">是否推荐</label>
 		<div class="col-sm-6">
-			#if(route.isTopEnable())
-			<input type="checkbox" data-for="is_top" class="switchery" checked value="#(route.isTop ??)">
-			#else
-			<input type="checkbox" data-for="is_top" class="switchery" value="#(route.isTop ??)">
-			#end
+			<input type="checkbox" data-for="is_top" class="switchery" #checkedIf(route.isTopEnable())>
 			<input type="hidden" id="is_top" name="route.is_top">
-			<p class="help-block">首页推荐线路，默认推荐8条线路</p>
+			<p class="help-block">勾选之后，会在首页推荐线路显示，默认推荐8条线路</p>
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label class="col-sm-2 control-label">是否评论</label>
 		<div class="col-sm-6">
-			#if(route.isCommentEnable())
-			<input type="checkbox" data-for="comment_status" class="switchery" checked value="#(route.commentStatus ??)">
-			#else
-			<input type="checkbox" data-for="comment_status" class="switchery" value="#(route.commentStatus ??)">
-			#end
+			<input type="checkbox" data-for="comment_status" class="switchery" #checkedIf(route.isCommentEnable())>
 			<input type="hidden" id="comment_status" name="route.comment_status">
 		</div>
 	</div>

@@ -201,10 +201,10 @@ public interface TRouteService extends JbootServiceJoiner {
      * find routes by categoryId
      *
      * @param categoryId
-     * @param hasThumbnail
+     * @param isTop
      * @param orderBy
      * @param count
      * @return java.util.List
      */
-    public List<TRoute> findListByCategoryId(long categoryId, Boolean hasThumbnail, String orderBy, Integer count);
+    public List<TRoute> findListInTop(long categoryId, Boolean isTop, String orderBy, Integer count);
 }

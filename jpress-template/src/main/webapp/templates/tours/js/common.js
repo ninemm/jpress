@@ -360,9 +360,9 @@ Utils = {
             $a.appendTo($griDiv);
             
             var $items = $griDiv;
-            $items.imagesLoaded().done(function(){
+            $items.imagesLoaded().done(function() {
                 $grid.masonry('layout');
-                $grid.append( $items ).masonry('appended', $items);
+                $grid.append($items).masonry('appended', $items);
                 $grid.masonry('reloadItems');
             });
 

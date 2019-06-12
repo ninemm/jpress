@@ -5,23 +5,17 @@
 <link rel="stylesheet" type="text/css" href="css/swiper.min.css" />
 <link rel="stylesheet" type="text/css" href="js/layer_mobile/need/layer.css" />
 <style>
+
+	.swiper-container {
+		position: fixed;
+	}
+
 	.fall-box {
-		margin: .5rem .4rem .4rem;
+		margin: 3rem .4rem .4rem;
 	}
 
 	.fall-box .item{
 		margin-bottom: .5rem;
-	}
-
-	.item .price-p{
-		margin-top: .0rem;
-		color: #444;
-		font-size: .7rem;
-		padding-bottom: 0rem;
-	}
-
-	.item .date-p {
-		font-size: .8rem;
 	}
 
 	.item .title-p{
@@ -34,18 +28,11 @@
 		padding: .5rem;
 	}
 
-	.caption-item.active {
-		opacity: 0.2;
-		background: #999;
+	.weui-photo-browser-modal .caption .caption-item.active {
+		opacity: 0.8;
+		background: #333;
 	}
 
-	a:link {
-		color: #333;
-	}
-
-	a:visited {
-		color: #999;
-	}
 </style>
 #end
 #define script()
@@ -55,95 +42,102 @@
 <script type='text/javascript' src="js/jquery/imagesloaded.pkgd.min.js"></script>
 <script>
 
+	var pageNum = 1 ;
+	var dataFall = [];
+	var totalItem = 10;
+	var items = new Array();
+
     var photoBrowser = null;
     var isLastPage = false;
+    var $grid = null;
     var categoryId = '#(category.id ?? 10)';
 
     $(function() {
-        /*顶部nav*/
+		// 顶部分类导航
         var swiper = new Swiper('.nav-container', {
             slidesPerView: 'auto',
             paginationClickable: true
         });
 
-        $(".nav-ul .swiper-slide").click(function() {
-            pageNum = 1;
-            $(this).addClass("active-li")
-				.siblings()
-				.removeClass("active-li");
+		// 线路图片点击事件处理
+		$(document).on('click', '.item-img', function(index) {
+			var index = $('.item-img').index(this);
+			photoBrowser = $.photoBrowser({items: items, initIndex: index});
+			if (photoBrowser != null)
+				photoBrowser.open();
+		})
+		// 导航点击事件处理
+		.on('click', '.nav-ul .swiper-slide', function () {
 
-            $('.fall-box').empty();
-            categoryId = $(this).attr("category");
-            items.splice(0, items.length);
+			pageNum = 1;
+			items.splice(0, items.length);
+			categoryId = $(this).attr("category");
 
-            if (photoBrowser) {
-                photoBrowser.close();
-            }
+			$('.fall-box').empty();
+			$(this).addClass("active-li").siblings().removeClass("active-li");
 
-            loadRoute();
-        });
+			if (photoBrowser) {
+				photoBrowser.close();
+			}
 
-        /*瀑布流初始化设置*/
-        var $grid = $('.grid').masonry({
+			loadRoute();
+		});
+
+        // 瀑布流初始化设置
+        $grid = $('.grid').masonry({
             itemSelector : '.grid-item',
             gutter:10
         });
 
-        // layout Masonry after each image loads
+        // layout Masonry after each image loaded
         $grid.imagesLoaded().done( function() {
             $grid.masonry('layout');
         });
 
         loadRoute();
 
-        $(document).on('click', '.item-img', function(index) {
-            var index = $('.item-img').index(this);
-            photoBrowser = $.photoBrowser({items: items, initIndex: index});
-            if (photoBrowser != null)
-                photoBrowser.open();
-        });
-
-        var pageNum = 1 ;
-        var dataFall = [];
-        var totalItem = 10;
-        var items = new Array();
-
         $(window).scroll(function(){
             $grid.masonry('layout');
             var scrollTop = $(this).scrollTop();
             var windowHeight = $(this).height();
             var scrollHeight = $(document).height();
-
             if(!isLastPage && (scrollTop + windowHeight == scrollHeight)) {
-                console.log(pageNum)
                 loadRoute();
             }
         });
-
-        function loadRoute() {
-            $.ajax({
-                method: 'post',
-                url: '#(CPATH)/routes/paginate',
-                data: { page: pageNum, pageSize: 6, categoryId: categoryId, orderBy: 'created' },
-                dataType: 'json',
-                beforeSend: function() {
-                    Utils.openLoadingWin('加载中..');
-                },
-                success: function(res) {
-                    dataFall = res.page.list;
-                    isLastPage = res.isLastPage;
-                    setTimeout(function(){
-                        items = Utils.appendFall($grid, dataFall);
-                        Utils.closeLoadingWin();
-                        pageNum ++ ;
-                    },500);
-                },
-                error: function(res) {
-                    Utils.closeLoadingWin();
-                }
-            });
-        }
     })
+
+	function loadRoute() {
+
+		var data = {
+			page: pageNum,
+			pageSize: 10,
+			categoryId: categoryId,
+			orderBy: 'created desc'
+		};
+
+		$.ajax({
+			method: 'post',
+			url: '#(CPATH)/routes/paginate',
+			data: data,
+			dataType: 'json',
+			beforeSend: function() {
+				Utils.openLoadingWin('加载中..');
+			},
+			success: function(res) {
+				dataFall = res.page.list;
+				isLastPage = res.isLastPage;
+				setTimeout(function(){
+					items = items.concat(Utils.appendFall($grid, dataFall));
+					Utils.closeLoadingWin();
+					pageNum ++ ;
+				}, 500);
+			},
+			error: function(res) {
+				Utils.closeLoadingWin();
+			}
+		});
+	}
 </script>
 #end
 

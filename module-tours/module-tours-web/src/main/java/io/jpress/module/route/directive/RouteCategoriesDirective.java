@@ -45,7 +45,7 @@ public class RouteCategoriesDirective extends JbootDirectiveBase {
         String type = getPara(1, scope);
 
         if (id == null || type == null) {
-            throw new IllegalArgumentException("#articleCategories() args error. id or type must not be null." + getLocation());
+            throw new IllegalArgumentException("#routeCategories() args error. id or type must not be null." + getLocation());
         }
 
 

@@ -5,8 +5,18 @@
 <link rel="stylesheet" type="text/css" href="css/swiper.min.css" />
 <link rel="stylesheet" type="text/css" href="js/layer_mobile/need/layer.css" />
 <style>
+
+    .title {
+        position: fixed;
+        width: 100%;
+        background: #fff;
+        z-index: 1;
+        overflow: hidden;
+        border-bottom: 1px solid #d9d9d9;
+    }
+
     .fall-box {
-        margin: .5rem .4rem .4rem;
+        margin: 2.6rem .4rem .4rem;
     }
 
     .fall-box .item{
@@ -38,6 +48,7 @@
     }
 </style>
 #end
+
 #define script()
 <script type='text/javascript' src="js/weui/swiper.min.js"></script>
 <script type='text/javascript' src="js/layer_mobile/layer.js"></script>
@@ -45,7 +56,13 @@
 <script type='text/javascript' src="js/jquery/imagesloaded.pkgd.min.js"></script>
 <script>
 
+    var pageNum = 1 ;
+    var dataFall = [];
+    var totalItem = 10;
+    var items = new Array();
+
     var photoBrowser = null;
+    var isLastPage = false;
 
     $(function() {
 
@@ -60,8 +77,6 @@
             $grid.masonry('layout');
         });
 
-        loadRoute();
-
         $(document).on('click', '.item-img', function(index) {
             var index = $('.item-img').index(this);
             photoBrowser = $.photoBrowser({items: items, initIndex: index});
@@ -69,38 +84,43 @@
                 photoBrowser.open();
         });
 
-        var pageNum = 1 ;
-        var dataFall = [];
-        var totalItem = 10;
-        var isAppended = true;
-        var items = new Array();
+        loadRoute();
 
         $(window).scroll(function(){
             $grid.masonry('layout');
             var scrollTop = $(this).scrollTop();
             var scrollHeight = $(document).height();
             var windowHeight = $(this).height();
-            if(scrollTop + windowHeight == scrollHeight) {
+            if(!isLastPage && (scrollTop + windowHeight == scrollHeight)) {
                 loadRoute();
             }
         });
 
         function loadRoute() {
+
+            var paramData = {
+                page: pageNum,
+                pageSize: 10,
+                code: '#(code ??)',
+                keyword: '#(keyword ??)',
+                categoryId: '#(categoryId ??)'
+            };
+
             $.ajax({
-                method: 'post',
                 url: '#(CPATH)/route/search/paginate',
-                data: {pageNum: pageNum, pageSize: 10, keyword: '#(keyword ??)', code: '#(code ??)', categoryId: '#(categoryId ??)'},
+                method: 'post',
+                data: paramData,
                 dataType: 'json',
                 beforeSend: function() {
                     Utils.openLoadingWin('加载中..');
                 },
                 success: function(res) {
                     dataFall = res.page.list;
+                    isLastPage = res.isLastPage;
                     setTimeout(function(){
-                        items = Utils.appendFall($grid, dataFall);
+                        items = items.concat(Utils.appendFall($grid, dataFall));
                         Utils.closeLoadingWin();
                         pageNum ++ ;
-                        isAppended = false;
                     },500);
                 },
                 error: function(res) {
@@ -116,7 +136,10 @@
 <!-- 搜索结果 -->
 <div class="weui-content">
     <div class="container">
-        <div class="weui-cells__title font-16 txt-color-green">搜索线路如下: #( keyword ??)</div>
+        <div class="title">
+            <div class="weui-cells__title font-16 txt-color-green">搜索线路如下: #( keyword ??)</div>
+        </div>
+
         <aside class="fall-box grid"></aside>
     </div>
 </div>

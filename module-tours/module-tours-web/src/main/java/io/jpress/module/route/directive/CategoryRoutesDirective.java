@@ -57,9 +57,9 @@ public class CategoryRoutesDirective extends JbootDirectiveBase {
                     "categoryFlag or categoryId must not be empty. " + getLocation());
         }
 
-        Boolean hasThumbnail = getParaToBool("hasThumbnail", scope);
-        String orderBy = getPara("orderBy", scope, "order_list desc,id desc");
+        String orderBy = getPara("orderBy", scope, "order_list desc, id desc");
         int count = getParaToInt("count", scope, 10);
+        Boolean isTop = getParaToBool("isTop", scope);
 
         ArticleCategory category = categoryId != null
                 ? categoryService.findById(categoryId)
@@ -70,7 +70,7 @@ public class CategoryRoutesDirective extends JbootDirectiveBase {
 
         scope.setLocal("category", category);
 
-        List<TRoute> routes = service.findListByCategoryId(category.getId(), hasThumbnail, orderBy, count);
+        List<TRoute> routes = service.findListInTop(category.getId(), isTop, orderBy, count);
         if (routes == null || routes.isEmpty()) {
             return;
         }
