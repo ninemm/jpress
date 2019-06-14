@@ -46,7 +46,7 @@ public class RelKeywordValidateTask implements Runnable {
         Integer pageNum = scheduleTask.getLastPageNum();
         String searchType = scheduleTask.getSearchType();
 
-        if (pageNum == null) {
+        if (pageNum == null || pageNum == 0) {
             pageNum = 1;
         }
         ScheduleTaskService taskService = Aop.get(ScheduleTaskService.class);

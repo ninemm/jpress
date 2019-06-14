@@ -108,14 +108,14 @@ public class _TRouteController extends AdminControllerBase {//
                 return;
             }
 
-            route.setSlug("NO" + route.getCode());
+            route.setSlug(route.getCode().toString());
             Long[] categoryIds = routeCategoryService.findCategoryIdsByRouteId(routeId);
             flagCheck(categories, categoryIds);
         } else {
             route = new TRoute();
             Long code = routeService.findMaxRouteCode();
             route.setCode(code);
-            route.setSlug("NO" + code.toString());
+            route.setSlug(code.toString());
         }
         setAttr("route", route);
 
@@ -124,7 +124,6 @@ public class _TRouteController extends AdminControllerBase {//
                 ? JPressConsts.EDIT_MODE_MARKDOWN
                 : JPressConsts.EDIT_MODE_HTML);
 
-        // set("now", new Date());
         initStylesAttr("route_");
         render("tours/route_edit.html");
     }

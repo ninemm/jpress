@@ -283,7 +283,11 @@ function showConfirm(options) {
         , offset: options.offset
     }, function(index) {
         layer.close(index);
-        options.okFunction();
+        if (options.ids ) {
+            options.okFunction(options.ids);
+        } else {
+            options.okFunction();
+        }
     }, function(index) {
         layer.close(index);
     });

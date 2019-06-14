@@ -192,7 +192,7 @@
 							<div class="col-sm-12" style="padding-bottom: 2px">
 								网址：<span class="domainSpan">#option('web_domain')</span>#(CPATH)/route/<span id="slug" class="slugSpan text-red" for-input="route-slug" ><strong>#(route.slug ??)</strong></span>#if(option("web_fake_static_enable"))#option('web_fake_static_suffix')#end
 								#if(route && route.isNormal())
-								（<a href="#(route.url)" target="_blank">访问</a>）
+								（<a href="#(CPATH)/route/#(route.id)" target="_blank">访问</a>）
 								#end
 								<input type="hidden" id="route-slug" name="route.slug">
 								#if(!route)

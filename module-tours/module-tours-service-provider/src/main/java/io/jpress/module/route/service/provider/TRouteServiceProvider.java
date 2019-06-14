@@ -192,39 +192,34 @@ public class TRouteServiceProvider extends JbootServiceBase<TRoute> implements T
         Columns columns = Columns.create();
         columns.add("status", TRoute.STATUS_NORMAL);
         String now = DateTime.now().toString("yyyy-MM-dd");
-        columns.lt("departure_date", now);
+        columns.lt("expire_date", now);
 
-        List<TRoute> expiredList = DAO.findListByColumns(columns);
-        Db.tx(() -> {
-            List<TRoute> list = Lists.newArrayList();
-            for (TRoute route : expiredList) {
-                /*if (route.getGroupId() != null && route.getGroupId() > 0) {
-                    // update current group status
-                    TGroup curGroup = groupService.findById(route.getGroupId());
-                    curGroup.setStatus(TGroup.EXPIRED_STATUS);
-                    curGroup.update();
+        List<TRoute> list = DAO.findListByColumns(columns);
+        for (TRoute route : list) {
+            /*if (route.getGroupId() != null && route.getGroupId() > 0) {
+                // update current group status
+                TGroup curGroup = groupService.findById(route.getGroupId());
+                curGroup.setStatus(TGroup.EXPIRED_STATUS);
+                curGroup.update();
 
-                    TGroup nextGroup = groupService.findNextById(route.getGroupId());
-                    if (nextGroup != null) {
-                        route.setModified(new Date());
-                        route.setGroupId(nextGroup.getId());
-                        route.setDepartureDate(nextGroup.getLeaveDate());
-                        list.add(route);
+                TGroup nextGroup = groupService.findNextById(route.getGroupId());
+                if (nextGroup != null) {
+                    route.setModified(new Date());
+                    route.setGroupId(nextGroup.getId());
+                    route.setDepartureDate(nextGroup.getLeaveDate());
+                    list.add(route);
 
-                        nextGroup.setStatus(TGroup.ENROLLING_STATUS);
-                        nextGroup.update();
-                        continue;
-                    }
-                }*/
+                    nextGroup.setStatus(TGroup.ENROLLING_STATUS);
+                    nextGroup.update();
+                    continue;
+                }
+            }*/
 
-                route.setModified(new Date());
-                route.setStatus(TRoute.STATUS_TRASH);
-                list.add(route);
-            }
+            route.setModified(new Date());
+            route.setStatus(TRoute.STATUS_TRASH);
+        }
 
-            Db.batchUpdate(list, list.size());
-            return true;
-        });
+        Db.batchUpdate(list, list.size());
     }
 
     @Override

@@ -50,6 +50,9 @@ public class DictServiceProvider extends JbootServiceBase<Dict> implements DictS
                     Jboot.getCache().remove(Dict.CACHE_NAME, dict.getType());
                 }
                 break;
+            case ACTION_ADD:
+                Jboot.getCache().remove(Dict.CACHE_NAME, "*");
+                break;
             default :
                 ;
         }

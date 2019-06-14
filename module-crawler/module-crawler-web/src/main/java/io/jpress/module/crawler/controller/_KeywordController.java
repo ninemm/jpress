@@ -120,6 +120,10 @@ public class _KeywordController extends AdminControllerBase {
         renderJson(Ret.ok().set("id", entry.getId()));
     }
 
+    public void doStop() {
+        Long id = getIdPara();
+    }
+
     public void doDel() {
         Long id = getIdPara();
         renderJson(keywordService.deleteById(id) ? Ret.ok() : Ret.fail());

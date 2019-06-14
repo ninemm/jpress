@@ -55,13 +55,14 @@
 
         let options = {
             msg: '确定批量删除关键词吗?'
+            , ids: ids
             , okFunction: okBatchDelFun
         };
 
         showConfirm(options);
     })
 
-    function okBatchDelFun() {
+    function okBatchDelFun(ids) {
         ajaxGet("#(CPATH)/admin/crawler/keyword/doBatchDel?ids=" + ids);
     }
 
@@ -127,11 +128,11 @@
                             value += ' <small class="label label-primary" title="关键字在搜狗有效">搜</small>';
                         }
 
-                        if (row.is_baidu_enabled) {
+                        if (row.is_soso_enabled) {
                             value += ' <small class="label label-info" title="关键字在360有效">360</small>';
                         }
 
-                        if (row.is_baidu_enabled) {
+                        if (row.is_shenma_enabled) {
                             value += ' <small class="label label-success" title="关键字在神马有效">神</small>';
                         }
 
@@ -156,11 +157,11 @@
                             checked_tips += ' <small class="label label-primary" title="关键字在搜狗已检查">搜</small>';
                         }
 
-                        if (row.is_baidu_checked) {
+                        if (row.is_soso_checked) {
                             checked_tips += ' <small class="label label-info" title="关键字在360已检查">360</small>';
                         }
 
-                        if (row.is_baidu_checked) {
+                        if (row.is_shenma_checked) {
                             checked_tips += ' <small class="label label-success" title="关键字在神马已检查">神</small>';
                         }
 
@@ -179,7 +180,7 @@
                     formatter: function (value, row, rowIndex) {
                         var url = '#(CPATH)/admin/crawler/keyword/edit/' + row.id;
                         var strHtml = '<a href="' + url + '" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a> '
-                            + '<a href="javascript:void(0);" class="btn btn-xs text-orange" title="停用" onclick="doReview(\'' + row.id + '\')"><i class="fa fa-stop"></i></a> '
+                            + '<a href="javascript:void(0);" class="btn btn-xs text-orange" title="停用" onclick="doStop(\'' + row.id + '\')"><i class="fa fa-stop"></i></a> '
                             + '<a href="javascript:void(0);" class="btn btn-xs text-aqua" title="相关词云" onclick="doReview(\'' + row.id + '\')"><i class="fa fa-cloud"></i></a> '
                             + '<a href="javascript:void(0);" class="btn btn-xs text-red" title="删除" onclick="doDel(\'' + row.id + '\')"><i class="fa fa-trash"></i></a>';
                         return strHtml;
@@ -209,13 +210,14 @@
     function doDel(id) {
         let options = {
             msg: '确定删除该关键词吗?'
+            , ids: id
             , okFunction: okDelFun
         };
 
         showConfirm(options);
     }
 
-    function okDelFun() {
+    function okDelFun(id) {
         ajaxGet("#(CPATH)/admin/crawler/keyword/doDel/" + id);
     }
 
