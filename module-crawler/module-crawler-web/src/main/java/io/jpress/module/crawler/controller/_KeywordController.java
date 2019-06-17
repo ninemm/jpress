@@ -162,9 +162,9 @@ public class _KeywordController extends AdminControllerBase {
         Integer maxLength = getParaToInt("maxLength");
 
         /** 在搜索引擎中有效 */
-        String validSearchTypes = getPara("validSearchTypes");
+        String searchTypes = getPara("searchTypes");
         /** 在搜索引擎是否检查 */
-        String checkedSearchTypes = getPara("checkedSearchTypes");
+        String disableSearchTypes = getPara("disableSearchTypes");
 
         /** 选中的关键词 */
         String selectedKeywords = getPara("selectedKeywords");
@@ -193,8 +193,8 @@ public class _KeywordController extends AdminControllerBase {
             exportToTxt(txtFilePath, null, list);
         } else {
             // 按条件导出关键词
-            List<String> list = keywordService.findListByParams(inputKeywords, categoryIds, validSearchTypes,
-                    checkedSearchTypes, minLength, maxLength, minNum, maxNum, orderBy);
+            List<String> list = keywordService.findListByParams(inputKeywords, categoryIds, searchTypes,
+                    disableSearchTypes, minLength, maxLength, minNum, maxNum, orderBy);
             exportToTxt(txtFilePath, list, null);
         }
         renderFile(txtFile, title + ".txt");

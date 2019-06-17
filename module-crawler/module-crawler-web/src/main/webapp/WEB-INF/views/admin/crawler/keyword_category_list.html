@@ -29,7 +29,7 @@
     $("#batchDel").click(function () {
         var ids = getSelectedIds();
         if (ids == "") {
-            alert('您未选择任何条目');
+            alert('您未选择任何分类');
             return
         }
         ajaxGet("#(CPATH)/admin/crawler/keyword/category/doDelByIds?ids=" + ids, okFunction);

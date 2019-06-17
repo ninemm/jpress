@@ -38,7 +38,7 @@
 
     <section class="content-header">
         <h1>
-            采集模板
+            #if(spider.id ??) 编辑 #else 新增 #end采集模板
             <small>Spider Template Item</small>
         </h1>
     </section>
@@ -56,9 +56,9 @@
 							<div class="nav-tabs-custom">
 								<ul class="nav nav-tabs" id="spiderTabs">
 									<li class="active"><a href="#tab_base" data-toggle="tab">1.基础配置</a></li>
-                                    <li><a href="#tab_query" data-toggle="tab">2.正则式</a></li>
+                                    <li><a href="#tab_query" data-toggle="tab">2.采集规则</a></li>
                                     <!--<li><a href="#tab_proxy" data-toggle="tab">3.代理</a></li>-->
-                                    <li><a href="#tab_advance" data-toggle="tab">4.高级配置</a></li>
+                                    <li><a href="#tab_advance" data-toggle="tab">3.高级配置</a></li>
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active form-horizontal" id="tab_base">

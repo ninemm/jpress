@@ -14,24 +14,23 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
+import io.jboot.db.dialect.JbootMysqlDialect;
 import io.jboot.db.model.Column;
+import io.jboot.service.JbootServiceBase;
 import io.jboot.utils.StrUtil;
 import io.jpress.commons.utils.DateUtils;
 import io.jpress.model.Columns;
+import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.KeywordCategory;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
 import io.jpress.module.crawler.model.vo.SearchEngineVO;
 import io.jpress.module.crawler.service.KeywordCategoryService;
 import io.jpress.module.crawler.service.KeywordService;
-import io.jpress.module.crawler.model.Keyword;
-import io.jboot.service.JbootServiceBase;
 import org.apache.commons.lang3.RandomUtils;
 import org.joda.time.DateTime;
 
-import java.awt.dnd.peer.DropTargetPeer;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +79,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
             columns.regexp("title", inputKeywords);
         }
 
-        searchEngineParams(columns, validSearchTypes, checkedSearchTypes);
+        addParams(columns, validSearchTypes, checkedSearchTypes);
         orderBy = buildOrderBy(orderBy);
 
         return DAO.paginateByColumns(pageNum, pageSize, columns, orderBy);
@@ -88,7 +87,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
 
     @Override
     public List<String> findListByPage(int pageNum, int pageSize) {
-        StringBuilder sql = new StringBuilder("select name from c_keyword");
+        StringBuilder sql = new StringBuilder("select title from c_keyword");
         sql.append(" where id >=");
         sql.append(" (SELECT id FROM c_keyword LIMIT ?, 1)");
         sql.append(" limit ?");
@@ -96,8 +95,8 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
     }
 
     @Override
-    public List<String> findListByParams(String inputKeywords, String categoryIds, String validSearchTypes,
-         String checkedSearchTypes, Integer minLength, Integer maxLength, Integer minNum, Integer maxNum, String orderBy) {
+    public List<String> findListByParams(String inputKeywords, String categoryIds, String searchTypes, String disableSearchTypes,
+         Integer minLength, Integer maxLength, Integer minNum, Integer maxNum, String orderBy) {
 
         /** 随机导出关键词 */
         if (minNum != null && maxNum != null) {
@@ -105,16 +104,19 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
             return findRandomListByRandom(randomNum);
         }
 
-        StringBuilder sqlBuilder = new StringBuilder("SELECT name");
-        sqlBuilder.append(" FROM c_keyword");
-        Columns columns = (Columns) Columns.create();
+        Columns columns = Columns.create();
 
         if (StrUtil.notBlank(categoryIds)) {
             if (categoryIds.contains(",")) {
+                Object[] categorys = Splitter.on(",").splitToList(categoryIds).toArray();
                 columns.in("category_id", categoryIds);
             } else {
                 columns.eq("category_id", categoryIds);
             }
+        }
+
+        if (StrUtil.notBlank(inputKeywords)) {
+            columns.regexp("title", inputKeywords);
         }
 
         if (minLength != null) {
@@ -125,17 +127,16 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
             columns.le("num", maxLength);
         }
 
-        if (StrUtil.notBlank(inputKeywords)) {
-            columns.regexp("title", inputKeywords);
-        }
-
-        searchEngineParams(columns, validSearchTypes, checkedSearchTypes);
+        addParams(columns, searchTypes, disableSearchTypes);
 
         if (StrUtil.isBlank(orderBy)) {
             orderBy = "title asc";
         }
 
-        return Db.query(columns.toMysqlSql() + " order by " + orderBy);
+        JbootMysqlDialect dialect = new JbootMysqlDialect();
+        String sql = dialect.forFindByColumns(DAO._getTable().getName(), "title", columns.getList(), orderBy, null);
+
+        return Db.query(sql, columns.getValueArray());
     }
 
     @Override
@@ -260,7 +261,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
 
     private List<String> findRandomListByRandom(Integer randomNum) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT name FROM c_keyword WHERE id >= ((SELECT MAX(id) FROM c_keyword)-(SELECT MIN(id) FROM c_keyword)) * RAND() + (SELECT MIN(id) FROM c_keyword)");
+        sql.append("SELECT title FROM c_keyword WHERE id >= ((SELECT MAX(id) FROM c_keyword)-(SELECT MIN(id) FROM c_keyword)) * RAND() + (SELECT MIN(id) FROM c_keyword)");
         sql.append(" LIMIT ?");
         return Db.query(sql.toString(), randomNum);
     }
@@ -288,7 +289,7 @@ public class KeywordServiceProvider extends JbootServiceBase<Keyword> implements
         return sqlBuilder.toString();
     }
 
-    private void searchEngineParams(Columns columns, Object searchEngineTypes, Object disabledSearchEngineTypes) {
+    private void addParams(Columns columns, Object searchEngineTypes, Object disabledSearchEngineTypes) {
 
         if (searchEngineTypes != null) {
             List<String> list = Splitter.on(",").splitToList(searchEngineTypes.toString());
