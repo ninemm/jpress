@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Model;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.components.cache.annotation.Cacheable;
+import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 import io.jpress.model.Dict;
@@ -21,6 +22,14 @@ public class DictServiceProvider extends JbootServiceBase<Dict> implements DictS
         Columns columns = Columns.create();
         columns.eq("type", type);
         return DAO.findListByColumns(columns, "value asc");
+    }
+
+    @Override
+    @Cacheable(name = Dict.CACHE_NAME, key = "#(value)")
+    public String findNameByValue(Object value) {
+        Column column = Column.create("value", value);
+        Dict dict = DAO.findFirstByColumn(column);
+        return dict != null ? dict.getName() : "-";
     }
 
     @Override
@@ -44,10 +53,12 @@ public class DictServiceProvider extends JbootServiceBase<Dict> implements DictS
                     Dict dict = (Dict) data;
                     Jboot.getCache().remove(Dict.CACHE_NAME, dict.getId());
                     Jboot.getCache().remove(Dict.CACHE_NAME, dict.getType());
+                    Jboot.getCache().remove(Dict.CACHE_NAME, dict.getValue());
                 } else {
                     Dict dict = findById(data);
                     Jboot.getCache().remove(Dict.CACHE_NAME, data);
                     Jboot.getCache().remove(Dict.CACHE_NAME, dict.getType());
+                    Jboot.getCache().remove(Dict.CACHE_NAME, dict.getValue());
                 }
                 break;
             case ACTION_ADD:

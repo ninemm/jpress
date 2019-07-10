@@ -39,7 +39,7 @@ public class _WebpageController extends AdminControllerBase {
     @Inject
     private WebpageService webpageService;
 
-    @AdminMenu(text = "文章管理", groupId = "crawler", order = 2)
+    @AdminMenu(text = "网页内容管理", groupId = "crawler", order = 2)
     public void index() {
         Page<Webpage> entries = webpageService.paginate(getPagePara(), 10);
         setAttr("page", entries);

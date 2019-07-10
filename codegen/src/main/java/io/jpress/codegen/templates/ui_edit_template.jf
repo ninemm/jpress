@@ -1,12 +1,10 @@
 #[[
 #@layout()
 #define css()
-#@layout_css?()
 <link rel="stylesheet" href="#(CPATH)/static/components/datepicker/css/bootstrap-datepicker3.min.css">
 #end
 
 #define script()
-#@layout_script?()
 <script src="#(CPATH)/static/components/datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="#(CPATH)/static/components/datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script>
@@ -33,7 +31,7 @@
 
     <section class="content-header">
         <h1>
-                        编辑/新增
+            编辑/新增
             <small>Edit</small>
         </h1>
     </section>
@@ -51,30 +49,30 @@
                           method="POST" id="form">
                         
                         <div class="box-body ">
-	                        #for(cm : tableMeta.columnMetas)
-	                            #set(modelAttrName=firstCharToLowerCase(tableMeta.modelName)+"."+cm.name)
-	                              #set(modelAttrName_=firstCharToLowerCase(tableMeta.modelName)+"_"+cm.name)
-	                             #if("id"==cm.name)
-	                                <input type="hidden" id="entryId" name="#(modelAttrName)" value="#('#(')#(modelAttrName) ??)">
-	                             #else
-		                            <div class="form-group">
-		                                <label class="col-sm-2 control-label">#(cm.remarks?? "列名称")</label>
-		                                <div class="col-sm-6">
-		                                 
-		                                #if("java.util.Date"==cm.javaType)
-										    <input type="input" class="form-control datetimepicker" placeholder="点击选择"
-		                       						name="#(modelAttrName)" value="#('#date(')#(modelAttrName) ?? now,'yyyy-MM-dd')" >
-										 #elseif("java.lang.Boolean"==cm.javaType)
-										   <input type="checkbox" class="switchery" data-for="#(modelAttrName_)" #('#')checkedIf(#(modelAttrName) ??)>
-                                           <input type="hidden" id="#(modelAttrName_)" name="#(modelAttrName)">
-										#else
-										   <input type="input" name="#(modelAttrName)" class="form-control" value="#('#(')#(modelAttrName) ??)"
-		                                           placeholder="">
-										#end
-		                                </div>
-		                            </div>
-		                          #end
-				 			#end
+                        #for(cm : tableMeta.columnMetas)
+                            #set(modelAttrName=firstCharToLowerCase(tableMeta.modelName)+"."+cm.name)
+                            #set(modelAttrName_=firstCharToLowerCase(tableMeta.modelName)+"_"+cm.name)
+                            #if("id"==cm.name)
+                                <input type="hidden" id="entryId" name="#(modelAttrName)" value="#('#(')#(modelAttrName) ??)">
+                            #else
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">#(cm.remarks?? "列名称")</label>
+                                    <div class="col-sm-6">
+
+                                    #if("java.util.Date"==cm.javaType)
+                                        <input type="input" class="form-control datetimepicker" placeholder="点击选择"
+                                                name="#(modelAttrName)" value="#('#date(')#(modelAttrName) ?? now,'yyyy-MM-dd')" >
+                                    #elseif("java.lang.Boolean"==cm.javaType)
+                                        <input type="checkbox" class="switchery" data-for="#(modelAttrName_)" #('#')checkedIf(#(modelAttrName) ??)>
+                                        <input type="hidden" id="#(modelAttrName_)" name="#(modelAttrName)">
+                                    #else
+                                        <input type="input" name="#(modelAttrName)" class="form-control" value="#('#(')#(modelAttrName) ??)"
+                                            placeholder="">
+                                    #end
+                                    </div>
+                                </div>
+                            #end
+                        #end
 
                         </div>
                         <!-- /.box-body -->

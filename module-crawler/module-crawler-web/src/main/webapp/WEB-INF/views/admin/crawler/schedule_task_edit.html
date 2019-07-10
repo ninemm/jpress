@@ -37,7 +37,7 @@
 								<label class="col-sm-2 control-label">任务名称</label>
 								<div class="col-sm-6">
 								   <input type="input" name="scheduleTask.task_name" class="form-control" value="#(scheduleTask.task_name ??)"
-										   placeholder="请填写该任务的名称，名称需要唯一...">
+										   placeholder="请填写该任务的名称，名称需要唯一，如baidu-task...">
 								</div>
 							</div>
 							<div class="form-group">
@@ -54,6 +54,8 @@
 										<option value="">--请选择--</option>
 										<option value="io.jpress.module.crawler.task.RelKeywordValidateTask" #selectedIf('io.jpress.module.crawler.task.RelKeywordValidateTask' == scheduleTask.getTaskClass())>相关关键词验证</option>
 										<option value="io.jpress.module.crawler.task.SugKeywordValidateTask" #selectedIf('io.jpress.module.crawler.task.SugKeywordValidateTask' == scheduleTask.getTaskClass())>下拉关键词验证</option>
+										<option value="io.jpress.module.crawler.task.ProxyValidateTask" #selectedIf('io.jpress.module.crawler.task.ProxyValidateTask' == scheduleTask.getTaskClass())>代理校验</option>
+										<option value="io.jpress.module.crawler.task.QiYunScheduleTask" #selectedIf('io.jpress.module.crawler.task.QiYunScheduleTask' == scheduleTask.getTaskClass())>旗云代理采集</option>
 									</select>
 								</div>
 							</div>

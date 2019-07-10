@@ -24,7 +24,7 @@
             <artifactId>jpress-core</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>io.jpress</groupId>
             <artifactId>module-crawler-model</artifactId>
             <version>2.0</version>
@@ -34,13 +34,34 @@
             <groupId>io.jpress</groupId>
             <artifactId>module-crawler-service-api</artifactId>
             <version>2.0</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>io.jpress</groupId>
             <artifactId>module-crawler-service-provider</artifactId>
             <version>2.0</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>io.jpress</groupId>-->
+<!--            <artifactId>module-proxy-service-provider</artifactId>-->
+<!--            <version>2.0</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>io.jpress</groupId>
+            <artifactId>module-keyword-web</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>io.jpress</groupId>-->
+<!--            <artifactId>module-proxy-web</artifactId>-->
+<!--            <version>2.0</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -55,6 +76,18 @@
         <dependency>
             <groupId>cn.edu.hfut.dmic.webcollector</groupId>
             <artifactId>WebCollector</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.brotli/dec -->
+        <dependency>
+            <groupId>org.brotli</groupId>
+            <artifactId>dec</artifactId>
+            <version>0.1.2</version>
         </dependency>
 
     </dependencies>

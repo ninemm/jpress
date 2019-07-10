@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2018-2019, Eric 黄鑫 (ninemm@126.com).
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.jpress.module.crawler.task;
 
 import com.google.common.collect.ImmutableMap;
@@ -6,16 +22,18 @@ import com.google.common.util.concurrent.*;
 import com.jfinal.aop.Aop;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jpress.module.crawler.callable.*;
-import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.ScheduleTask;
-import io.jpress.module.crawler.model.util.CrawlerConsts;
-import io.jpress.module.crawler.model.vo.KeywordParamVO;
-import io.jpress.module.crawler.service.KeywordService;
 import io.jpress.module.crawler.service.ScheduleTaskService;
+import io.jpress.module.keyword.callable.BaiduRelKeywordCallable;
+import io.jpress.module.keyword.callable.ShenmaRelKeywordCallable;
+import io.jpress.module.keyword.callable.SogoRelKeywordCallable;
+import io.jpress.module.keyword.callable.SosoRelKeywordCallable;
+import io.jpress.module.keyword.model.Keyword;
+import io.jpress.module.keyword.model.util.KeywordConsts;
+import io.jpress.module.keyword.model.vo.KeywordParamVO;
+import io.jpress.module.keyword.service.KeywordService;
 
 import java.util.Date;
 import java.util.List;
@@ -78,7 +96,7 @@ public class RelKeywordValidateTask implements Runnable {
 
         /** 监听执行线程池 */
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(executor);
-        /** Map存储关键词ID，有效状态 */
+        /** Map存储关键词 ID，有效状态 */
         List<ListenableFuture<KeywordParamVO>> futures = Lists.newArrayList();
 
         page.getList().stream().forEach(keyword -> {
@@ -86,11 +104,11 @@ public class RelKeywordValidateTask implements Runnable {
             Callable<KeywordParamVO> callable = null;
             KeywordParamVO keywordParam = new KeywordParamVO(keyword.getId(), keyword.getTitle());
 
-            if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SOGO)) {
+            if (searchType.equals(KeywordConsts.SEARCH_ENGINE_SOGO)) {
                 callable = new SogoRelKeywordCallable(keywordParam);
-            } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_360)) {
+            } else if (searchType.equals(KeywordConsts.SEARCH_ENGINE_360)) {
                 callable = new SosoRelKeywordCallable(keywordParam);
-            } else if (searchType.equals(CrawlerConsts.SEARCH_ENGINE_SHENMA)) {
+            } else if (searchType.equals(KeywordConsts.SEARCH_ENGINE_SHENMA)) {
                 callable = new ShenmaRelKeywordCallable(keywordParam);
             } else {
                 callable = new BaiduRelKeywordCallable(keywordParam);
@@ -109,7 +127,7 @@ public class RelKeywordValidateTask implements Runnable {
                 Map<String, List<KeywordParamVO>> keywordData = ImmutableMap.of(searchType, result);
                 ret.put("keywordData", keywordData);
 
-                Jboot.sendEvent(CrawlerConsts.UPDATE_KEYWORD_EVENT_NAME, ret);
+                Jboot.sendEvent(KeywordConsts.UPDATE_KEYWORD_EVENT_NAME, ret);
             }
         } catch (InterruptedException e) {
             _LOG.error("下拉搜索执行错误", e);

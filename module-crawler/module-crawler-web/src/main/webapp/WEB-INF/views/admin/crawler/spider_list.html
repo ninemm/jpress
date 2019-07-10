@@ -4,7 +4,7 @@
 <script>
 
 	function doDel(id) {
-		ajaxGet("#(CPATH)/admin/spider/doDel/" + id);
+		ajaxGet("#(CPATH)/admin/crawler/spider/doDel/" + id);
 	}
 
 	$("#batchDel").click(function () {
@@ -13,7 +13,7 @@
 			alert('您未选择任何条目');
 			return
 		}
-		ajaxGet("#(CPATH)/admin/spider/doDelByIds?ids=" + ids);
+		ajaxGet("#(CPATH)/admin/crawler/spider/doDelByIds?ids=" + ids);
 	});
 
 	function doStart(id) {
@@ -21,14 +21,47 @@
         let options = {
             msg: '确认启动采集吗?'
             , ids: id
-            , okFunction: okFunction
+            , okFunction: okStartFunction
         };
 
         showConfirm(options);
     }
 
-    function okFunction(id) {
-        ajaxGet("#(CPATH)/admin/spider/start/" + id);
+    function okStartFunction(id) {
+        ajaxGet("#(CPATH)/admin/crawler/spider/start/" + id, okFunction);
+    }
+
+    function doStop(id) {
+        let options = {
+            msg: '确认停止采集吗?'
+            , ids: id
+            , okFunction: okStopFunction
+        };
+        showConfirm(options);
+    }
+
+    function okStopFunction(id) {
+        ajaxGet("#(CPATH)/admin/crawler/spider/stop/" + id, okFunction);
+    }
+
+    function doSchedule(id, name) {
+        let url = '#(CPATH)/admin/crawler/spider/task';
+        let options = {
+            content: url,
+            title: name + '，添加定时任务',
+            offset: '120px',
+            area: ['800px', '600px']
+        };
+        openWindow(options);
+    }
+
+    function okFunction() {
+        toastr.success('操作成功');
+        location.reload();
+    }
+
+    function close() {
+	    layui.closeAll();
     }
 
 </script>
@@ -73,8 +106,9 @@
 								<th>线程数</th>
 								<th>重试次数</th>
                                 <th>请求超时时间</th>
+                                <th>启动代理</th>
 								<th title="单位毫秒">睡眠时长</th>
-								<th title="最多抓取网页数量,0代表不限制">抓取网页数量</th>
+								<th title="最多抓取页数,0代表不限制">抓取总页数</th>
 								<th>操作</th>
                             </tr>
                             #for(entry : page.list)
@@ -89,12 +123,23 @@
 								<td>#(entry.thread)</td>
 								<td>#(entry.retry)</td>
                                 <td>#(entry.timeout)</td>
+                                <td>
+                                    #if(entry.isEnableProxy())
+                                    <small class="label label-success">是</small>
+                                    #else
+                                    <small class="label label-default">否</small>
+                                    #end
+                                </td>
 								<td>#(entry.sleep)</td>
 								<td>#(entry.max_page_gather)</td>
 								<td>
                                     <a href="#(CPATH)/admin/crawler/spider/edit/#(entry.id)" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a>
+                                    #if(entry.isStartCrawler() == false)
                                     <a href="javascript:;" class="btn btn-xs text-orange" onclick="doStart('#(entry.id)')" title="启动(执行一次)"><i class="fa fa-play-circle"></i></a>
-                                    <a href="javascript:;" class="btn btn-xs text-blue" onclick="doSchedule('#(entry.id)')" title="定时任务"><i class="fa fa-clock-o"></i></a>
+                                    #else
+                                    <a href="javascript:;" class="btn btn-xs text-orange" onclick="doStop('#(entry.id)')" title="停止(可断掉续传)"><i class="fa fa-stop"></i></a>
+                                    #end
+                                    <a href="javascript:;" class="btn btn-xs text-blue" onclick="doSchedule('#(entry.id)', '#(entry.site_name)')" title="定时任务"><i class="fa fa-clock-o"></i></a>
                                     <a href="javascript:;" class="btn btn-xs text-red" onclick="doDel('#(entry.id)')" title="删除"><i class="fa fa-trash"></i></a>
 								</td>
                             </tr>

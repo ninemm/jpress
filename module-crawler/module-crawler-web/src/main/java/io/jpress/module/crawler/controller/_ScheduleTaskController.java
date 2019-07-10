@@ -22,6 +22,8 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
+import io.jboot.web.validate.EmptyValidate;
+import io.jboot.web.validate.Form;
 import io.jpress.JPressConsts;
 import io.jpress.core.menu.annotation.AdminMenu;
 import io.jpress.module.crawler.ScheduleTaskManager;
@@ -41,7 +43,7 @@ public class _ScheduleTaskController extends AdminControllerBase {
     @Inject
     private ScheduleTaskService taskService;
 
-    @AdminMenu(text = "任务管理", groupId = "crawler", order = 5)
+    @AdminMenu(text = "定时任务管理", groupId = "crawler", order = 4)
     public void index() {
         Page<ScheduleTask> page = taskService.paginate(getPagePara(), 10);
         setAttr("page", page);
@@ -74,7 +76,7 @@ public class _ScheduleTaskController extends AdminControllerBase {
         }
 
         if (task.isDistributed() && Jboot.getRedis() == null) {
-            _LOG.error("redis is null, can not use DistributedScheduleTask or config redis info in jboot.properties");
+            // _LOG.error("redis is null, can not use DistributedScheduleTask or config redis info in jboot.properties");
             renderJson(Ret.fail().set("message", "redis 为空，不能启用分布式，请进行配置！"));
             return;
         }
@@ -145,6 +147,39 @@ public class _ScheduleTaskController extends AdminControllerBase {
 
         _LOG.error("task id can't empty");
         renderJson(Ret.fail().set("message", "task id can't empty"));
+    }
+
+    @EmptyValidate({
+        @Form(name = "scheduleTask.cron", message = "Cron表达式不能为空"),
+        @Form(name = "scheduleTask.task_name", message = "任务名称不能为空"),
+        @Form(name = "scheduleTask.task_class", message = "任务类名不能为空")
+    })
+    public void doSaveAndStart() {
+        ScheduleTask task = getModel(ScheduleTask.class,"scheduleTask");
+        try {
+            task.setCreated(new Date());
+            task.setTaskId(StrUtil.uuid());
+            taskService.save(task);
+            if (ScheduleTaskManager.me().start(task)) {
+                task.setIsStart(true);
+                task.setCreated(new Date());
+                taskService.update(task);
+                renderOkJson();
+                return;
+            }
+            _LOG.error("task start fail");
+            renderJson(Ret.fail().set("message", "task start fail"));
+            return;
+        } catch (Exception e) {
+            if (task.getId() != null) {
+                task.delete();
+            }
+
+            _LOG.error(e.getMessage(), e);
+            renderJson(Ret.fail().set("message", e.getMessage()));
+            return;
+        }
+
     }
 
     /**

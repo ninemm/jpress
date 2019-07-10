@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2018-2019, Eric 黄鑫 (ninemm@126.com).
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.jpress.module.crawler.task;
 
 import com.google.common.collect.ImmutableMap;
@@ -9,16 +25,16 @@ import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jpress.module.crawler.callable.BaiduSugKeywordCallable;
-import io.jpress.module.crawler.callable.ShenmaSugKeywordCallable;
-import io.jpress.module.crawler.callable.SogoSugKeywordCallable;
-import io.jpress.module.crawler.callable.SosoSugKeywordCallable;
-import io.jpress.module.crawler.model.Keyword;
 import io.jpress.module.crawler.model.ScheduleTask;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
-import io.jpress.module.crawler.model.vo.KeywordParamVO;
-import io.jpress.module.crawler.service.KeywordService;
 import io.jpress.module.crawler.service.ScheduleTaskService;
+import io.jpress.module.keyword.callable.BaiduSugKeywordCallable;
+import io.jpress.module.keyword.callable.ShenmaSugKeywordCallable;
+import io.jpress.module.keyword.callable.SogoSugKeywordCallable;
+import io.jpress.module.keyword.callable.SosoSugKeywordCallable;
+import io.jpress.module.keyword.model.Keyword;
+import io.jpress.module.keyword.model.vo.KeywordParamVO;
+import io.jpress.module.keyword.service.KeywordService;
 
 import java.util.Date;
 import java.util.List;

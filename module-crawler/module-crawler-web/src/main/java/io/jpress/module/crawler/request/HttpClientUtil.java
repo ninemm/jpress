@@ -1,0 +1,422 @@
+/*
+ * Copyright (c) 2018-2019, Eric 黄鑫 (ninemm@126.com).
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.jpress.module.crawler.request;
+
+import com.google.common.io.ByteStreams;
+import com.jfinal.log.Log;
+import io.jboot.utils.StrUtil;
+import io.jpress.module.crawler.model.util.CrawlerConsts;
+import org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.*;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.AuthSchemes;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.*;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
+
+/**
+ * HTTP Client 工具类
+ *
+ * @author: Eric Huang
+ * @date: 2019/6/26 17:37
+ */
+public class HttpClientUtil {
+
+    private final static Log LOG = Log.getLog(HttpClientUtil.class);
+
+    public final static int MAX_TOTAL_CONNECTIONS = 400;
+
+    public final static int MAX_ROUTE_CONNECTIONS = 40;
+
+    public final static int CONNECT_TIMEOUT = 30000;
+
+    /**
+     * 连接池
+     */
+    private static PoolingHttpClientConnectionManager clientConnectionManager = null;
+
+    static {
+        initPoolingHttpClientConnectionManager();
+    }
+
+    public static HttpClientUtil getInstance() {
+        return HttpUtilSingleton.HTTP_UTIL;
+    }
+
+    public CloseableHttpClient createHttpClient() {
+        return createHttpClient(CONNECT_TIMEOUT, null, null);
+    }
+
+    public CloseableHttpClient createHttpClient(int timeOut, HttpHost httpHost, BasicClientCookie basicClientCookie) {
+
+        RequestConfig.Builder builder = RequestConfig.custom()
+            .setConnectionRequestTimeout(timeOut)
+            .setConnectTimeout(timeOut)
+            .setSocketTimeout(timeOut)
+            //RFC6265第4节定义的更为宽松的概要，用于与不符合标准的现有服务器的互操作性表现得很好
+            .setCookieSpec(CookieSpecs.STANDARD);
+
+        //设置代理
+        if (httpHost != null && StrUtil.notBlank(httpHost.getHostName()) && httpHost.getPort() > 0) {
+            builder.setProxy(httpHost);
+        }
+
+        RequestConfig requestConfig = builder.build();
+        HttpClientBuilder httpClientBuilder = HttpClients.custom();
+        httpClientBuilder.setDefaultRequestConfig(requestConfig)
+            .setRetryHandler(new RequestRetryHandler())
+            .setUserAgent(CrawlerConsts.USER_AGENT[2])
+            .setConnectionManager(clientConnectionManager);
+
+        if (basicClientCookie != null) {
+            CookieStore cookieStore = new BasicCookieStore();
+            cookieStore.addCookie(basicClientCookie);
+            httpClientBuilder.setDefaultCookieStore(cookieStore);
+        }
+
+        CloseableHttpClient closeableHttpClient = httpClientBuilder.setRedirectStrategy(
+            new DefaultRedirectStrategy() {
+                @Override
+                public boolean isRedirected(org.apache.http.HttpRequest request, HttpResponse response, HttpContext context) {
+                    boolean isRedirect = false;
+
+                    try {
+                        isRedirect = super.isRedirected((org.apache.http.HttpRequest) request, response, context);
+                    } catch (ProtocolException e) {
+                        LOG.error("", e);
+                    }
+
+                    if (!isRedirect) {
+                        int responseCode = response.getStatusLine().getStatusCode();
+                        if (responseCode == HttpStatus.SC_MOVED_PERMANENTLY
+                            || responseCode == HttpStatus.SC_MOVED_TEMPORARILY) {
+                            return true;
+                        }
+                    }
+
+                    return isRedirect;
+                }
+
+                @Override
+                protected URI createLocationURI(String location) throws ProtocolException {
+                    location = location.replace("|", "%7C");
+                    return super.createLocationURI(location);
+                }
+            }
+        ).build();
+
+        return closeableHttpClient;
+    }
+
+
+    public Response getResponse(CloseableHttpClient client, String url) {
+        return getResponse(client, null, url);
+    }
+
+    /**
+     * Request 參數為null，則默認為httpGet請求
+     *
+     * @param client
+     * @param request
+     * @param url
+     * @return
+     */
+    public Response getResponse(CloseableHttpClient client, Request request, String url) {
+        if (request != null) {
+            if (request.getMethod().equals(CrawlerConsts.METHOD_HTTPGET)) {
+                return httpGetResponse(client, request, url);
+            } else if (request.getMethod().equals(CrawlerConsts.METHOD_HTTPPOST)) {
+                return httpPostResponse(client, request, url);
+            } else {
+                LOG.warn("暂不支持的http请求类型：" + request.getMethod());
+                return null;
+            }
+        } else {
+            return httpGetResponse(client, null, url);
+        }
+    }
+
+    public Response httpGetResponse(CloseableHttpClient client, String url) {
+        return httpGetResponse(client, null, url);
+    }
+
+    public Response httpPostResponse(CloseableHttpClient client, String url) {
+        return httpPostResponse(client, null, url);
+    }
+
+    private Response httpGetResponse(CloseableHttpClient client, Request request, String url) {
+        CloseableHttpResponse closeableHttpResponse = null;
+        HttpGet httpGet = new HttpGet(urlEncode(url));
+        Response response = null;
+        //请求头设置
+        if (request != null) {
+            Map<String, String> headers = request.getHeaders();
+            if (headers != null && headers.size() > 0) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    httpGet.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        try {
+            closeableHttpResponse = client.execute(httpGet);
+            response = getHttpResponse(request, closeableHttpResponse);
+            response.setUrl(url);
+        } catch (Exception e) {
+            LOG.error("请求失败，url:" + url, e);
+        } finally {
+            //使用连接池无需关闭
+            //closeResources(closeableHttpResponse, null);
+        }
+        return response;
+    }
+
+    private Response httpPostResponse(CloseableHttpClient client, Request request, String url) {
+        Response response = null;
+        HttpPost httpPost = new HttpPost(urlEncode(url));
+        if (request != null) {
+            Map<String, String> headers = request.getHeaders();
+            // 设置头
+            if (headers != null && headers.size() != 0) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+
+            Map<String, Object> params = request.getParams();
+            if (params != null && params.size() > 0) {
+                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    nvps.add(new BasicNameValuePair(entry.getKey(), String.valueOf(entry.getValue())));
+                }
+                try {
+                    httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("设置post请求参数失败:", e);
+                }
+            }
+        }
+        CloseableHttpResponse closeableHttpResponse = null;
+        try {
+            closeableHttpResponse = client.execute(httpPost);
+            response = getHttpResponse(request, closeableHttpResponse);
+            response.setUrl(url);
+        } catch (Exception e) {
+            LOG.error("请求失败，url:" + url, e);
+        } finally {
+            //使用连接池无需关闭
+            //closeResources(closeableHttpResponse, null);
+        }
+        return response;
+    }
+
+
+    /**
+     * 设置response
+     *
+     * @param request
+     * @param httpResponse
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws IOException
+     */
+    private Response getHttpResponse(Request request, CloseableHttpResponse httpResponse) throws UnsupportedEncodingException, IOException {
+        Response response = new Response();
+        String charSet = "utf-8";
+        if (request != null) {
+            charSet = request.getCharset();
+            if (StrUtil.isBlank(charSet)) {
+                charSet = httpResponse.getEntity().getContentType() == null ? "utf-8" : StringUtils.contains(httpResponse.getEntity().getContentType().getValue(), "charset") ? getCharSet(httpResponse.getEntity().getContentType().getValue()) : "utf-8";
+            }
+        }
+        response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+        // 获取返回数据
+        HttpEntity entity = httpResponse.getEntity();
+        Header header = entity.getContentEncoding();
+        InputStream in = entity.getContent();
+        try {
+            if (header != null && CrawlerConsts.SYMBOL_ZIP.equals(header.getValue().toLowerCase())) {
+                byte[] bytes = ByteStreams.toByteArray(new GZIPInputStream(in));
+                String content = new String(bytes, charSet);
+                response.setContent(content);
+            } else if (header != null && CrawlerConsts.SYMBOL_BROTLI.equals(header.getValue().toLowerCase())) {
+                byte[] bytes = ByteStreams.toByteArray(new BrotliCompressorInputStream(in));
+                String content = new String(bytes, charSet);
+                response.setContent(content);
+            } else {
+                byte[] bytes = EntityUtils.toByteArray(entity);
+                String content = new String(bytes, charSet);
+                response.setContent(content);
+            }
+        } catch (Exception e) {
+            LOG.error("读取响应内容异常: ", e);
+        } finally {
+            //关闭流的作用就是将用完的连接释放，下次请求可以复用，如不使用in.close();而仅仅使用response.close();结果就是连接会被关闭，并且不能被复用，如此失去了采用连接池的意义。
+            IOUtils.closeQuietly(in);
+        }
+        return response;
+    }
+
+    /**
+     * 将url进行encode编码，这里不能直接使用URlEncode(url,"utf-8");方法进编码，
+     * 会报org.apache.http.client.ClientProtocolException，这里只将特殊字符转义
+     * 如：+、空格、#、{、}、“ 等
+     *
+     * @param url
+     * @return
+     */
+    private String urlEncode(String url) {
+        url = url.replaceAll("\\+", "%2b")
+            .replaceAll(" ", "%20")
+            .replaceAll("\\{", "%7b")
+            .replaceAll("}", "%7d")
+            .replaceAll("\"", "%22");
+        return url;
+    }
+
+    /**
+     * 初始化连接池，支持http/https
+     */
+    private static void initPoolingHttpClientConnectionManager() {
+        SSLContext sslcontext = null;
+        try {
+            //TLS安全协议上下文获取
+            sslcontext = SSLContext.getInstance("TLS");
+            // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
+            X509TrustManager x509m = new X509TrustManager() {
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                }
+            };
+
+            sslcontext.init(null, new TrustManager[]{x509m}, new java.security.SecureRandom());
+            SSLConnectionSocketFactory sslConnectionSocketFactory =
+                    new SSLConnectionSocketFactory(sslcontext, NoopHostnameVerifier.INSTANCE);
+
+            //RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD_STRICT)
+            //        .setExpectContinueEnabled(true)
+            //        .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+            //        .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
+
+            Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.INSTANCE)
+                    .register("https", sslConnectionSocketFactory)
+                    .build();
+
+            clientConnectionManager = new PoolingHttpClientConnectionManager(registry);
+            // 设置最大连接数
+            clientConnectionManager.setMaxTotal(MAX_TOTAL_CONNECTIONS);
+            // 设置每个连接的路由数
+            clientConnectionManager.setDefaultMaxPerRoute(MAX_ROUTE_CONNECTIONS);
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("", e);
+        } catch (KeyManagementException e) {
+            LOG.error("", e);
+        }
+    }
+
+    private static class HttpUtilSingleton {
+        private final static HttpClientUtil HTTP_UTIL = new HttpClientUtil();
+    }
+
+    /**
+     * 截取编码方式
+     *
+     * @param str
+     * @return
+     */
+    private String getCharSet(String str) {
+        String charSet = match(str, CrawlerConsts.CHARSET_PATTERN);
+        return charSet;
+    }
+
+
+    /**
+     * 正则匹配
+     *
+     * @param s
+     * @param pattern
+     * @return
+     */
+    private String match(String s, String pattern) {
+        Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE + Pattern.UNICODE_CASE);
+        Matcher matcher = p.matcher(s);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return "";
+        }
+    }
+
+    public void closeResources(CloseableHttpResponse closeableHttpResponse, CloseableHttpClient closeableHttpClient) {
+        try {
+            if (closeableHttpResponse != null) {
+                closeableHttpResponse.close();
+            }
+            if (closeableHttpClient != null) {
+                closeableHttpClient.close();
+            }
+        } catch (IOException e) {
+            LOG.error("关闭closeableHttpResponse失败：", e);
+        }
+    }
+}

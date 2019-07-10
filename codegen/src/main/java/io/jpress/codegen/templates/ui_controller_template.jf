@@ -40,7 +40,6 @@ public class _#(tableMeta.modelName)Controller extends AdminControllerBase {
         render("#(moduleName)/#(tableMeta.name)_list.html");
     }
 
-   
     public void edit() {
         int entryId = getParaToInt(0, 0);
 
@@ -55,7 +54,6 @@ public class _#(tableMeta.modelName)Controller extends AdminControllerBase {
         service.saveOrUpdate(entry);
         renderJson(Ret.ok().set("id", entry.getId()));
     }
-
 
     public void doDel() {
         Long id = getIdPara();

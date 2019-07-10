@@ -104,5 +104,13 @@
 				</label>
 			</div>
 		</div>
+
+		<div class="form-group col-sm-10">
+			<label class="col-sm-2 control-label">自动探测发布时间</label>
+			<div class="input-group col-sm-6">
+				<input type="checkbox" class="switchery" data-for="auto_detect_push_date" #checkedIf(spider ?? false && spider.is_auto_detect_push_date ??)>
+				<input type="hidden" id="auto_detect_push_date" name="spider.is_auto_detect_push_date">
+			</div>
+		</div>
 	</div>
 </div>

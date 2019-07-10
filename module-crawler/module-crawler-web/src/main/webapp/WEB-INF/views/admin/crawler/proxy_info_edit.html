@@ -1,0 +1,150 @@
+#@layout()
+
+#define script()
+<script>
+    function doSubmit() {
+        ajaxSubmit("#form", function (data) {
+            $("#entryId").attr("value", data.id);
+            toastr.success('内容保存成功。');
+        })
+    }
+
+    $("#submit").on("click", function () {
+        doSubmit();
+    })
+</script>
+#end
+
+#define content()
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            查看
+            <small>View ProxyInfo</small>
+        </h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header ">
+                        <h3 class="box-title"></h3>
+                    </div>
+                    <form class="form-horizontal form-setting" autocomplete="off"
+                          action="#(CPATH)/admin/proxy/proxyInfo/doSave" method="POST" id="form">
+                        
+                        <div class="box-body ">
+                            <input type="hidden" id="entryId" name="proxyInfo.id" value="#(proxyInfo.id ??)">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">IP</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.ip" class="form-control" value="#(proxyInfo.ip ??)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">端口</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.port" class="form-control" value="#(proxyInfo.port ??)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">匿名度</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.anonymity_type" class="form-control"
+                                       value="#(proxyInfo.anonymity_type ??)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">位置</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.location" class="form-control"
+                                       value="#(proxyInfo.location ??)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">网络运营商</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.isp" class="form-control" value="#(proxyInfo.isp ??)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">响应时长(s)</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.response" class="form-control"
+                                       value="#(proxyInfo.response ??)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">最后验证时间</label>
+                                <div class="col-sm-6">
+                                    <input type="input" class="form-control datetimepicker" name="proxyInfo.verify_time"
+                                       value="#date(proxyInfo.verify_time ??, 'yyyy-MM-dd HH:mm:ss')" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">请求协议</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.protocol" class="form-control"
+                                       value="#(proxyInfo.protocol ??)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Method</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.method" class="form-control"
+                                       value="#(proxyInfo.method ??)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">网站</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.website" class="form-control"
+                                       value="#(proxyInfo.website ??)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">是否可用</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" class="switchery" data-for="proxyInfo_is_enable" #checkedIf(proxyInfo.is_enable ??)>
+                                    <input type="hidden" id="proxyInfo_is_enable" name="proxyInfo.is_enable">
+                                </div>
+                            </div>
+
+                            <!--<div class="form-group">
+                                <label class="col-sm-2 control-label">用户名</label>
+                                <div class="col-sm-6">
+                                    <input type="input" name="proxyInfo.username" class="form-control" value="#(proxyInfo.username ??)"
+                                        placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">密码</label>
+                                <div class="col-sm-6">
+
+                                    <input type="input" name="proxyInfo.password" class="form-control" value="#(proxyInfo.password ??)"
+                                        placeholder="">
+                                </div>
+                            </div>-->
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <div class="col-sm-offset-2 col-sm-10 submit-block">
+                                <div class="box-submit">
+                                    <!--<button id="submit" type="button" class="btn btn-primary">提交</button>-->
+                                    <button type="button" class="btn btn-default" onclick="window.history.go(-1);">返回</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+#end

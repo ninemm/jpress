@@ -29,6 +29,25 @@ public class DateUtils {
     /**
      * 功能描述：字符串转日期
      * @param str		日期字符串
+     * @return
+     * 返回类型：Date
+     * 创建人：eric
+     * 日期：2017年2月16日
+     */
+    public static Date strToDate(String str) {
+
+        if (StrUtil.isBlank(str)) {
+            return null;
+        }
+
+        String format = DEFAULT_FORMATTER;
+        return strToDate(str, format);
+
+    }
+
+    /**
+     * 功能描述：字符串转日期
+     * @param str		日期字符串
      * @param format	日期格式
      * @return
      * 返回类型：Date

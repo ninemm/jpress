@@ -15,6 +15,14 @@ public interface DictService  {
      */
     public Dict findById(Object id);
 
+    /**
+     * find dict name by value
+     *
+     * @param id
+     * @return
+     */
+    public String findNameByValue(Object value);
+
 
     /**
      * find all model

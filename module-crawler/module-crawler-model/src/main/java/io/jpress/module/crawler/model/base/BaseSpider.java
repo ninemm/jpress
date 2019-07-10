@@ -217,6 +217,14 @@ public abstract class BaseSpider<M extends BaseSpider<M>> extends JbootModel<M> 
 		return getStr("publish_time_format");
 	}
 
+	public void setIsEnableProxy(java.lang.Boolean isEnableProxy) {
+		set("is_enable_proxy", isEnableProxy);
+	}
+
+	public java.lang.Boolean getIsEnableProxy() {
+		return getBoolean("is_enable_proxy");
+	}
+
 	public void setIsGatherIndex(java.lang.Boolean isGatherIndex) {
 		set("is_gather_index", isGatherIndex);
 	}
@@ -279,6 +287,14 @@ public abstract class BaseSpider<M extends BaseSpider<M>> extends JbootModel<M> 
 	
 	public java.lang.Boolean getIsAjaxSite() {
 		return getBoolean("is_ajax_site");
+	}
+
+	public void setIsStartCrawler(java.lang.Boolean isStartCrawler) {
+		set("is_start_crawler", isStartCrawler);
+	}
+
+	public java.lang.Boolean getIsStartCrawler() {
+		return getBoolean("is_start_crawler");
 	}
 
 	public void setIsAutoDetectPushDate(java.lang.Boolean isAutoDetectPushDate) {

@@ -2,7 +2,7 @@ package io.jpress.module.crawler.crawler;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
-import io.jpress.module.crawler.model.vo.KeywordParamVO;
+import io.jpress.module.keyword.model.vo.KeywordParamVO;
 
 /**
  * RamCrawler抽象类

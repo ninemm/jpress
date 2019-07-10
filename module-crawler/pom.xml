@@ -15,9 +15,6 @@
     <artifactId>module-crawler</artifactId>
 
     <properties>
-        <webcollector.version>2.73-alpha</webcollector.version>
-        <hanlp.version>portable-1.7.3</hanlp.version>
-
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -29,21 +26,19 @@
         <module>module-crawler-service-provider</module>
     </modules>
 
-    <dependencyManagement>
+    <!--<dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>cn.edu.hfut.dmic.webcollector</groupId>
                 <artifactId>WebCollector</artifactId>
-                <version>${webcollector.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.hankcs</groupId>
                 <artifactId>hanlp</artifactId>
-                <version>${hanlp.version}</version>
             </dependency>
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement>-->
 
     <build>
         <plugins>

@@ -1,0 +1,129 @@
+#@layout()
+
+#define script()
+<script>
+
+	function doSubmit() {
+		ajaxSubmit("#form", function (data) {
+			$("#entryId").attr("value", data.id);
+			toastr.success('内容保存成功。');
+		})
+	}
+
+	$("#submit").on("click", function () {
+		doSubmit();
+	})
+	</script>
+#end
+
+#define content()
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            #if(spider.id ??) 编辑 #else 新增 #end代理采集配置
+            <small>Proxy IP Template Item</small>
+        </h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title"></h3>
+                    </div>
+                    <form class="form-horizontal form-setting autoAjaxSubmit" autocomplete="off"
+                        action="#(CPATH)/admin/crawler/spider/doSave" data-ok-href="#(CPATH)/admin/crawler/spider"
+                        method="POST" id="form">
+						<input type="hidden" id="entryId" name="spider.id" value="#(spider.id ??)">
+                        <div class="box-body">
+                            <div class="col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">网站名称</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="input" name="spider.site_name" class="form-control" value="#(spider.site_name ??)" placeholder="请输入网站名称...">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">网站域名</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="input" name="spider.domain" class="form-control" value="#(spider.domain ??)" placeholder="请输入网站域名...">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">起始链接</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <!--<input type="url" name="spider.start_url" class="form-control" value="#(spider.start_url ??)" placeholder="请输入开始抓取的链接...">-->
+                                        <textarea name="spider.start_url" class="form-control" placeholder="请输入开始链接...">#(spider.start_url ??)</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">最大页码</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="number" min="1" name="spider.max_page_gather" class="form-control" value="#(spider.max_page_gather ?? 0)"
+                                               placeholder="请输入最大页码，0代表采集单个页面">
+                                        <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 最大分页页码，0或空为采集单个页面 </p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">线程数</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="number" min="1" max="10" name="spider.thread" class="form-control" value="#(spider.thread ?? 1)"
+                                                placeholder="请输入爬虫线程数...">
+                                        <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 请合理的填写线程数，以免触发反爬策略，默认值是1 </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">重试次数</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="number" min="1" max="5" name="spider.retry" class="form-control" value="#(spider.retry ?? 1)"
+                                                placeholder="请输入HTTP请求失败后，重试次数...">
+                                        <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 请合理的填写重试数，为了提高爬取效率，重试次数不要太多，最大值是5 </p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">请求超时时间</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="number" min="3000" name="spider.timeout" class="form-control" value="#(spider.timeout ?? 50000)"
+                                                placeholder="请输入HTTP请求超时时间">
+                                        <div class="input-group-addon">ms</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">线程休眠时长</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="number" min="1000" name="spider.sleep" class="form-control" value="#(spider.sleep ?? 30000)"
+                                               placeholder="请输入抓取网页后，线程休眠时长">
+                                        <div class="input-group-addon">ms</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-xs-12 control-label">是否启动代理</label>
+                                    <div class="input-group col-sm-6 col-xs-12">
+                                        <input type="checkbox" class="switchery" data-for="enable_proxy" #checkedIf(spider ?? false && spider.isEnableProxy() ??)>
+                                        <input type="hidden" id="enable_proxy" name="spider.is_enable_proxy">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <div class="text-center">
+                                <div class="box-submit">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-footer -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+#end

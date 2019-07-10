@@ -8,7 +8,7 @@ import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
 import io.jboot.Jboot;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
-import io.jpress.module.crawler.model.vo.KeywordParamVO;
+import io.jpress.module.keyword.model.vo.KeywordParamVO;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
