@@ -35,4 +35,17 @@ public class Spider extends BaseSpider<Spider> {
         return isEnableProxy != null && isEnableProxy == true;
     }
 
+    /**
+     * 是否断点续传
+     *
+     * @author Eric
+     * @date 11:53 2019-07-04
+     * @param null
+     * @return
+     */
+    public Boolean isResumable() {
+        Boolean isResumable = getIsResumable();
+        return isResumable != null && isResumable == true;
+    }
+
 }

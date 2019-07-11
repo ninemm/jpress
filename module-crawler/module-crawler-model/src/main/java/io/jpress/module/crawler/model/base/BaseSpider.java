@@ -225,6 +225,14 @@ public abstract class BaseSpider<M extends BaseSpider<M>> extends JbootModel<M> 
 		return getBoolean("is_enable_proxy");
 	}
 
+	public void setIsResumable(java.lang.Boolean isResumable) {
+		set("is_resumable", isResumable);
+	}
+
+	public java.lang.Boolean getIsResumable() {
+		return getBoolean("is_resumable");
+	}
+
 	public void setIsGatherIndex(java.lang.Boolean isGatherIndex) {
 		set("is_gather_index", isGatherIndex);
 	}

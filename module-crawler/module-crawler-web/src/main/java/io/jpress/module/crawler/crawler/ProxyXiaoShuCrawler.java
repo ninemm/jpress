@@ -20,7 +20,6 @@ import cn.edu.hfut.dmic.webcollector.conf.Configuration;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jfinal.log.Log;
@@ -58,7 +57,7 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
         Headers headers = Headers.of(headerMap);
 
         // 设置HTTP代理插件
-        if (spider.isEnableProxy()) {
+        if (spider != null && spider.isEnableProxy()) {
             setRequester(new ProxyRequester("http", headers));
         }
     }
@@ -92,7 +91,7 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
                         sqlBuilder.append("'").append(m.group("anonymity")).append("'").append(", ");
                         sqlBuilder.append("'").append(m.group("isp")).append("'").append(", ");
                         sqlBuilder.append("'").append(crawlerTime).append("'").append(", ");
-                        sqlBuilder.append("'").append(ProxySite.xsProxy.getDomain()).append("'");
+                        sqlBuilder.append("'").append(ProxySite.xiaoshu.getDomain()).append("'");
 
                         sqlBuilder.append(")");
                         sqlList.add(sqlBuilder.toString());
@@ -115,7 +114,9 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
             conf.setDefaultUserAgent(spider.getUserAgent());
 
             this.setConf(conf);
-            this.setResumable(true);
+            if (spider.isResumable()) {
+                this.setResumable(true);
+            }
             this.setThreads(spider.getThread());
             this.addSeedAndReturn(spider.getStartUrl()).type(LIST_TYPE);
 

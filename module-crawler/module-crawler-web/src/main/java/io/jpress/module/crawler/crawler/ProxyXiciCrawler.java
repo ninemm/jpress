@@ -19,12 +19,10 @@ package io.jpress.module.crawler.crawler;
 import cn.edu.hfut.dmic.webcollector.conf.Configuration;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jfinal.log.Log;
-import io.jboot.Jboot;
 import io.jpress.module.crawler.enums.ProxySite;
 import io.jpress.module.crawler.model.Spider;
 import io.jpress.module.crawler.model.util.CrawlerConsts;
@@ -82,7 +80,7 @@ public class ProxyXiciCrawler extends AbstractBreadthCrawler {
         Headers headers = Headers.of(headerMap);
 
         // 设置HTTP代理插件
-        if (spider.isEnableProxy()) {
+        if (spider != null && spider.isEnableProxy()) {
             setRequester(new ProxyRequester("https", headers));
         }
 
@@ -126,7 +124,7 @@ public class ProxyXiciCrawler extends AbstractBreadthCrawler {
             sqlBuilder.append("'").append(anonymity).append("', ");
 
             sqlBuilder.append("'").append(crawlerTime).append("', ");
-            sqlBuilder.append("'").append(ProxySite.xiciProxy.getDomain()).append("'");
+            sqlBuilder.append("'").append(ProxySite.xici.getDomain()).append("'");
             sqlBuilder.append(")");
             sqlBuilder.append(" on duplicate key update response = " + response);
 
@@ -149,7 +147,9 @@ public class ProxyXiciCrawler extends AbstractBreadthCrawler {
             // conf.setDefaultCookie("_free_proxy_session=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWUwYTFkMzVkNmZkMjNkMDIyNzU5YzJiNzE0OGY4ODAxBjsAVEkiEF9jc3JmX3Rva2VuBjsARkkiMWE3Q1Z5R0h5WGpPT1dhWHJrT29VVllFaW8zM055SjRDNk12MTBoRGprb0k9BjsARg");
 
             this.setConf(conf);
-            this.setResumable(true);
+            if (spider.isResumable()) {
+                this.setResumable(true);
+            }
             this.setThreads(spider.getThread());
             this.addSeedAndReturn(spider.getStartUrl());
 

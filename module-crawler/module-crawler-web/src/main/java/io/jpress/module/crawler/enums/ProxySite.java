@@ -23,21 +23,20 @@ package io.jpress.module.crawler.enums;
  * @date: 2019/6/25 18:33
  */
 public enum ProxySite {
-
-    xiciProxy("xicidaili","https://www.xicidaili.com", "西刺免费代理IP"),
-    kuaiProxy("kuaidaili","https://www.kuaidaili.com/", "快代理IP"),
-    xsProxy("xsdaili","http://www.xsdaili.com/", "小舒免费代理IP"),
-    // goubanjia("goubanjia","www.goubanjia.com", "全网代理IP"),
+    xici("xicidaili","www.xicidaili.com", "西刺免费代理IP"),
+    kuai("kuaidaili","www.kuaidaili.com/", "快代理IP"),
+    xiaoshu("xsdaili","www.xsdaili.com/", "小舒免费代理IP"),
+    goubanjia("goubanjia","www.goubanjia.com", "全网代理IP"),
     qiyun("qiyun","www.qydaili.com", "旗云代理"),
     nima("nima","www.nimadaili.com", "泥马代理"),
-    ip3366("goubanjia", "www.ip3366.net", "云代理IP"),
+    ip3366("ip3366", "www.ip3366.net", "云代理IP"),
     // freeProxyList("goubanjia","free-proxy-list.net", "Free Proxy List"),
-    data5u("goubanjia","www.data5u.com", "无忧代理IP"),
-    xdaili("goubanjia","www.xdaili.cn", "讯代理IP"),
-    nianshao("goubanjia","www.nianshao.me", "年少HTTP PROXY"),
-    proxydb("goubanjia","proxydb.net", "proxydb"),
-    kxdaili("kx","kxdaili.com", "开心代理"),
-    coderbusy("goubanjia","proxy.coderbusy.com", "coderbusy");
+    data5u("data5u","www.data5u.com", "无忧代理IP"),
+    // xdaili("goubanjia","www.xdaili.cn", "讯代理IP"),
+    // nianshao("goubanjia","www.nianshao.me", "年少HTTP PROXY"),
+    proxydb("proxydb","proxydb.net", "proxydb"),
+    // kxdaili("kx","kxdaili.com", "开心代理"),
+    coderbusy("coderbusy","proxy.coderbusy.com", "coderbusy");
 
     private String key;
     private String domain;

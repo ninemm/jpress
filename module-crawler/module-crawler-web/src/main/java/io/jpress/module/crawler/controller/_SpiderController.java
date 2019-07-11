@@ -31,8 +31,6 @@ import io.jpress.module.crawler.model.Spider;
 import io.jpress.module.crawler.service.SpiderService;
 import io.jpress.web.base.AdminControllerBase;
 
-import java.util.Date;
-
 
 @RequestMapping(value = "/admin/crawler/spider", viewPath = JPressConsts.DEFAULT_ADMIN_VIEW)
 public class _SpiderController extends AdminControllerBase {
@@ -98,26 +96,41 @@ public class _SpiderController extends AdminControllerBase {
             int depth = 1;
             String key = null;
             AbstractBreadthCrawler crawler = null;
-            // ProxyCrawlerManager.me().
-            if (spider.getStartUrl().contains(ProxySite.kuaiProxy.getKey())) {
-                key = ProxySite.kuaiProxy.getKey();
+
+            if (spider.getStartUrl().contains(ProxySite.kuai.getKey())) {
+                key = ProxySite.kuai.getKey();
                 crawler = new ProxyKuaiCrawler("crawler/kuai", false, spider);
-            } else if (spider.getStartUrl().contains(ProxySite.xsProxy.getKey())) {
+            } else if (spider.getStartUrl().contains(ProxySite.xiaoshu.getKey())) {
                 depth = 2;
-                key = ProxySite.xsProxy.getKey();
+                key = ProxySite.xiaoshu.getKey();
                 crawler = new ProxyXiaoShuCrawler("crawler/xiaoshu", false, spider);
-            } else if (spider.getStartUrl().contains(ProxySite.xiciProxy.getKey())) {
-                key = ProxySite.xiciProxy.getKey();
+            } else if (spider.getStartUrl().contains(ProxySite.xici.getKey())) {
+                key = ProxySite.xici.getKey();
                 crawler = new ProxyXiciCrawler("crawler/xici", false, spider);
             } else if (spider.getStartUrl().contains(ProxySite.nima.getKey())) {
                 key = ProxySite.nima.getKey();
                 crawler = new ProxyNiMaCrawler("crawler/nima", false, spider);
+            } else if (spider.getStartUrl().contains(ProxySite.coderbusy.getKey())) {
+                key = ProxySite.coderbusy.getKey();
+                crawler = new ProxyCoderBusyCrawler("crawler/coderbusy", false, spider);
+            } else if (spider.getStartUrl().contains(ProxySite.data5u.getKey())) {
+                key = ProxySite.data5u.getKey();
+                crawler = new ProxyData5uCrawler("crawler/data5u", false, spider);
+            } else if (spider.getStartUrl().contains(ProxySite.ip3366.getKey())) {
+                key = ProxySite.ip3366.getKey();
+                crawler = new ProxyYunCrawler("crawler/yun", false, spider);
+            } else if (spider.getStartUrl().contains(ProxySite.qiyun.getKey())) {
+                key = ProxySite.qiyun.getKey();
+                crawler = new ProxyQiyunCrawler("crawler/qiyun", false, spider);
             }
 
             try {
-                if (crawler != null) {
-                    ProxyCrawlerManager.me().start(key, crawler, depth);
+
+                if (crawler == null) {
+                    throw new JbootException("crawler don't init.");
                 }
+
+                ProxyCrawlerManager.me().start(key, crawler, depth);
             } catch (Exception e) {
                 _LOG.error("crawler:" + crawler.getClass().getName() + " start failure. ", e);
                 renderFailJson();
@@ -140,14 +153,22 @@ public class _SpiderController extends AdminControllerBase {
         spider.setIsStartCrawler(false);
 
         if (spiderService.update(spider)) {
-            if (spider.getStartUrl().contains(ProxySite.kuaiProxy.getKey())) {
-                ProxyCrawlerManager.me().stop(ProxySite.kuaiProxy.getKey());
-            } else if (spider.getStartUrl().contains(ProxySite.xsProxy.getKey())) {
-                ProxyCrawlerManager.me().stop(ProxySite.kuaiProxy.getKey());
-            } else if (spider.getStartUrl().contains(ProxySite.xiciProxy.getKey())) {
-                ProxyCrawlerManager.me().stop(ProxySite.xiciProxy.getKey());
+            if (spider.getStartUrl().contains(ProxySite.kuai.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.kuai.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.xiaoshu.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.kuai.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.xici.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.xici.getKey());
             } else if (spider.getStartUrl().contains(ProxySite.nima.getKey())) {
                 ProxyCrawlerManager.me().stop(ProxySite.nima.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.coderbusy.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.coderbusy.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.data5u.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.data5u.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.ip3366.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.ip3366.getKey());
+            } else if (spider.getStartUrl().contains(ProxySite.qiyun.getKey())) {
+                ProxyCrawlerManager.me().stop(ProxySite.qiyun.getKey());
             }
         }
         renderOkJson();

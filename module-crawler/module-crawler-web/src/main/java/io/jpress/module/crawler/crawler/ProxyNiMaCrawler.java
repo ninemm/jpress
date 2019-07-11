@@ -143,7 +143,9 @@ public class ProxyNiMaCrawler extends AbstractBreadthCrawler {
             conf.setDefaultUserAgent(spider.getUserAgent());
 
             this.setConf(conf);
-            this.setResumable(true);
+            if (spider.isResumable()) {
+                this.setResumable(true);
+            }
             this.setThreads(spider.getThread());
             this.addSeedAndReturn(spider.getStartUrl());
 

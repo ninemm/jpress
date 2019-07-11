@@ -12,6 +12,7 @@
 				<input type="input" name="spider.domain" class="form-control" value="#(spider.domain ??)" placeholder="请输入网站域名...">
 			</div>
 		</div>
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label">起始链接</label>
 			<div class="input-group col-sm-6">
@@ -20,6 +21,14 @@
 			</div>
 		</div>
 		<div class="form-group">
+			<label class="col-sm-2 col-xs-12 control-label">User Agent</label>
+			<div class="input-group col-sm-6 col-xs-12">
+				<input type="input" name="spider.user_agent" class="form-control" value="#(spider.user_agent ??)" placeholder="请输入User Agent">
+				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 爬虫对自身的描述，将自己描述为一个普通的浏览器以防止被网站封杀 </p>
+			</div>
+		</div>
+
+		<div class="form-group">
 			<label class="col-sm-2 col-xs-12 control-label">最大页码</label>
 			<div class="input-group col-sm-6 col-xs-12">
 				<input type="number" min="1" name="spider.max_page_gather" class="form-control" value="#(spider.max_page_gather ?? 0)"
@@ -27,7 +36,6 @@
 				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 最大分页页码，0或空为采集单个页面 </p>
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label class="col-sm-2 col-xs-12 control-label">线程数</label>
 			<div class="input-group col-sm-6 col-xs-12">
@@ -36,6 +44,7 @@
 				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 请合理的填写线程数，以免触发反爬策略，默认值是1 </p>
 			</div>
 		</div>
+
 		<div class="form-group">
 			<label class="col-sm-2 col-xs-12 control-label">重试次数</label>
 			<div class="input-group col-sm-6 col-xs-12">
@@ -44,7 +53,6 @@
 				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 请合理的填写重试数，为了提高爬取效率，重试次数不要太多，最大值是5 </p>
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label class="col-sm-2 col-xs-12 control-label">请求超时时间</label>
 			<div class="input-group col-sm-6 col-xs-12">
@@ -53,23 +61,27 @@
 				<div class="input-group-addon">ms</div>
 			</div>
 		</div>
+
 		<div class="form-group">
 			<label class="col-sm-2 col-xs-12 control-label">线程休眠时长</label>
 			<div class="input-group col-sm-6 col-xs-12">
-				<input type="number" min="1000" name="spider.sleep" class="form-control" value="#(spider.sleep ?? 30000)"
+				<input type="number" min="1000" name="spider.sleep" class="form-control" value="#(spider.sleep ?? 3000)"
 					   placeholder="请输入抓取网页后，线程休眠时长">
 				<div class="input-group-addon">ms</div>
 			</div>
 		</div>
-
 		<div class="form-group">
-			<label class="col-sm-2 col-xs-12 control-label">是否启动代理</label>
+			<label class="col-sm-2 col-xs-12 control-label">设置</label>
 			<div class="input-group col-sm-6 col-xs-12">
-				<input type="checkbox" class="switchery" data-for="enable_proxy" #checkedIf(spider ?? false && spider.isEnableProxy() ??)>
-				<input type="hidden" id="enable_proxy" name="spider.is_enable_proxy">
+				<label class="checkbox-inline">
+					<input type="checkbox" class="switchery" data-for="resumable" #checkedIf(spider ?? false && spider.is_resumable ??)>
+					<input type="hidden" id="resumable" name="spider.is_resumable">是否断点续传
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" class="switchery" data-for="enable_proxy" #checkedIf(spider ?? false && spider.isEnableProxy() ??)>
+					<input type="hidden" id="enable_proxy" name="spider.is_enable_proxy">是否启动代理
+				</label>
 			</div>
 		</div>
-
-
 	</div>
 </div>

@@ -1,14 +1,6 @@
 <div class="container content">
 	<div class="col-md-12">
 		<div class="form-group col-sm-10">
-			<label class="col-sm-2 control-label">User Agent</label>
-			<div class="input-group col-sm-10">
-				<input type="input" name="spider.user_agent" class="form-control" value="#(spider.user_agent ??)" placeholder="请输入User Agent">
-				<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 爬虫对自身的描述，将自己描述为一个普通的浏览器以防止被网站封杀 </p>
-			</div>
-		</div>
-
-		<div class="form-group col-sm-10">
 			<label class="col-sm-2 control-label">回调URL</label>
 			<div class="input-group col-sm-10">
 				<input type="url" name="spider.callback_url" class="form-control" value="#(spider.callback_url ??)"
@@ -107,7 +99,7 @@
 
 		<div class="form-group col-sm-10">
 			<label class="col-sm-2 control-label">自动探测发布时间</label>
-			<div class="input-group col-sm-6">
+			<div class="input-group col-sm-6 custom-switchery">
 				<input type="checkbox" class="switchery" data-for="auto_detect_push_date" #checkedIf(spider ?? false && spider.is_auto_detect_push_date ??)>
 				<input type="hidden" id="auto_detect_push_date" name="spider.is_auto_detect_push_date">
 			</div>

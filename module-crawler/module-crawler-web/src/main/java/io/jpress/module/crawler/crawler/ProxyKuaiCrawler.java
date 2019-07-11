@@ -68,7 +68,7 @@ public class ProxyKuaiCrawler extends AbstractBreadthCrawler {
         Headers headers = Headers.of(headerMap);
 
         // 设置HTTP代理插件
-        if (spider.isEnableProxy()) {
+        if (spider != null && spider.isEnableProxy()) {
             setRequester(new ProxyRequester("https", headers));
         }
     }
@@ -116,7 +116,7 @@ public class ProxyKuaiCrawler extends AbstractBreadthCrawler {
             sqlBuilder.append("'").append(anonymity).append("'").append(", ");
 
             sqlBuilder.append("'").append(isp).append("'").append(", ");
-            sqlBuilder.append("'").append(ProxySite.kuaiProxy.getDomain()).append("'");
+            sqlBuilder.append("'").append(ProxySite.kuai.getDomain()).append("'");
             sqlBuilder.append(")");
             sqlBuilder.append(" on duplicate key update response = " + response);
 
@@ -137,7 +137,9 @@ public class ProxyKuaiCrawler extends AbstractBreadthCrawler {
             conf.setDefaultUserAgent(spider.getUserAgent());
 
             this.setConf(conf);
-            this.setResumable(true);
+            if (spider.isResumable()) {
+                this.setResumable(true);
+            }
             this.setThreads(spider.getThread());
             this.addSeedAndReturn(spider.getStartUrl());
 

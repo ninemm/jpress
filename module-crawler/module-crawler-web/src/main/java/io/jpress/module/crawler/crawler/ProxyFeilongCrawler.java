@@ -45,6 +45,7 @@ import java.util.Map;
  * @author: Eric Huang
  * @date: 2019-07-03 17:54
  */
+@Deprecated
 public class ProxyFeilongCrawler extends AbstractBreadthCrawler {
 
     public ProxyFeilongCrawler(String crawlPath, boolean autoParse, Spider spider) {
@@ -56,7 +57,7 @@ public class ProxyFeilongCrawler extends AbstractBreadthCrawler {
         Headers headers = Headers.of(headerMap);
 
         // 设置HTTP代理插件
-        if (spider.isEnableProxy()) {
+        if (spider != null && spider.isEnableProxy()) {
             setRequester(new ProxyRequester("http", headers));
         }
     }

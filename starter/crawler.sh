@@ -1,18 +1,18 @@
 #!/bin/bash
 # ----------------------------------------------------------------------
-# name:         jpress.sh
+# name:         crawler.sh
 # version:      1.0
-# description:  JPress 控制脚本
-# author:       yangfuhai
-# email:        fuhai999@gmail.com
-# use : ./jpress.sh {start, stop, restart}
+# description:  Crawler 控制脚本
+# author:       Eric Huang
+# email:        ninemm@126.com
+# use : ./crawler.sh {start, stop, restart}
 # ----------------------------------------------------------------------
 
 MAIN_CLASS=io.jpress.Starter
 COMMAND="$1"
 
 if [[ "$COMMAND" != "start" ]] && [[ "$COMMAND" != "stop" ]] && [[ "$COMMAND" != "restart" ]]; then
-	echo "Usage:  ./jpress.sh {start, stop, restart}"
+	echo "Usage:  ./crawler .sh {start, stop, restart}"
 	exit 0
 fi
 
