@@ -153,6 +153,14 @@ public abstract class BaseScheduleTask<M extends BaseScheduleTask<M>> extends Jb
 		return getStr("search_type");
 	}
 
+	public void setSpiderId(java.lang.Long spiderId) {
+		set("spider_id", spiderId);
+	}
+
+	public java.lang.Long getSpiderId() {
+		return getLong("spider_id");
+	}
+
 	public void setCreated(java.util.Date created) {
 		set("created", created);
 	}

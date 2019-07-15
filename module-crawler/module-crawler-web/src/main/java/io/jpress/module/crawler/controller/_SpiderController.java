@@ -15,6 +15,7 @@
  */
 package io.jpress.module.crawler.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
@@ -27,7 +28,10 @@ import io.jpress.JPressConsts;
 import io.jpress.core.menu.annotation.AdminMenu;
 import io.jpress.module.crawler.crawler.*;
 import io.jpress.module.crawler.enums.ProxySite;
+import io.jpress.module.crawler.model.ScheduleTask;
 import io.jpress.module.crawler.model.Spider;
+import io.jpress.module.crawler.model.util.CrawlerConsts;
+import io.jpress.module.crawler.service.ScheduleTaskService;
 import io.jpress.module.crawler.service.SpiderService;
 import io.jpress.web.base.AdminControllerBase;
 
@@ -39,6 +43,8 @@ public class _SpiderController extends AdminControllerBase {
 
     @Inject
     private SpiderService spiderService;
+    @Inject
+    private ScheduleTaskService scheduleTaskService;
 
     @AdminMenu(text = "网站爬虫模板", groupId = "crawler", order = 0)
     public void index() {
@@ -58,6 +64,10 @@ public class _SpiderController extends AdminControllerBase {
         int entryId = getParaToInt(0, 0);
 
         Spider entry = entryId > 0 ? spiderService.findById(entryId) : null;
+        if (entry == null) {
+            entry = new Spider();
+            entry.setUserAgent(RandomUtil.randomEle(CrawlerConsts.USER_AGENT));
+        }
         setAttr("spider", entry);
         render("crawler/spider_edit.html");
     }
@@ -79,6 +89,14 @@ public class _SpiderController extends AdminControllerBase {
     }
 
     public void task() {
+
+        Object id = getPara("id");
+        ScheduleTask scheduleTask = scheduleTaskService.findBySpiderId(id);
+        if (scheduleTask == null) {
+            scheduleTask = new ScheduleTask();
+        }
+
+        setAttr("scheduleTask", scheduleTask);
         keepPara();
         render("crawler/spider_task.html");
     }

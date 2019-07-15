@@ -53,7 +53,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <form class="form-horizontal form-setting autoAjaxSubmit" autocomplete="off"
-                          action="#(CPATH)/admin/crawler/spider/doSave" data-ok-href="#(CPATH)/admin/crawler/task"
+                          action="#(CPATH)/admin/crawler/spider/doSave" data-ok-href="#(CPATH)/admin/crawler/spider"
                           method="POST" id="form">
 						<input type="hidden" id="entryId" name="spider.id" value="#(spider.id ??)">
                         <div class="box-body no-padding">
@@ -61,7 +61,6 @@
 								<ul class="nav nav-tabs" id="spiderTabs">
 									<li class="active"><a href="#tab_base" data-toggle="tab">1.基础配置</a></li>
                                     <li><a href="#tab_query" data-toggle="tab">2.采集规则</a></li>
-                                    <!--<li><a href="#tab_proxy" data-toggle="tab">3.代理</a></li>-->
                                     <li><a href="#tab_advance" data-toggle="tab">3.高级配置</a></li>
 								</ul>
 								<div class="tab-content">
@@ -81,7 +80,7 @@
                         <div class="box-footer">
                             <div class="text-center">
                                 <div class="box-submit">
-                                    <button id="submit" type="button" class="btn btn-primary">提交</button>
+                                    <button type="submit" class="btn btn-primary">提交</button>
                                     <button type="button" class="btn btn-default" onclick="window.history.go(-1);">返回</button>
                                 </div>
                             </div>

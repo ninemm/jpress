@@ -37,7 +37,7 @@
 								<label class="col-sm-2 control-label">任务名称</label>
 								<div class="col-sm-6">
 								   <input type="input" name="scheduleTask.task_name" class="form-control" value="#(scheduleTask.task_name ??)"
-										   placeholder="请填写该任务的名称，名称需要唯一，如baidu-task...">
+										   placeholder="请填写任务名称，如baidu-task...">
 								</div>
 							</div>
 							<div class="form-group">
@@ -55,9 +55,9 @@
 										<option value="io.jpress.module.crawler.task.RelKeywordValidateTask" #selectedIf('io.jpress.module.crawler.task.RelKeywordValidateTask' == scheduleTask.getTaskClass())>相关关键词验证</option>
 										<option value="io.jpress.module.crawler.task.SugKeywordValidateTask" #selectedIf('io.jpress.module.crawler.task.SugKeywordValidateTask' == scheduleTask.getTaskClass())>下拉关键词验证</option>
 										<option value="io.jpress.module.crawler.task.ProxyValidateTask" #selectedIf('io.jpress.module.crawler.task.ProxyValidateTask' == scheduleTask.getTaskClass())>代理校验</option>
-										<option value="io.jpress.module.crawler.task.QiYunScheduleTask" #selectedIf('io.jpress.module.crawler.task.QiYunScheduleTask' == scheduleTask.getTaskClass())>旗云代理采集</option>
+										<!--<option value="io.jpress.module.crawler.task.QiYunScheduleTask" #selectedIf('io.jpress.module.crawler.task.QiYunScheduleTask' == scheduleTask.getTaskClass())>旗云代理采集</option>
 										<option value="io.jpress.module.crawler.task.Data5uScheduleTask" #selectedIf('io.jpress.module.crawler.task.Data5uScheduleTask' == scheduleTask.getTaskClass())>无忧代理采集</option>
-										<option value="io.jpress.module.crawler.task.YunScheduleTask" #selectedIf('io.jpress.module.crawler.task.YunScheduleTask' == scheduleTask.getTaskClass())>云代理采集</option>
+										<option value="io.jpress.module.crawler.task.YunScheduleTask" #selectedIf('io.jpress.module.crawler.task.YunScheduleTask' == scheduleTask.getTaskClass())>云代理采集</option>-->
 									</select>
 								</div>
 							</div>
@@ -73,11 +73,11 @@
 							</div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">关键词数</label>
+                                <label class="col-sm-2 control-label">记录条数</label>
                                 <div class="col-sm-6">
                                     <input type="number" min="10" name="scheduleTask.page_size" class="form-control" value="#(scheduleTask.page_size ?? 300)"
                                            placeholder="请输入...">
-                                    <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 每次处理关键词数, 最少100, 推荐每次处理<mark>300</mark>条记录</a></p>
+                                    <p class="help-block"><i class="fa fa-volume-up text-orange"></i> 每次处理记录条数, 最少100, 推荐每次处理<mark>300</mark>条记录</a></p>
                                 </div>
                             </div>
 							<div class="form-group">

@@ -34,55 +34,39 @@
 			<div class="box-body">
 				<form class="form-horizontal form-setting" autocomplete="off"
 					  action="#(CPATH)/admin/crawler/task/doSaveAndStart" method="POST" id="form">
-
+					<input type="hidden" name="scheduleTask.spider_id" value="#(id ??)">
 					<div class="box-body">
 						<div class="form-group">
 							<label class="col-sm-2 control-label">任务名称</label>
 							<div class="col-sm-10">
 							   <input type="input" name="scheduleTask.task_name" class="form-control" value="#(scheduleTask.task_name ??)"
-									   placeholder="请填写该任务的名称，名称需要唯一，如baidu-task...">
+									   placeholder="请填写任务名称，如baidu-task...">
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">任务描述</label>
 							<div class="col-sm-10">
-							   <textarea rows="3" class="form-control" placeholder="请输入..."
+							   <textarea rows="2" class="form-control" placeholder="请输入..."
 									 name="scheduleTask.task_description">#(scheduleTask.task_description ??)</textarea>
 							</div>
 						</div>
+
 						<div class="form-group">
 							<label class="col-sm-2 control-label">任务类名</label>
 							<div class="col-sm-10">
 								<select class="form-control" name="scheduleTask.task_class">
 									<option value="">--请选择--</option>
-									<option value="io.jpress.module.crawler.task.RelKeywordValidateTask">相关关键词验证</option>
-									<option value="io.jpress.module.crawler.task.SugKeywordValidateTask">下拉关键词验证</option>
-									<option value="io.jpress.module.crawler.task.ProxyValidateTask">代理有效校验</option>
-									<option value="io.jpress.module.crawler.task.QiYunScheduleTask">旗云代理采集</option>
-									<option value="io.jpress.module.crawler.task.Data5uScheduleTask">无忧代理采集</option>
-									<option value="io.jpress.module.crawler.task.YunScheduleTask">云代理采集</option>
+									<option value="io.jpress.module.crawler.task.NimaScheduleTask" #selectedIf('io.jpress.module.crawler.task.NimaScheduleTask' == scheduleTask.getTaskClass())>泥马代理</option>
+									<option value="io.jpress.module.crawler.task.KuaiScheduleTask" #selectedIf('io.jpress.module.crawler.task.KuaiScheduleTask' == scheduleTask.getTaskClass())>快代理</option>
+									<option value="io.jpress.module.crawler.task.XiaoShuScheduleTask" #selectedIf('io.jpress.module.crawler.task.XiaoShuScheduleTask' == scheduleTask.getTaskClass())>小舒代理</option>
+									<option value="io.jpress.module.crawler.task.QiYunScheduleTask" #selectedIf('io.jpress.module.crawler.task.QiYunScheduleTask' == scheduleTask.getTaskClass())>旗云代理</option>
+									<option value="io.jpress.module.crawler.task.Data5uScheduleTask" #selectedIf('io.jpress.module.crawler.task.Data5uScheduleTask' == scheduleTask.getTaskClass())>无忧代理</option>
+									<option value="io.jpress.module.crawler.task.YunScheduleTask" #selectedIf('io.jpress.module.crawler.task.YunScheduleTask' == scheduleTask.getTaskClass())>云代理</option>
+									<option value="io.jpress.module.crawler.task.CoderBusyScheduleTask" #selectedIf('io.jpress.module.crawler.task.CoderBusyScheduleTask' == scheduleTask.getTaskClass())>coderbusy</option>
 								</select>
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label class="col-sm-2 control-label">搜索引擎类型</label>
-							<div class="col-sm-10">
-								<select class="form-control" name="scheduleTask.search_type">
-									<option value="">--请选择--</option>
-									#dict('search', 'select', (scheduleTask.search_type ??))
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label">关键词数</label>
-							<div class="col-sm-10">
-								<input type="number" min="10" name="scheduleTask.page_size" class="form-control" value="#(scheduleTask.page_size ?? 300)"
-									   placeholder="请输入...">
-								<p class="help-block"><i class="fa fa-volume-up text-orange"></i> 每次处理关键词数, 最少100, 推荐每次处理<mark>300</mark>条记录</a></p>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">cron表达式</label>
 							<div class="col-sm-10">

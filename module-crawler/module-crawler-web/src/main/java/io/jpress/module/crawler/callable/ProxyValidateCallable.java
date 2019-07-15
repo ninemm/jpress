@@ -39,11 +39,11 @@ public class ProxyValidateCallable implements Callable<ProxyVO> {
     @Override
     public ProxyVO call() throws Exception {
         long start = System.currentTimeMillis();
-        boolean isValid = ProxyVerification.me().verifyProxyBySocket(proxy.getIp(), proxy.getPort(), true);
+        boolean isEnable = ProxyVerification.me().verifyProxyBySocket(proxy.getIp(), proxy.getPort(), true);
         long end = System.currentTimeMillis();
 
-        proxy.setIsEnable(isValid);
-        if (isValid) {
+        proxy.setIsEnable(isEnable);
+        if (isEnable) {
             proxy.setResponse(NumberUtil.div((float) (end - start), 1000, 4));
         }
 

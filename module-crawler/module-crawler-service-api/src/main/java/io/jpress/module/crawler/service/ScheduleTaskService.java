@@ -31,6 +31,13 @@ public interface ScheduleTaskService  {
      */
     public ScheduleTask findById(Object id);
 
+    /**
+     * find model by spider id
+     *
+     * @param spiderId
+     * @return
+     */
+    public ScheduleTask findBySpiderId(Object spiderId);
 
     /**
      * find all model

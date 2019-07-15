@@ -22,7 +22,8 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.exception.JbootException;
 import io.jpress.module.crawler.crawler.AbstractBreadthCrawler;
 import io.jpress.module.crawler.crawler.ProxyCrawlerManager;
-import io.jpress.module.crawler.crawler.ProxyYunCrawler;
+import io.jpress.module.crawler.crawler.ProxyData5uCrawler;
+import io.jpress.module.crawler.crawler.ProxyKuaiCrawler;
 import io.jpress.module.crawler.enums.ProxySite;
 import io.jpress.module.crawler.model.ProxyInfo;
 import io.jpress.module.crawler.model.ScheduleTask;
@@ -32,33 +33,32 @@ import io.jpress.module.crawler.service.SpiderService;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * 云代理定时任务
+ * 快代理定时任务
  *
- * http://www..ip3366.net/
+ * https://www.kuaidaili.com/
  *
  * @author: Eric Huang
  * @date: 2019-07-04 17:02
  */
-public class YunScheduleTask extends AbstractScheduleTask<ProxyInfo> {
+public class KuaiScheduleTask extends AbstractScheduleTask<ProxyInfo> {
 
-    private static final Log _LOG = Log.getLog(YunScheduleTask.class);
+    private static final Log _LOG = Log.getLog(KuaiScheduleTask.class);
 
-    public YunScheduleTask(ScheduleTask scheduleTask) {
+    public KuaiScheduleTask(ScheduleTask scheduleTask) {
         super(scheduleTask);
     }
 
     @Override
     public void run() {
-
         Object spiderId = scheduleTask.getSpiderId();
         if (spiderId == null) {
             throw new JbootException("spider id is null, please init spider template.");
         }
 
         Spider spider = Aop.get(SpiderService.class).findById(spiderId);
-        AbstractBreadthCrawler crawler = new ProxyYunCrawler("crawler/yun", false, spider);
+        AbstractBreadthCrawler crawler = new ProxyKuaiCrawler("crawler/kuai", false, spider);
         try {
-            ProxyCrawlerManager.me().start(ProxySite.data5u.getKey(), crawler, 1);
+            ProxyCrawlerManager.me().start(ProxySite.kuai.getKey(), crawler, 1);
         } catch (Exception e) {
             _LOG.error("crawler:" + crawler.getClass().getName() + " start failure. ", e);
         }

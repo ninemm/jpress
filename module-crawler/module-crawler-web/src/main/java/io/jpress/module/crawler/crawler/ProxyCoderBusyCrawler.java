@@ -72,10 +72,16 @@ public class ProxyCoderBusyCrawler extends AbstractBreadthCrawler {
         for (Element ele : elements) {
             String ip = ele.child(0).text();
             String port = ele.child(1).text();
-            // String anonymity = ele.child(2).text();
+            String anonymity = ele.child(2).text();
             String protocol = ele.child(3).text();
 
-            if ("Yes".equals(protocol)) {
+            if ("Transparent".equals(anonymity)) {
+                anonymity = "透明";
+            } else if ("HighAnonymous".equals(anonymity)) {
+                anonymity = "高匿";
+            }
+
+            if ("√".equals(protocol)) {
                 protocol = "https";
             } else {
                 protocol = null;
@@ -93,7 +99,7 @@ public class ProxyCoderBusyCrawler extends AbstractBreadthCrawler {
             }
 
             StringBuilder sqlBuilder = new StringBuilder("insert into proxy_info(`ip`, `port`, `location`, `response`,");
-            sqlBuilder.append(" `protocol`, `crawler_time`, `website`) values(");
+            sqlBuilder.append(" `protocol`, `anonymity_type`, `crawler_time`, `website`) values(");
 
             sqlBuilder.append("'").append(ip).append("', ");
             sqlBuilder.append(port).append(", ");
@@ -101,16 +107,17 @@ public class ProxyCoderBusyCrawler extends AbstractBreadthCrawler {
             sqlBuilder.append(respTime).append(", ");
 
             sqlBuilder.append("'").append(protocol).append("', ");
+            sqlBuilder.append("'").append(anonymity).append("', ");
             sqlBuilder.append("'").append(crawlerTime).append("', ");
             sqlBuilder.append("'").append("proxy.coderbusy.com").append("'");
             sqlBuilder.append(")");
 
             sqlBuilder.append(" on duplicate key update response = " + respTime);
-            //System.out.println(sqlBuilder.append(";").toString());
+            System.out.println(sqlBuilder.append(";").toString());
             proxyList.add(sqlBuilder.toString());
         }
 
-        Jboot.sendEvent(CrawlerConsts.QIYUNPROXY_EVENT_NAME, proxyList);
+        //Jboot.sendEvent(CrawlerConsts.QIYUNPROXY_EVENT_NAME, proxyList);
     }
 
     @Override

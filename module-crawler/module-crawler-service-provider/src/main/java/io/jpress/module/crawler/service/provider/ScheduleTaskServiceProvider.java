@@ -19,6 +19,7 @@ package io.jpress.module.crawler.service.provider;
 import com.jfinal.plugin.activerecord.Model;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
+import io.jboot.db.model.Column;
 import io.jpress.model.Dict;
 import io.jpress.module.crawler.service.ScheduleTaskService;
 import io.jpress.module.crawler.model.ScheduleTask;
@@ -26,6 +27,12 @@ import io.jboot.service.JbootServiceBase;
 
 @Bean
 public class ScheduleTaskServiceProvider extends JbootServiceBase<ScheduleTask> implements ScheduleTaskService {
+
+    @Override
+    public ScheduleTask findBySpiderId(Object spiderId) {
+        Column column = Column.create("spider_id", spiderId);
+        return DAO.findFirstByColumn(column);
+    }
 
     @Override
     public void shouldUpdateCache(int action, Object data) {
@@ -44,5 +51,6 @@ public class ScheduleTaskServiceProvider extends JbootServiceBase<ScheduleTask> 
                 ;
         }
     }
+
 
 }

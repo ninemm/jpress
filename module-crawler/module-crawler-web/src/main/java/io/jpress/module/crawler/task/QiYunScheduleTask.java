@@ -19,6 +19,7 @@ package io.jpress.module.crawler.task;
 import com.jfinal.aop.Aop;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.exception.JbootException;
 import io.jpress.module.crawler.crawler.AbstractBreadthCrawler;
 import io.jpress.module.crawler.crawler.ProxyCrawlerManager;
 import io.jpress.module.crawler.crawler.ProxyQiyunCrawler;
@@ -31,7 +32,7 @@ import io.jpress.module.crawler.service.SpiderService;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * TODO <br>
+ * 旗云代理定时任务
  *
  * @author: Eric Huang
  * @date: 2019-07-04 17:02
@@ -40,8 +41,6 @@ public class QiYunScheduleTask extends AbstractScheduleTask<ProxyInfo> {
 
     private static final Log _LOG = Log.getLog(QiYunScheduleTask.class);
 
-    private Object id;
-
     public QiYunScheduleTask(ScheduleTask scheduleTask) {
         super(scheduleTask);
     }
@@ -49,7 +48,12 @@ public class QiYunScheduleTask extends AbstractScheduleTask<ProxyInfo> {
     @Override
     public void run() {
 
-        Spider spider = Aop.get(SpiderService.class).findById(id);
+        Object spiderId = scheduleTask.getSpiderId();
+        if (spiderId == null) {
+            throw new JbootException("spider id is null, please init spider template.");
+        }
+
+        Spider spider = Aop.get(SpiderService.class).findById(spiderId);
         AbstractBreadthCrawler crawler = new ProxyQiyunCrawler("crawler/qiyuan", false, spider);
         try {
             ProxyCrawlerManager.me().start(ProxySite.qiyun.getKey(), crawler, 1);

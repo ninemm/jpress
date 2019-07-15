@@ -19,6 +19,7 @@ package io.jpress.module.crawler.task;
 import com.jfinal.aop.Aop;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.exception.JbootException;
 import io.jpress.module.crawler.crawler.AbstractBreadthCrawler;
 import io.jpress.module.crawler.crawler.ProxyCrawlerManager;
 import io.jpress.module.crawler.crawler.ProxyData5uCrawler;
@@ -43,16 +44,18 @@ public class Data5uScheduleTask extends AbstractScheduleTask<ProxyInfo> {
 
     private static final Log _LOG = Log.getLog(Data5uScheduleTask.class);
 
-    private Object id;
-
     public Data5uScheduleTask(ScheduleTask scheduleTask) {
         super(scheduleTask);
     }
 
     @Override
     public void run() {
+        Object spiderId = scheduleTask.getSpiderId();
+        if (spiderId == null) {
+            throw new JbootException("spider id is null, please init spider template.");
+        }
 
-        Spider spider = Aop.get(SpiderService.class).findById(id);
+        Spider spider = Aop.get(SpiderService.class).findById(spiderId);
         AbstractBreadthCrawler crawler = new ProxyData5uCrawler("crawler/data5u", false, spider);
         try {
             ProxyCrawlerManager.me().start(ProxySite.data5u.getKey(), crawler, 1);

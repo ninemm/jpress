@@ -19,6 +19,7 @@ package io.jpress.module.crawler.task;
 import com.jfinal.aop.Aop;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.exception.JbootException;
 import io.jpress.module.crawler.crawler.AbstractBreadthCrawler;
 import io.jpress.module.crawler.crawler.ProxyCoderBusyCrawler;
 import io.jpress.module.crawler.crawler.ProxyCrawlerManager;
@@ -41,8 +42,6 @@ public class CoderBusyScheduleTask extends AbstractScheduleTask<ProxyInfo> {
 
     private static final Log _LOG = Log.getLog(CoderBusyScheduleTask.class);
 
-    private Object id;
-
     public CoderBusyScheduleTask(ScheduleTask scheduleTask) {
         super(scheduleTask);
     }
@@ -50,7 +49,12 @@ public class CoderBusyScheduleTask extends AbstractScheduleTask<ProxyInfo> {
     @Override
     public void run() {
 
-        Spider spider = Aop.get(SpiderService.class).findById(id);
+        Object spiderId = scheduleTask.getSpiderId();
+        if (spiderId == null) {
+            throw new JbootException("spider id is null, please init spider template.");
+        }
+
+        Spider spider = Aop.get(SpiderService.class).findById(spiderId);
         AbstractBreadthCrawler crawler = new ProxyCoderBusyCrawler("crawler/coderbusy", false, spider);
         try {
             ProxyCrawlerManager.me().start(ProxySite.coderbusy.getKey(), crawler, 1);

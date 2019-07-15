@@ -15,6 +15,7 @@
  */
 package io.jpress.module.crawler.controller;
 
+import com.google.common.collect.ImmutableMap;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Log;
@@ -27,11 +28,13 @@ import io.jboot.web.validate.Form;
 import io.jpress.JPressConsts;
 import io.jpress.core.menu.annotation.AdminMenu;
 import io.jpress.module.crawler.ScheduleTaskManager;
+import io.jpress.module.crawler.model.ProxyInfo;
 import io.jpress.module.crawler.model.ScheduleTask;
 import io.jpress.module.crawler.service.ScheduleTaskService;
 import io.jpress.web.base.AdminControllerBase;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -45,9 +48,21 @@ public class _ScheduleTaskController extends AdminControllerBase {
 
     @AdminMenu(text = "定时任务管理", groupId = "crawler", order = 4)
     public void index() {
-        Page<ScheduleTask> page = taskService.paginate(getPagePara(), 10);
-        setAttr("page", page);
+        // Page<ScheduleTask> page = taskService.paginate(getPagePara(), 10);
+        // setAttr("page", page);
         render("crawler/schedule_task_list.html");
+    }
+
+    public void paginate() {
+
+        /*Integer response = getInt("response");
+        Integer isEnable = getInt("isEnable", 1);
+        String protocol = getPara("protocol");
+        String anonymityType = getPara("anonymityType");*/
+
+        Page<ScheduleTask> page = taskService.paginate(getPagePara(), getPageSizePara());
+        Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "rows", page.getList());
+        renderJson(map);
     }
 
     public void edit() {

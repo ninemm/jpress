@@ -1,5 +1,5 @@
 #@layout()
-	
+
 #define script()
 <script>
 
@@ -45,10 +45,10 @@
     }
 
     function doSchedule(id, name) {
-        let url = '#(CPATH)/admin/crawler/spider/task';
+        let url = '#(CPATH)/admin/crawler/spider/task?id='+id;
         let options = {
             content: url,
-            title: name + '，添加定时任务',
+            title: name + '，定时任务配置',
             offset: '120px',
             area: ['800px', '600px']
         };
@@ -61,7 +61,7 @@
     }
 
     function close() {
-	    layui.closeAll();
+	    layer.closeAll();
     }
 
 </script>
@@ -105,10 +105,11 @@
 								<th>网站域名</th>
 								<th>线程数</th>
 								<th>重试次数</th>
-                                <th>请求超时时间</th>
-                                <th>启动代理</th>
-								<th title="单位毫秒">睡眠时长</th>
-								<th title="最多抓取页数,0代表不限制">抓取总页数</th>
+                                <th title="连接超时时长,单位毫秒">Timeout</th>
+								<th title="线程时间间隔,单位毫秒">Interval</th>
+                                <th>是否启动</th>
+                                <th>断点续传</th>
+								<th title="抓取指定页数数据,0或空表示只抓一页数据">总页数</th>
 								<th>操作</th>
                             </tr>
                             #for(entry : page.list)
@@ -123,6 +124,7 @@
 								<td>#(entry.thread)</td>
 								<td>#(entry.retry)</td>
                                 <td>#(entry.timeout)</td>
+                                <td>#(entry.sleep)</td>
                                 <td>
                                     #if(entry.isEnableProxy())
                                     <small class="label label-success">是</small>
@@ -130,7 +132,13 @@
                                     <small class="label label-default">否</small>
                                     #end
                                 </td>
-								<td>#(entry.sleep)</td>
+                                <td>
+                                    #if(entry.isResumable())
+                                    <small class="label label-success">是</small>
+                                    #else
+                                    <small class="label label-default">否</small>
+                                    #end
+                                </td>
 								<td>#(entry.max_page_gather)</td>
 								<td>
                                     <a href="#(CPATH)/admin/crawler/spider/edit/#(entry.id)" class="btn btn-xs text-green" title="编辑"><i class="fa fa-edit"></i></a>
