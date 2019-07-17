@@ -110,9 +110,8 @@ public class ProxyYunCrawler extends AbstractBreadthCrawler {
             sqlBuilder.append("'").append("www.ip3366.net").append("'");
             sqlBuilder.append(")");
             sqlBuilder.append(" on duplicate key update response = " + response);
-
-            // System.out.println(sqlBuilder.append(";").toString());
             proxyList.add(sqlBuilder.toString());
+
         }
         Jboot.sendEvent(CrawlerConsts.QIYUNPROXY_EVENT_NAME, proxyList);
     }

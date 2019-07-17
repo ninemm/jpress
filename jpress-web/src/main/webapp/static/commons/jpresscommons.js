@@ -360,10 +360,14 @@ function initEditTable (options) {
     let editSaveFunc = options.editSaveFunc || function () {};
     let clickCellFunc = options.clickCellFunc || function () {};
 
-    $(tableId).bootstrapTable({
+    let option = {
         url: url,
         method: 'get',
-        editable: true,//开启编辑模式
+        editable: true,                 //开启编辑模式
+        // showExport: true,            // 是否显示导出
+        // search: true,                // 搜索框
+        // showColumns: true,           // 显示列选项
+        // minimumCountColumns: 2,
         clickToSelect: false,
         uniqueId: 'id',
         striped: true,
@@ -385,5 +389,11 @@ function initEditTable (options) {
         maintainSelected: true,
         onEditableSave: editSaveFunc,
         onClickCell: clickCellFunc
-    });
+    };
+
+    if (options.toolbar) {
+        option.toolbar = options.toolbar;
+    }
+
+    $(tableId).bootstrapTable(option);
 }

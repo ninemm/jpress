@@ -12,6 +12,8 @@ import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.SchedulerListener;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ScheduleTaskManager {
 
-    private static final Log LOG = Log.getLog(ScheduleTaskManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScheduleTaskManager.class);
 
     private static final ScheduleTaskManager manager = new ScheduleTaskManager();
 
@@ -233,11 +235,12 @@ public class ScheduleTaskManager {
 
     public void stop() {
         for (final String taskId : schedulerMap.keySet()) {
+            LOG.info("Task {} is stopped.", taskId);
             stop(taskId);
         }
     }
 
-    public Map<String,Scheduler> getSchedulerMap(){
+    public Map<String, Scheduler> getSchedulerMap(){
         return schedulerMap;
     }
 }

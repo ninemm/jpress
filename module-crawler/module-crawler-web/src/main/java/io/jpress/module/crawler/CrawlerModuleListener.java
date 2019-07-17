@@ -16,12 +16,14 @@
 package io.jpress.module.crawler;
 
 import com.jfinal.core.Controller;
-import io.jboot.Jboot;
 import io.jboot.core.listener.JbootAppListenerBase;
-import io.jboot.db.model.Columns;
 import io.jpress.core.menu.MenuGroup;
 import io.jpress.core.module.ModuleListener;
+import io.jpress.module.crawler.model.ScheduleTask;
+import it.sauronsoftware.cron4j.Scheduler;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Gavin lau 刘洪义 （logicbiz@qq.com）
@@ -59,5 +61,10 @@ public class CrawlerModuleListener extends JbootAppListenerBase implements Modul
       
     }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        // 关闭所有的定时任务
+        ScheduleTaskManager.me().remove();
+    }
 }
