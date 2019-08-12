@@ -53,12 +53,10 @@ public class ProxyKuaiCrawler extends AbstractBreadthCrawler {
 
     private static final Log _LOG = Log.getLog(ProxyKuaiCrawler.class);
 
-    private static final Map<String, String> regionType = Maps.newHashMap();
+    private static final Map<String, String> TYPES = Maps.newHashMap();
     static {
-        regionType.put("inha", "国内高匿");
-        regionType.put("intr", "国内普通");
-        // regionType.put("outha", "国外高匿");
-        // regionType.put("outtr", "国外普通");
+        TYPES.put("inha", "国内高匿");
+        TYPES.put("intr", "国内普通");
     }
 
     public ProxyKuaiCrawler(String crawlPath, boolean autoParse, Spider spider) {
@@ -143,9 +141,16 @@ public class ProxyKuaiCrawler extends AbstractBreadthCrawler {
             this.setThreads(spider.getThread());
             this.addSeedAndReturn(spider.getStartUrl());
 
-            for (int page = START_PAGE; page <= spider.getMaxPageGather(); page++) {
-                this.addSeed(String.format(spider.getStartUrl() + "%d/", page));
-            }
+            TYPES.forEach((key, value) -> {
+                for (int page = 1; page <= spider.getMaxPageGather(); page++) {
+                    // 过滤高匿第一页
+                    if (page == 1 && key.equals("inha")) {
+                        continue;
+                    }
+                    this.addSeed(String.format(spider.getStartUrl()  + "%s/%d/",key, page));
+                }
+            });
+
         }
     }
 

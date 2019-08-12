@@ -35,6 +35,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -49,10 +51,10 @@ import java.util.List;
  */
 public class ProxyVerification {
 
-    private final static Log _LOG = Log.getLog(ProxyVerification.class);
+    private final static Logger _LOG = LoggerFactory.getLogger(ProxyVerification.class);
 
     private final static int CONNECT_NUM = 2;
-    private final static int CONNECT_TIMEOUT = 3000;
+    private final static int CONNECT_TIMEOUT = 5000;
 
     private static final ProxyVerification PROXY_VALIDATE = new ProxyVerification();
 

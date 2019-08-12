@@ -41,24 +41,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 小舒代理抓取代理IP
+ * 站大爷代理IP
+ *
+ * http://ip.zdaye.com/dayProxy.html
+ *
+ * http://ip.zdaye.com/dayProxy/2.html
  *
  * @author: Eric Huang
  * @date: 2019/6/20 23:35
  */
 
-public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
+public class ProxyZhandayeCrawler extends AbstractBreadthCrawler {
 
-    private Logger LOG = LoggerFactory.getLogger(ProxyXiaoShuCrawler.class);
+    private Logger LOG = LoggerFactory.getLogger(ProxyZhandayeCrawler.class);
 
+    private static final String URL = "http://ip.zdaye.com/dayProxy.html";
     private static final String LIST_TYPE = "xs_list";
     private static final String CONTENT_TYPE = "xs_content";
 
-    public ProxyXiaoShuCrawler(String crawlPath, boolean autoParse, Spider spider) {
+    public ProxyZhandayeCrawler(String crawlPath, boolean autoParse, Spider spider) {
         super(crawlPath, autoParse, spider);
-
         Map<String, String> headerMap = Maps.newHashMap();
-        headerMap.put("Host", "www.xsdaili.com");
+        headerMap.put("Host", "ip.zdaye.com");
         headerMap.put("User-Agent", RandomUtil.randomEle(CrawlerConsts.USER_AGENT));
         Headers headers = Headers.of(headerMap);
 
@@ -72,7 +76,7 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
     public void parse(Page page, CrawlDatums next) {
         if (page.matchType(LIST_TYPE)) {
 
-            Elements elements = page.select("div.ips > div.title");
+            Elements elements = page.select("div.thread_item > div.thread_content > h3.thread_title");
             elements.stream().forEach(element -> {
 
                 String title = element.text();
@@ -90,7 +94,6 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
                     if (year == date.getYear() && month == date.getMonthValue() && day == date.getDayOfMonth()) {
                         String url = element.child(0).absUrl("href");
                         LOG.info("proxy details url: {}", url);
-                        // Links links = page.links("div.ips > div.title > a");
                         next.add(url).type(CONTENT_TYPE);
                     }
                 }
@@ -146,10 +149,10 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
                 this.setResumable(true);
             }
             this.setThreads(spider.getThread());
-            this.addSeedAndReturn(spider.getStartUrl()).type(LIST_TYPE);
+            this.addSeedAndReturn(URL).type(LIST_TYPE);
 
             for (int page = START_PAGE; page <= spider.getMaxPageGather(); page++) {
-                this.addSeed(String.format(spider.getStartUrl() + "/dayProxy/%d.html", page), LIST_TYPE);
+                this.addSeed(String.format("http://ip.zdaye.com/dayProxy/%d.html", page), LIST_TYPE);
             }
         }
     }
@@ -163,9 +166,9 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
 
     public static void main(String[] args) throws Exception {
 
-        String URL = "http://www.xsdaili.com/dayProxy/1.html";
-        // String URL = "http://www.xsdaili.com/dayProxy/ip/1491.html";
-        ProxyXiaoShuCrawler crawler = new ProxyXiaoShuCrawler("xs_crawler", false, null);
+        String URL = "http://ip.zdaye.com/dayProxy.html";
+        //URL = "http://www.xsdaili.com/dayProxy/ip/1555.html";
+        ProxyZhandayeCrawler crawler = new ProxyZhandayeCrawler("crawler/zdy", false, null);
         Configuration conf = Configuration.copyDefault();
         conf.setExecuteInterval(5000);
         // conf.setThreadKiller(1);
@@ -176,11 +179,15 @@ public class ProxyXiaoShuCrawler extends AbstractBreadthCrawler {
         conf.setReadTimeout(300000);
         conf.setWaitThreadEndTime(5000);
 
-        conf.setDefaultUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+        conf.setDefaultUserAgent(RandomUtil.randomEle(CrawlerConsts.USER_AGENT));
 
         crawler.setConf(conf);
-        crawler.setThreads(2);
+        crawler.setThreads(1);
         crawler.addSeedAndReturn(URL).type(LIST_TYPE);
+
+        /*for (int page = START_PAGE; page <= 2; page++) {
+            crawler.addSeed(String.format("http://ip.zdaye.com/dayProxy/%d.html", page), LIST_TYPE);
+        }*/
 
         //crawler.setResumable(true);
         //crawler.addRegex("/dayProxy/ip/[0-9]+.html");
