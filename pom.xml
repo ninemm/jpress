@@ -34,7 +34,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <jboot.version>2.1.1</jboot.version>
+        <jboot.version>2.1.5</jboot.version>
         <jjwt.version>0.9.1</jjwt.version>
         <logback.version>1.2.3</logback.version>
         <javax.mail.version>1.6.2</javax.mail.version>
@@ -42,8 +42,8 @@
         <commonmark.version>0.12.1</commonmark.version>
         <aliyunoss.version>3.4.2</aliyunoss.version>
         <httpclient.version>4.5.3</httpclient.version>
+        <fasterxml.version>2.9.9</fasterxml.version>
         <commons-codec.version>1.10</commons-codec.version>
-
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
@@ -77,6 +77,16 @@
                 <groupId>io.jboot</groupId>
                 <artifactId>jboot</artifactId>
                 <version>${jboot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -180,6 +190,20 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${fasterxml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.version}</version>
+            </dependency>
+
+
 
         </dependencies>
     </dependencyManagement>

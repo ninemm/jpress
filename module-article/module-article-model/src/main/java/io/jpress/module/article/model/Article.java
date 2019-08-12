@@ -59,6 +59,7 @@ public class Article extends BaseArticle<Article> {
 
     /**
      * 用于渲染html模板，是否高亮
+     *
      * @return
      */
     public boolean isActive() {
@@ -101,7 +102,7 @@ public class Article extends BaseArticle<Article> {
             content = MarkdownUtils.toHtml(content);
             content = JsoupUtils.clean(content);
         }
-        return JsoupUtils.makeImageSrcToAbsolutePath(content, JPressOptions.getResDomain());
+        return content;
     }
 
 
@@ -199,23 +200,19 @@ public class Article extends BaseArticle<Article> {
 
     @Override
     public boolean save() {
-        CommonsUtils.escapeHtmlForAllAttrs(this, "content");
+        CommonsUtils.escapeHtmlForAllAttrs(this, "content", "summary");
         return super.save();
     }
 
     @Override
     public boolean update() {
-        CommonsUtils.escapeHtmlForAllAttrs(this, "content");
+        CommonsUtils.escapeHtmlForAllAttrs(this, "content", "summary");
         return super.update();
     }
 
-    public PingData toPingData(){
-        return PingData.create(getTitle(),getUrl());
+    public PingData toPingData() {
+        return PingData.create(getTitle(), getUrl());
     }
 
-//    @Override
-//    public Integer getOrderNumber() {
-//        Integer order = super.getOrderNumber();
-//        return order == null ? 0 : order;
-//    }
+
 }

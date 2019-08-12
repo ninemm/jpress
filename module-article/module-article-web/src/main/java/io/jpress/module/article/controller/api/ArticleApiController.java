@@ -35,6 +35,7 @@ import io.jpress.service.UserService;
 import io.jpress.web.base.ApiControllerBase;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Michael Yang 杨福海 （fuhai999@gmail.com）
@@ -70,20 +71,18 @@ public class ArticleApiController extends ApiControllerBase {
      */
     public void index() {
         Long id = getParaToLong("id");
-        if (id != null) {
-            Article article = articleService.findById(id);
-            renderJson(Ret.ok("article", article));
-            return;
-        }
-
         String slug = getPara("slug");
-        if (slug != null) {
-            Article article = articleService.findFirstBySlug(slug);
-            renderJson(Ret.ok("article", article));
+
+        Article article = id != null ? articleService.findById(id)
+                : (StrUtil.isNotBlank(slug) ? articleService.findFirstBySlug(slug) : null);
+
+        if (article == null || !article.isNormal()) {
+            renderFailJson();
             return;
         }
 
-        renderFailJson();
+        articleService.doIncArticleViewCount(article.getId());
+        renderJson(Ret.ok("article", article));
     }
 
     /**
@@ -98,8 +97,17 @@ public class ArticleApiController extends ApiControllerBase {
             return;
         }
 
+        Long pid = getLong("pid");
         List<ArticleCategory> categories = categoryService.findListByType(type);
-        SortKit.toTree(categories);
+
+        if (pid != null) {
+            categories = categories.stream()
+                    .filter(category -> pid.equals(category.getPid()))
+                    .collect(Collectors.toList());
+        } else {
+            SortKit.toTree(categories);
+        }
+
         renderJson(Ret.ok("categories", categories));
     }
 
@@ -145,14 +153,32 @@ public class ArticleApiController extends ApiControllerBase {
     public void paginate() {
         Long categoryId = getParaToLong("categoryId");
         String orderBy = getPara("orderBy");
-        int pageNumber = getParaToInt("page", 1);
+        int pageNumber = getParaToInt("pageNumber", 1);
 
         Page<Article> page = categoryId == null
                 ? articleService.paginateInNormal(pageNumber, 10, orderBy)
                 : articleService.paginateByCategoryIdInNormal(pageNumber, 10, categoryId, orderBy);
 
         renderJson(Ret.ok().set("page", page));
+    }
 
+
+    public void tagArticles() {
+        String tag = getPara("tag");
+        int count = getParaToInt("count", 10);
+        if (StrUtil.isBlank(tag)) {
+            renderFailJson();
+            return;
+        }
+
+        ArticleCategory category = categoryService.findFirstByTypeAndSlug(ArticleCategory.TYPE_TAG, tag);
+        if (category == null) {
+            renderFailJson();
+            return;
+        }
+
+        List<Article> articles = articleService.findListByCategoryId(category.getId(), null, "id desc", count);
+        renderJson(Ret.ok().set("articles", articles));
     }
 
 
@@ -253,7 +279,7 @@ public class ArticleApiController extends ApiControllerBase {
         }
 
         User user = getLoginedUser();
-        if (user == null){
+        if (user == null) {
             renderJson(Ret.fail().set("message", "用户未登录"));
             return;
         }
@@ -300,7 +326,7 @@ public class ArticleApiController extends ApiControllerBase {
 
         renderJson(ret);
 
-        ArticleKit.doNotifyAdministrator(article, comment);
+        ArticleKit.doNotifyAdministrator(article, comment, user);
     }
 
 

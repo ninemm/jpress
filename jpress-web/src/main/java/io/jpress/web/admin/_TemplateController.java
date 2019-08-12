@@ -123,12 +123,12 @@ public class _TemplateController extends AdminControllerBase {
         newFileName.append(File.separator);
         newFileName.append("dockers"); // 优先安装在docker的映射目录下
 
-        File templateRootPath  = new File(newFileName.toString());
-        if (!templateRootPath.exists() || !templateRootPath.isDirectory()){
+        File templateRootPath = new File(newFileName.toString());
+        if (!templateRootPath.exists() || !templateRootPath.isDirectory()) {
             templateRootPath = templateRootPath.getParentFile();
         }
 
-        File templateZipFile = new File(templateRootPath,ufile.getOriginalFileName());
+        File templateZipFile = new File(templateRootPath, ufile.getOriginalFileName());
         String templatePath = templateZipFile.getAbsolutePath()
                 .substring(0, templateZipFile.getAbsolutePath().length() - 4);
 
@@ -162,6 +162,7 @@ public class _TemplateController extends AdminControllerBase {
 
         renderJson(Ret.ok().set("success", true));
     }
+
 
     private void deleteFileQuietly(File file) {
         org.apache.commons.io.FileUtils.deleteQuietly(file);
@@ -354,7 +355,7 @@ public class _TemplateController extends AdminControllerBase {
         }
 
         File file = new File(pathFile, fileName);
-        if (!file.canWrite()){
+        if (!file.canWrite()) {
             renderJson(Ret.fail().set("message", "当前文件没有写入权限"));
             return;
         }
@@ -438,7 +439,7 @@ public class _TemplateController extends AdminControllerBase {
         File pathFile = new File(template.getAbsolutePath(), dirName);
 
         try {
-           FileUtils.copyFile(uploadFile.getFile(), new File(pathFile, fileName));
+            FileUtils.copyFile(uploadFile.getFile(), new File(pathFile, fileName));
         } catch (Exception e) {
             e.printStackTrace();
             renderFailJson();

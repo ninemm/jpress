@@ -59,7 +59,7 @@ public class TemplateRender extends Render {
         this.view = view;
     }
 
-    public TemplateRender(String view,int code) {
+    public TemplateRender(String view, int code) {
         this.view = view;
         this.errorCode = code;
     }
@@ -71,7 +71,7 @@ public class TemplateRender extends Render {
     @Override
     public void render() {
         response.setContentType(getContentType());
-        if (errorCode > 0){
+        if (errorCode > 0) {
             response.setStatus(errorCode);
         }
 
@@ -82,7 +82,7 @@ public class TemplateRender extends Render {
         }
 
         String html = getEngine().getTemplate(view).renderToString(data);
-        html = replaceSrcTemplateSrcPath(html);
+        html = replaceSrcPath(html);
 
         RenderHelpler.renderHtml(response, html, contentType);
 
@@ -94,13 +94,15 @@ public class TemplateRender extends Render {
     }
 
 
-    public String replaceSrcTemplateSrcPath(String content) {
+    public String replaceSrcPath(String content) {
         if (StrUtil.isBlank(content)) {
             return content;
         }
 
 
         Document doc = Jsoup.parse(content);
+        doc.outputSettings().prettyPrint(false);
+        doc.outputSettings().outline(false);
 
         Elements jsElements = doc.select("script[src]");
         replace(jsElements, "src");
@@ -118,7 +120,7 @@ public class TemplateRender extends Render {
     private void replace(Elements elements, String attrName) {
         Iterator<Element> iterator = elements.iterator();
         Template template = TemplateManager.me().getCurrentTemplate();
-        if (template == null){
+        if (template == null) {
             return;
         }
         while (iterator.hasNext()) {
@@ -131,14 +133,13 @@ public class TemplateRender extends Render {
                     || url.toLowerCase().startsWith("http")
                     || (attrName.equals("src") && url.startsWith("data:image/"))
                     || element.hasAttr("cdn-exclude")
-                    ) {
+            ) {
                 continue;
             }
 
             // 以 / 开头的，需要添加 contextPath
             if (url.startsWith("/")) {
-                if (contextPath.length() > 0
-                        && url.startsWith(contextPath + "/") == false) {
+                if (contextPath.length() > 0 && url.startsWith(contextPath + "/") == false) {
                     url = contextPath + url;
                 }
             }
@@ -148,12 +149,17 @@ public class TemplateRender extends Render {
                 url = contextPath + template.getWebAbsolutePath() + url.substring(1);
             }
 
+            // 以 ../ 开头的文件，可能是国际化下面的html资源文件
+//            else if (url.startsWith("../")) {
+//                url = contextPath + template.getWebAbsolutePath() + url.substring(2);
+//            }
+
             // 直接是文件目录名开头
             else {
                 url = contextPath + template.getWebAbsolutePath() + "/" + url;
             }
 
-            if (cdnDomain != null) {
+            if (StrUtil.isNotBlank(cdnDomain)) {
                 url = cdnDomain + url;
             }
 
