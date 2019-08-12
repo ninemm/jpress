@@ -36,8 +36,6 @@
         <jdk.version>1.8</jdk.version>
         <jboot.version>2.1.1</jboot.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <hutool.version>4.1.14</hutool.version>
-        <lombok.version>1.16.14</lombok.version>
         <logback.version>1.2.3</logback.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <commons-io.version>2.6</commons-io.version>
@@ -45,8 +43,6 @@
         <aliyunoss.version>3.4.2</aliyunoss.version>
         <httpclient.version>4.5.3</httpclient.version>
         <commons-codec.version>1.10</commons-codec.version>
-        <hanlp.version>portable-1.7.3</hanlp.version>
-        <webcollector.version>2.73-alpha</webcollector.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -183,30 +179,6 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.edu.hfut.dmic.webcollector</groupId>
-                <artifactId>WebCollector</artifactId>
-                <version>${webcollector.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.hankcs</groupId>
-                <artifactId>hanlp</artifactId>
-                <version>${hanlp.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
             </dependency>
 
         </dependencies>
