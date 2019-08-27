@@ -22,12 +22,18 @@ docker version
 
 # 安装docker-compose
 pip install --upgrade pip
-pip install docker-compose
+if [ $? -ne 0 ]; then
+    curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+else
+    pip install docker-compose
+fi
 docker-compose -version
 
 # 安装jpress
 wget https://gitee.com/fuhai/jpress/raw/master/docker-compose.yml
 docker-compose up -d
+
+rm -f install.sh
 
 
 
