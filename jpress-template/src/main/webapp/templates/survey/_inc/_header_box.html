@@ -1,0 +1,55 @@
+<!-- Preloader -->
+<div class="preloader">
+    <div class="loader">
+        <div class="shadow"></div>
+        <div class="box"></div>
+    </div>
+</div>
+<!-- End Preloader -->
+
+<!-- Start Navbar Area -->
+<div class="navbar-area">
+    <div class="plamb-responsive-nav">
+        <div class="container">
+            <div class="plamb-responsive-menu">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/img/logo.png" class="white-logo" alt="logo">
+                        <img src="assets/img/logo-black.png" class="black-logo" alt="logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="plamb-nav">
+        <div class="container">
+            <nav class="navbar navbar-expand-md navbar-light">
+                <a class="navbar-brand" href="index.html">
+                    <img src="assets/img/logo.png" class="white-logo" alt="logo">
+                    <img src="assets/img/logo-black.png" class="black-logo" alt="logo">
+                </a>
+                <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        #for(menu : MENUS)
+                        <li class="nav-item">
+                            <a href="#(menu.url ?? '#')" class="nav-link #(menu.isActive ? 'active' : '')"> #(menu.text ??)
+                            #if(menu.hasChild())
+                                <i class="fas fa-chevron-down"></i></a>
+                                <ul class="dropdown-menu">
+                                    #for(childMenu : menu.getChilds())
+                                    <li class="nav-item"><a href="#(childMenu.url ?? '#')" class="nav-link">#(childMenu.text ??)</a></li>
+                                    #end
+                                </ul>
+                            #else
+                            </a>
+                            #end
+                        </li>
+                        #end
+                    </ul>
+                    <div class="other-option"><a class="default-btn" href="pricing.html"> 免费试用 <span></span></a></div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- End Navbar Area -->

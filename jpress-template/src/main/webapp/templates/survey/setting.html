@@ -1,0 +1,131 @@
+#@layout()
+
+#define content()
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            模板设置
+            <small>Template Setting</small>
+        </h1>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header ">
+                        <h3 class="box-title"></h3>
+                    </div>
+
+                    <form class="form-horizontal form-setting" autocomplete="off" id="optionForm">
+                        <div class="box-body ">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">logo设置</label>
+                                <div class="col-sm-6">
+                                    <button type="button"
+                                            for-src="tours_logo"
+                                            for-input="tours_logo_input"
+                                            class="jp-image-browser btn btn-flat btn-default btn-xs">
+                                        <i class="fa fa-fw fa-image"></i> 选择图片
+                                    </button>
+                                    <br/>
+                                    <img src="#(CPATH)#option('tours_logo','/templates/tours/img/logo.jpg')"
+                                         id="tours_logo">
+                                    <input type="hidden" id="tours_logo_input" name="tours_logo"
+                                           value="#option('tours_logo')">
+                                </div>
+                            </div>
+
+                            <h4 class="page-header">二维码</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">二维码文章</label>
+                                <div class="col-sm-6">
+                                    <input type="input" class="form-control" placeholder="左边二维码底部的文字..."
+                                           name="tours_qrcode_text" value="#option('tours_qrcode_text')">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">二维码</label>
+                                <div class="col-sm-6">
+                                    <button type="button"
+                                            for-src="tours_qrcode"
+                                            for-input="tours_qrcode_input"
+                                            class="jp-image-browser btn btn-flat btn-default btn-xs">
+                                        <i class="fa fa-fw fa-image"></i> 选择图片
+                                    </button>
+                                    <br/>
+                                    <img src="#(CPATH)#option('tours_qrcode', '/templates/tours/images/qrcode.jpg')"
+                                         id="tours_qrcode">
+                                    <input type="hidden" id="tours_qrcode_input" name="tours_qrcode"
+                                           value="#option('tours_qrcode')">
+                                </div>
+                            </div>
+
+                            <h4 class="page-header">广告位</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">右边栏广告位</label>
+                                <div class="col-sm-6">
+                                    <button type="button"
+                                            for-src="tours_ad"
+                                            for-input="tours_ad_input"
+                                            class="jp-image-browser btn btn-flat btn-default btn-xs">
+                                        <i class="fa fa-fw fa-image"></i> 选择图片
+                                    </button>
+                                    <br/>
+                                    <img src="#(CPATH)#option('tours_ad','/static/commons/img/avatar.png')"
+                                         id="tours_ad">
+                                    <input type="hidden" id="tours_ad_input" name="tours_ad"
+                                           value="#option('tours_ad')">
+                                </div>
+                            </div>
+
+
+                            <h4 class="page-header">幻灯片设置</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">首页幻灯片</label>
+                                <div class="col-sm-6">
+                                    <textarea rows="5" class="form-control"
+                                              placeholder="幻灯片地址..."
+                                              name="tours_slides">#option("tours_slides")</textarea>
+                                    <p class="help-block"> 一行一条数据。 </p>
+                                </div>
+                            </div>
+
+                            <h4 class="page-header">联系方式</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">电话</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="tours_mobile" class="form-control"
+                                           placeholder="联系电话" value="#option('tours_mobile')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">QQ</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="tours_qq" class="form-control"
+                                           placeholder="请输入调用QQ的链接" value="#option('tours_qq')">
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="box-footer">
+                            <div class="col-sm-offset-2 col-sm-10 submit-block">
+                                <div class="box-submit">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+#end

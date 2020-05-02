@@ -1,0 +1,81 @@
+#define layout()
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+	<meta charset="utf-8">
+	<title>#(WEB_NAME ?? (WEB_TITLE + '-' + WEB_SUBTITLE))</title>
+	<meta name="keywords" content="#(SEO_KEYWORDS)">
+	<meta name="description" content="#(SEO_DESCRIPTION)">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><!-- Bootstrap Min CSS -->
+	<meta name="renderer" content="webkit">
+	<meta name="360-site-verification" content="753adddec0a74b7ee3a326ae1933eddd" />
+
+<!--	<title>互助调研 - 专注于大学生新品调研，新品调研，数据分析</title>-->
+	<link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  	<title>#(WEB_NAME ?? (WEB_TITLE + '-' + WEB_SUBTITLE))</title>
+	<meta name="keywords" content="#(SEO_KEYWORDS)">
+	<meta name="description" content="#(SEO_DESCRIPTION)">
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  	<meta name="renderer" content="webkit">
+	<meta name="360-site-verification" content="753adddec0a74b7ee3a326ae1933eddd" />
+  	
+  	<!-- Facebook and Twitter integration -->
+	<meta property="og:title" content="#(WEB_TITLE??WEB_NAME??)"/>
+	<meta property="og:image" content=""/>
+	<meta property="og:url" content=""/>
+	<meta property="og:site_name" content="#(WEB_TITLE ?? WEB_NAME ??)"/>
+	<meta property="og:description" content="#(SEO_DESCRIPTION ??)"/>
+
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css"><!-- Animate Min CSS -->
+	<link rel="stylesheet" href="assets/css/animate.min.css"><!-- FlatIcon CSS -->
+	<link rel="stylesheet" href="assets/css/flaticon.css"><!-- Odometer Min CSS -->
+	<link rel="stylesheet" href="assets/css/odometer.min.css"><!-- MeanMenu CSS -->
+	<link rel="stylesheet" href="assets/css/meanmenu.css"><!-- Magnific Popup Min CSS -->
+	<link rel="stylesheet" href="assets/css/magnific-popup.min.css"><!-- Nice Select Min CSS -->
+	<link rel="stylesheet" href="assets/css/nice-select.min.css"><!-- Owl Carousel Min CSS -->
+	<link rel="stylesheet" href="assets/css/owl.carousel.min.css"><!-- Font Awesome Min CSS -->
+	<link rel="stylesheet" href="assets/css/fontawesome.min.css"><!-- Style CSS -->
+	<link rel="stylesheet" href="assets/css/style.css"><!-- Responsive CSS -->
+	<link rel="stylesheet" href="assets/css/responsive.css">
+	#@css?()
+
+</head>
+
+<body ontouchstart>
+
+	#@content()
+
+	<script type='text/javascript' src="assets/js/jquery.min.js"></script><!-- Popper Min JS -->
+	<script type='text/javascript' src="assets/js/popper.min.js"></script><!-- Bootstrap Min JS -->
+	<script type='text/javascript' src="assets/js/bootstrap.min.js"></script><!-- MeanMenu JS  -->
+	<script type='text/javascript' src="assets/js/jquery.meanmenu.js"></script><!-- Appear Min JS -->
+	<script type='text/javascript' src="assets/js/jquery.appear.min.js"></script><!-- Odometer Min JS -->
+	<script type='text/javascript' src="assets/js/odometer.min.js"></script><!-- Owl Carousel Min JS -->
+	<script type='text/javascript' src="assets/js/owl.carousel.min.js"></script><!-- Magnific Popup Min JS -->
+	<script type='text/javascript' src="assets/js/jquery.magnific-popup.min.js"></script><!-- Nice Select Min JS -->
+	<script type='text/javascript' src="assets/js/jquery.nice-select.min.js"></script><!-- Ajaxchimp Min JS -->
+	<script type='text/javascript' src="assets/js/jquery.ajaxchimp.min.js"></script><!-- WOW Min JS -->
+	<script type='text/javascript' src="assets/js/wow.min.js"></script><!-- Form Validator Min JS -->
+	<script type='text/javascript' src="assets/js/form-validator.min.js"></script><!-- Contact Form Min JS -->
+	<script type='text/javascript' src="assets/js/contact-form-script.js"></script><!-- Main JS -->
+	<script type='text/javascript' src="assets/js/main.js"></script>
+
+	<script type="text/javascript">
+	    $(function() {
+			// Utils.context = '#(CPATH)';
+        	// FastClick.attach(document.body);
+		});
+	</script>
+	#@script?()
+</body>
+</html>
+#end
