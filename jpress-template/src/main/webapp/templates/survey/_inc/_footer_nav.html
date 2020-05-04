@@ -8,22 +8,23 @@
                     </div>
                     <p>互助调研平台是集问卷调研，访员管理，问卷广场于一体的综合性数据收集、分析平台。目前我们专注于在校大学生，提供各类针对大学生的专业化调研、数据分析等服务。</p>
                     <ul class="footer-social">
-                        <li><a href="#"><i class="fab fa-weixin"></i></a></li>
-                        <li><a href="http://wpa.qq.com/msgrd?v=3&uin=568554288&site=qq&menu=yes"><i class="fab fa-qq"></i></a></li>
+                        <li><a href="#"><img src="#option('template_survey_qrcode', 'assets/img/qrcode.png')" width="80px"></a></li>
+<!--                        <li><a href="#"><i class="fab fa-weixin"></i></a></li>-->
+<!--                        <li><a href="http://wpa.qq.com/msgrd?v=3&uin=568554288&site=qq&menu=yes"><i class="fab fa-qq"></i></a></li>-->
                     </ul>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-sm-6">
                 <div class="single-footer-widget">
                     <div class="footer-heading">
-                        <h3>特色服务</h3>
+                        <h3>企业服务</h3>
                     </div>
                     <ul class="footer-quick-links">
-                        <li><a href="#">学生调查</a></li>
-                        <li><a href="#">市场调查</a></li>
-                        <li><a href="#">产品调查</a></li>
-                        <li><a href="#">数据分析</a></li>
-                        <li><a href="#">问卷设计</a></li>
+                        <li><a href="#(CPATH)/article/student">学生调查</a></li>
+                        <li><a href="#(CPATH)/article/market">市场调查</a></li>
+                        <li><a href="#(CPATH)/article/product">产品调查</a></li>
+                        <li><a href="#(CPATH)/article/analyst">数据分析</a></li>
+                        <li><a href="#(CPATH)/article/design">问卷设计</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,13 +48,14 @@
                         <h3>联系方式</h3>
                     </div>
                     <div class="footer-info-contact"><i class="flaticon-call-answer"></i>
-                        <h3>手机</h3><span><a href="tel:+18627771043">+86 18627771043</a></span>
+                        <h3>手机</h3>
+                        <span><a href="tel:+#option('template_survey_phone', '18627771043')">+86 #option('template_survey_phone', '18627771043')（同微信号） </a></span>
                     </div>
                     <div class="footer-info-contact"><i class="flaticon-envelope"></i>
-                        <h3>邮件</h3><span><a href="mailto:huangxin@ninemm.cn">huangxin@ninemm.cn</a></span>
+                        <h3>邮件</h3><span><a href="mailto:#option('template_survey_email', 'huangxin@ninemm.cn')">#option('template_survey_email', 'huangxin@ninemm.cn')</a></span>
                     </div>
                     <div class="footer-info-contact"><i class="flaticon-maps-and-flags"></i>
-                        <h3>地址</h3><span>武汉市汉阳区汉阳大道139号汉商大厦1606</span>
+                        <h3>地址</h3><span>#option('template_survey_address', '武汉市汉阳区汉阳大道139号汉商大厦1606')</span>
                     </div>
                 </div>
             </div>
@@ -75,8 +77,8 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <ul>
-                    <li><a href="/article/terms">服务条款</a></li>
-                    <li><a href="/article/policy">隐私政策</a></li>
+                    <li><a href="#(CPATH)/article/terms">服务条款</a></li>
+                    <li><a href="#(CPATH)/article/policy">隐私政策</a></li>
                 </ul>
             </div>
         </div>

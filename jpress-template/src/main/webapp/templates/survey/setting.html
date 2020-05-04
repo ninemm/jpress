@@ -25,17 +25,13 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">logo设置</label>
                                 <div class="col-sm-6">
-                                    <button type="button"
-                                            for-src="tours_logo"
-                                            for-input="tours_logo_input"
+                                    <button type="button" for-src="template_survey_logo" for-input="template_survey_logo_input"
                                             class="jp-image-browser btn btn-flat btn-default btn-xs">
                                         <i class="fa fa-fw fa-image"></i> 选择图片
                                     </button>
                                     <br/>
-                                    <img src="#(CPATH)#option('tours_logo','/templates/tours/img/logo.jpg')"
-                                         id="tours_logo">
-                                    <input type="hidden" id="tours_logo_input" name="tours_logo"
-                                           value="#option('tours_logo')">
+                                    <img src="#(CPATH)#option('template_survey_logo','/templates/survey/assets/img/logo.png')" id="template_survey_logo">
+                                    <input type="hidden" id="template_survey_logo_input" name="template_survey_logo" value="#option('template_survey_logo')">
                                 </div>
                             </div>
 
@@ -44,7 +40,7 @@
                                 <label class="col-sm-2 control-label">二维码文章</label>
                                 <div class="col-sm-6">
                                     <input type="input" class="form-control" placeholder="左边二维码底部的文字..."
-                                           name="tours_qrcode_text" value="#option('tours_qrcode_text')">
+                                       name="template_survey_qrcode_text" value="#option('template_survey_qrcode_text')">
                                 </div>
                             </div>
 
@@ -52,16 +48,16 @@
                                 <label class="col-sm-2 control-label">二维码</label>
                                 <div class="col-sm-6">
                                     <button type="button"
-                                            for-src="tours_qrcode"
-                                            for-input="tours_qrcode_input"
+                                            for-src="template_survey_qrcode"
+                                            for-input="template_survey_qrcode_input"
                                             class="jp-image-browser btn btn-flat btn-default btn-xs">
                                         <i class="fa fa-fw fa-image"></i> 选择图片
                                     </button>
                                     <br/>
-                                    <img src="#(CPATH)#option('tours_qrcode', '/templates/tours/images/qrcode.jpg')"
-                                         id="tours_qrcode">
-                                    <input type="hidden" id="tours_qrcode_input" name="tours_qrcode"
-                                           value="#option('tours_qrcode')">
+                                    <img src="#(CPATH)#option('template_survey_qrcode', '/templates/survey/assets/img/qrcode.jpg')"
+                                         id="template_survey_qrcode">
+                                    <input type="hidden" id="template_survey_qrcode_input" name="template_survey_qrcode"
+                                           value="#option('template_survey_qrcode')">
                                 </div>
                             </div>
 
@@ -70,16 +66,16 @@
                                 <label class="col-sm-2 control-label">右边栏广告位</label>
                                 <div class="col-sm-6">
                                     <button type="button"
-                                            for-src="tours_ad"
-                                            for-input="tours_ad_input"
+                                            for-src="template_survey_ad"
+                                            for-input="template_survey_ad_input"
                                             class="jp-image-browser btn btn-flat btn-default btn-xs">
                                         <i class="fa fa-fw fa-image"></i> 选择图片
                                     </button>
                                     <br/>
-                                    <img src="#(CPATH)#option('tours_ad','/static/commons/img/avatar.png')"
-                                         id="tours_ad">
-                                    <input type="hidden" id="tours_ad_input" name="tours_ad"
-                                           value="#option('tours_ad')">
+                                    <img src="#(CPATH)#option('template_survey_ad','/static/commons/img/avatar.png')"
+                                         id="template_survey_ad">
+                                    <input type="hidden" id="template_survey_ad_input" name="template_survey_ad"
+                                           value="#option('template_survey_ad')">
                                 </div>
                             </div>
 
@@ -88,29 +84,41 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">首页幻灯片</label>
                                 <div class="col-sm-6">
-                                    <textarea rows="5" class="form-control"
-                                              placeholder="幻灯片地址..."
-                                              name="tours_slides">#option("tours_slides")</textarea>
+                                    <textarea rows="5" class="form-control" placeholder="幻灯片地址..."
+                                      name="template_survey_slides">#option("template_survey_slides")</textarea>
                                     <p class="help-block"> 一行一条数据。 </p>
                                 </div>
                             </div>
 
                             <h4 class="page-header">联系方式</h4>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">电话</label>
+                                <label class="col-sm-2 control-label">电话号码</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="tours_mobile" class="form-control"
-                                           placeholder="联系电话" value="#option('tours_mobile')">
+                                    <input type="text" name="template_survey_phone" class="form-control"
+                                           placeholder="请输入联系人电话号码" value="#option('template_survey_phone')">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">QQ</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="tours_qq" class="form-control"
-                                           placeholder="请输入调用QQ的链接" value="#option('tours_qq')">
+                                    <input type="text" name="template_survey_qq" class="form-control"
+                                           placeholder="请输入联系人QQ号" value="#option('template_survey_qq')">
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">邮件地址</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="template_survey_email" class="form-control"
+                                           placeholder="请输入业务联系人邮件地址" value="#option('template_survey_email')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">企业地址</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="template_survey_address" class="form-control"
+                                           placeholder="请输入企业地址" value="#option('template_survey_address')">
+                                </div>
+                            </div>
 
                         </div>
                         <div class="box-footer">
